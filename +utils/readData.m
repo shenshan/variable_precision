@@ -12,32 +12,31 @@ function [stimuli,response,set_size] = readData(key)
     
     for ii = 1:length(files)
         load([datapath '/' files(ii).name]);
-        switch exp_id
-            case [1,2,4]
-                stimuli = [stimuli; data(:,1)];
-                response = [response; data(:,2)];
-                set_size = [set_size; 1];
-            case [3,5]
-                stimuli = [stimuli; data(:,1)];
-                response = [response; data(:,2)];
-                set_size = [set_size; data(:,5)];
-            case 6
+        if ismember(exp_id, [1,2,4])
+            stimuli = [stimuli; data(:,1)];
+            response = [response; data(:,2)];
+            set_size = [set_size; 1];
+        elseif ismember(exp_id, [3,5])
+            stimuli = [stimuli; data(:,1)];
+            response = [response; data(:,2)];
+            set_size = [set_size; data(:,5)];
+        elseif exp_id == 6
                 stimuli = [stimuli; data(:,1:4)];
                 response = [response; data(:,5)];
                 set_size = [set_size; 4];
-            case 7
+        elseif exp_id == 7
                 stimuli = [stimuli; data(:,[1,8:10])];
                 response = [response; data(:,2)];
                 set_size = [set_size; data(:,5)];
-            case 8
+        elseif exp_id == 8
                 stimuli = [stimuli; data(:,1:2)];
                 response = [response; data(:,3)];
                 set_size = [set_size; 2];
-            case 9
+        elseif exp_id == 9
                 stimuli = [stimuli; data(:,1:2)];
                 response = [response; data(:,3)];
                 set_size = [set_size; 2];
-            case 10
+        elseif exp_id == 10
                 stimuli = [stimuli; data.orts];
                 response = [response; data.C_hat];
                 set_size = [set_size; data.N];        
