@@ -23,7 +23,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             
             if ismember(key.model_name, {'CPG','VPG'})
-                prediction = varprecision.utils.computePredGuessing(preidction,pars.guess);
+                prediction = varprecision.utils.computePredGuessing(prediction,pars.guess);
             end
             
             % reset 0 or 1 to avoid numerical problems
