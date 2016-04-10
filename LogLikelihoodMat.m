@@ -21,20 +21,9 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             [prediction,trial_num_sim] = fetch1(varprecision.PrecomputedTable & key,'prediction_table','trial_num_sim');
             pars = fetch(varprecision.ParameterSet & key,'*');
             setsizes = fetch1(varprecision.Experiment & key, 'setsize');
-            if strcmp(key.model_name,'CPG') 
-                if length(setsizes)==1
-                    guess_adj = repmat(permute(pars.guess,[1,3,4,2]),[size(prediction),1]);
-                else
-                    guess_adj = repmat(permute(pars.guess,[1,3,4,5,2]),[size(prediction),1]);
-                end
-                prediction = bsxfun(@times,prediction,1-guess_adj) + 0.5*guess_adj;
-            elseif strcmp(key.model_name,'VPG')
-                if length(setsizes)==1
-                    guess_adj = repmat(permute(pars.guess,[1,3,4,5,2]),[size(prediction),1]);
-                else
-                    guess_adj = repmat(permute(pars.guess,[1,3,4,5,6,2]),[size(prediction),1]);
-                end
-                prediction = bsxfun(@times,prediction,1-guess_adj) + 0.5*guess_adj;
+            
+            if ismember(key.model_name, {'CPG','VPG'})
+                prediction = varprecision.utils.computePredGuessing(preidction,pars.guess);
             end
             
             % reset 0 or 1 to avoid numerical problems
