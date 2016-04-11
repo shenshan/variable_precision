@@ -6,12 +6,13 @@ cnt_l              : longblob     # number of trials that the subject reports le
 cnt_r              : longblob     # number of trials reports right
 cnt                : longblob     # number of total trials
 p_right            : longblob     # number of probability of reporting right, same size as p_right
+stims              : longblob     # unique stimuli shown to the subjects, or binned stimuli
 %}
 
 classdef DataStats < dj.Relvar & dj.AutoPopulate
 	
     properties 
-        popRel = varprecision.Data & 'exp_id<6'
+        popRel = varprecision.Data & 'exp_id<6' % works for exp 1-5 for now, will expand to all exps in the future
     end
     
     methods(Access=protected)
@@ -41,12 +42,13 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
                
             end
             cnt = cnt_r + cnt_l;
-            p_right = cnt_r./cnt_l;
+            p_right = cnt_r./cnt;
             
             key.cnt_l = cnt_l;
             key.cnt_r = cnt_r;
             key.cnt = cnt;
             key.p_right = p_right;
+            key.stims = stimuli;
 			
             self.insert(key)
 		end
