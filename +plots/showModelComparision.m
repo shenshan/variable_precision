@@ -38,7 +38,9 @@ for exp = exps'
         bar(eviMat)
     end
     
+    model_names = fetchn(varprecision.Model & exp, 'model_name');
     ylabel('LML')
+    set(gca,'XTick',1:length(models),'XTickLabel',model_names)
     
 
 end

@@ -4,7 +4,7 @@ varprecision.PrecomputedTable (computed) # experiment 1 to 5, prediction table c
 -----
 trial_num_sim     : int         # number of trials for simulation
 prediction_table  : longblob    # table size would be length(setsize)xlength(stimuli)xlength(pars)
-
+stims_unique      : blob        # unique stimuli for exp 1-5
 %}
 
 classdef PrecomputedTable < dj.Relvar & dj.AutoPopulate
@@ -31,7 +31,7 @@ classdef PrecomputedTable < dj.Relvar & dj.AutoPopulate
             key.trial_num_sim = 1000;
             pars.trial_num_sim = 1000;
             key.prediction_table = varprecision.utils.computePreTable(pars,stimuli);
-                        
+            key.stims_unique = stimuli;          
 			self.insert(key)
 		end
 	end
