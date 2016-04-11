@@ -18,7 +18,7 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
     methods(Access=protected)
 
 		function makeTuples(self, key)
-            [stimuli_real,response] = fetch1(varprecision.Data & key,'stimuli','response');
+            [stimuli_real,response,set_size] = fetch1(varprecision.Data & key,'stimuli','response','set_size');
             setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             stimuli = unique(stimuli_real);
             
@@ -34,10 +34,14 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
             else
                 cnt_r = zeros(length(setsizes),length(stimuli));
                 cnt_l = zeros(length(setsizes),length(stimuli));
-                for ii = 1:length(stimuli)
-                    response_sub = response(stimuli_real==stimuli(ii));
-                    cnt_r(ii) = sum(response_sub==1);
-                    cnt_l(ii) = length(response_sub) - cnt_r(ii);
+                for ii = 1:length(setsizes)
+                    response_sub = response(set_size==setsizes(ii));
+                    stimuli_sub = stimuli_real(set_size==setsizes(ii));
+                    for jj = 1:length(stimuli)
+                        response_sub2 = response_sub(stimuli_sub==stimuli(jj));
+                        cnt_r(ii,jj) = sum(response_sub2==1);
+                        cnt_l(ii,jj) = length(response_sub2) - cnt_r(ii,jj);
+                    end
                 end
                
             end
