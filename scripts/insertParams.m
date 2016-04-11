@@ -8,12 +8,12 @@
 % and uses kappa = linspace(1,150,31), theta = linspace(0.1,20,31) for von mises experiments
 
 % parameters
-p_right = linspace(0.3,0.7,21);
-lambda = linspace(0.01,0.7,31);
-theta1 = linspace(0.01,0.7,31);
-kappa = linspace(1,150,31);
-theta2 = linspace(0.1,20,31);
-guess = linspace(0,0.5,31);
+p_right = linspace(0.3,0.7,20);
+lambda = linspace(0.01,0.7,30);
+theta1 = linspace(0.01,0.7,30);
+kappa = linspace(1,150,30);
+theta2 = linspace(0.1,20,30);
+guess = linspace(0,0.5,30);
 
 % gaussian experiments
 for ii = 1:5
