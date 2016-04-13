@@ -87,7 +87,7 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                         
                         % get the best parameters p_right,theta and guess
                          [llmax, key.p_right_idx] = max(sum_max);
-                         key.p_right_hat = pars.p_right_hat(key.p_right_idx);
+                         key.p_right_hat = pars.p_right(key.p_right_idx);
                         
                         % find the best lambda for each set sizes
                         for ii = 1:length(setsizes)

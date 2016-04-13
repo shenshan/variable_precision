@@ -21,6 +21,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             [prediction,trial_num_sim] = fetch1(varprecision.PrecomputedTable & key,'prediction_table','trial_num_sim');
             pars = fetch(varprecision.ParameterSet & key,'*');
             subj_info = fetch(varprecision.Subject & key,'*');
+            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             
             if ismember(key.model_name, {'CPG','VPG'})
                 prediction = varprecision.utils.computePredGuessing(prediction,pars.guess);
@@ -32,8 +33,12 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             
             % compute prediction table
             [cnt_l,cnt_r] = fetch1(varprecision.DataStats & key, 'cnt_l','cnt_r');
-
-            ll_mat  = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction))));
+            
+            if length(setsizes)==1
+                ll_mat  = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction))));
+            else
+                ll_mat = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction)),2));
+            end
             
             ll_mat_path = ['~/Documents/MATLAB/local/+varprecision/results/exp_' num2str(pars.exp_id) '/'];
             
