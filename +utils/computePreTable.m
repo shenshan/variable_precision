@@ -20,11 +20,11 @@ if ismember(pars.model_name,{'CP','CPG'})
         pretable = zeros(length(pars.setsizes),length(stimuli),length(pars.p_right),length(pars.lambda));
         for ii = 1:length(pars.setsizes)
             pars2.setsize = pars.setsizes(ii);
-            for jj = 1:length(pars.lamdba)
+            for jj = 1:length(pars.lambda)
                 pars2.lambda = pars.lambda(jj);
                 noiseMat = normrnd(0,1/sqrt(pars2.lambda),[pars2.setsize,length(stimuli),pars.trial_num_sim]);
                 stimulusMat = varprecision.utils.adjustStimuliSize(pars.exp_id,stimuli',pars2.setsize);
-                xMat = repmat(stimulusMat,[1,1,pars.tiral_num_sim]) + noiseMat;
+                xMat = repmat(stimulusMat,[1,1,pars.trial_num_sim]) + noiseMat;
                 pretable(ii,:,:,jj) = varprecision.decisionrule.exp4(xMat,pars2);
             end
         end
