@@ -17,12 +17,12 @@ for exp = exps'
     eviMat = zeros(length(keys_rec),length(models));
     for ikey = 1:length(keys_rec)
         key_rec = keys_rec(ikey);
-        evi = fetchn(varprecision.Evidence & key_rec, cmp_type);
+        evi = fetchn(varprecision.FitParametersEvidence & key_rec, cmp_type);
         eviMat(ikey,:) = evi;
     end
     
     % fetch the evidence for VPG
-    evi = fetchn(varprecision.Evidence & keys_rec & 'model_name="VPG"', cmp_type);
+    evi = fetchn(varprecision.FitParametersEvidence & keys_rec & 'model_name="VPG"', cmp_type);
     
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);

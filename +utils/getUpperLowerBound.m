@@ -9,5 +9,10 @@ out_sem = squeeze(std(inputMat,[],dim)/sqrt(size(inputMat,dim)));
 out_up = out_mean + out_sem;
 out_low = out_mean - out_sem;
 
-patch = [out_up; wrev(out_low)];
+if isvector(out_up) && size(out_low,2)==1
+    out_up = out_up';
+    out_low = out_low';
+end
+        
+patch = [out_up, fliplr(out_low)];
 
