@@ -4,7 +4,7 @@ varprecision.LogLikelihoodMatAll (computed) # table that stores the log likeihoo
 ->varprecision.PrecomputedTable
 ->varprecision.DataStats
 -----
-ll_mat     : longblob     # log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
+ll_mat_path     : longblob     # log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 
 %}
 

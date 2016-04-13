@@ -1,5 +1,5 @@
 %{
-varprecision.FitParametersEvidence (computed) # extract the parameters that gives the highest likelihood, and compute evidences of all kinds
+varprecision.FitParametersEvidence(computed) # extract the parameters that gives the highest likelihood, and compute evidences of all kinds
 -> varprecision.LogLikelihoodMatAll
 -----
 p_right_hat    : double     # estimated p_right
@@ -27,7 +27,9 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
 
 		function makeTuples(self, key)
 		
-            LLMat = fetch1(varprecision.LogLikelihoodMatAll & key, 'll_mat');
+            ll_mat_path = fetch1(varprecision.LogLikelihoodMatAll & key, 'll_mat_path');
+            load(ll_mat_path,'ll_mat');
+            LLMat = ll_mat;
             pars = fetch(varprecision.ParameterSet & key,'*');
             setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             nTrials = fetch1(varprecision.Data & key, 'ntrials');
@@ -85,13 +87,14 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                         
                         % get the best parameters p_right,theta and guess
                          [llmax, key.p_right_idx] = max(sum_max);
-                         key.p_right_hat = pars.lambda(key.p_right_idx);
+                         key.p_right_hat = pars.p_right_hat(key.p_right_idx);
                         
                         % find the best lambda for each set sizes
                         for ii = 1:length(setsizes)
-                            key.lambda_hat(ii) = pars.lambda(idxMat(ii,key.p_right_idx));
+                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx);
                         end
-                            
+                        
+                        
                     case 'CPG'
                         
                         idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.guess));
@@ -114,7 +117,7 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                         key.guess_hat = pars.guess(key.guess_idx);
                         
                         for ii = 1:length(setsizes)
-                            key.lambda_hat(ii) = pars.lambda(idxMat(ii,key.p_right_idx,key.guess_idx));
+                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.guess_idx);
                         end
                         
                     case 'VP'
@@ -139,7 +142,7 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                         key.theta_hat = pars.theta(key.theta_idx);
                         
                         for ii = 1:length(setsizes)
-                            key.lambda_hat(ii) = pars.lambda(idxMat(ii,key.p_right_idx,key.theta_idx));
+                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx);
                         end
                         
                     case 'VPG'
@@ -165,10 +168,11 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                         key.guess_hat = pars.guess(key.guess_idx);
                         
                         for ii = 1:length(setsizes)
-                            key.lambda_hat(ii) = pars.lambda(idxMat(ii,key.p_right_idx,key.theta_idx,key.guess_idx));
+                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx,key.guess_idx);
                         end
-                        
+                       
                 end
+                key.lambda_hat = pars.lambda(key.lambda_idx);
                 
                 %% compute lml
     

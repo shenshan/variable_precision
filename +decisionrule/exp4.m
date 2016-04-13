@@ -25,8 +25,8 @@ function prediction = exp4(x,pars)
         f = exp(x.^2*pars.sigma_s^2/2/sigma^2/(sigma^2+pars.sigma_s^2));
         x_c = pars.lambda*x/sqrt(2*(pars.lambda + 1/pars.sigma_s^2));
 
-        term1 = squeeze(sum (f.*(1 + erf(x_c))));
-        term2 = squeeze(sum (f.*(1 - erf(x_c))));
+        term1 = squeeze(sum (f.*(1 + erf(x_c)),1));
+        term2 = squeeze(sum (f.*(1 - erf(x_c)),1));
 
             
     elseif ismember(pars.model_name,{'VP','VPG'})
@@ -38,11 +38,11 @@ function prediction = exp4(x,pars)
         f = exp(logf);
         x_c = pars.lambdaMat.*x./sqrt(2*(pars.lambdaMat + 1/pars.sigma_s^2));
 
-        term1 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 + erf(x_c))));
-        term2 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 - erf(x_c))));
+        term1 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 + erf(x_c)),1));
+        term2 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 - erf(x_c)),1));
             
     end
-    obs_response = repmat(term1,[1,1,length(pars.p_right)]).*p_right_adj - repmat(term2,[1,1,length(pars.p_right)]).*(1-p_right_adj);
+    obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj) - bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
     prediction = (sum(obs_response>0,2) + .5*sum(obs_response==0,2))/nTrials;
 
 

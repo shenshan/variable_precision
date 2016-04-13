@@ -3,7 +3,7 @@ varprecision.LogLikelihoodMat (computed) # compute prediction table based on the
 ->varprecision.PrecomputedTable
 ->varprecision.DataStats
 -----
-ll_mat     : longblob     # log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
+ll_mat_path     : longblob     # path for log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 
 %}
 
@@ -20,7 +20,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             % fetch the prediction table, compute table with guessing if needed
             [prediction,trial_num_sim] = fetch1(varprecision.PrecomputedTable & key,'prediction_table','trial_num_sim');
             pars = fetch(varprecision.ParameterSet & key,'*');
-            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
+            subj_info = fetch(varprecision.Subject & key,'*');
             
             if ismember(key.model_name, {'CPG','VPG'})
                 prediction = varprecision.utils.computePredGuessing(prediction,pars.guess);
@@ -32,14 +32,19 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             
             % compute prediction table
             [cnt_l,cnt_r] = fetch1(varprecision.DataStats & key, 'cnt_l','cnt_r');
+
+            ll_mat  = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction))));
             
-            if length(setsizes)==1
-                ll_mat  = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction))));
-            else
-                ll_mat  = squeeze(sum(sum((bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction))))));
+            ll_mat_path = ['~/Documents/MATLAB/local/+varprecision/results/exp_' num2str(pars.exp_id) '/'];
+            
+            if ~exist(ll_mat_path,'dir')
+                mkdir(ll_mat_path)
             end
+            filename = [subj_info.subj_initial '_' pars.model_name '_' num2str(pars.parset_id) '.mat'];
             
-            key.ll_mat = single(ll_mat);
+            key.ll_mat_path = [ll_mat_path filename];
+            save(key.ll_mat_path,'ll_mat');
+            
             
             self.insert(key)
             makeTuples(varprecision.LogLikelihoodMatAll,key)
