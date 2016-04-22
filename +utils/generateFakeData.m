@@ -28,11 +28,15 @@ for iexp = exps'
             pars.method = mode;
             
             % insert fake pars into fakeparams table
-            insert(varprecision.FakeDataParams,pars)
+            if isempty(varprecision.FakeDataParams & pars)
+                insert(varprecision.FakeDataParams,pars)
+            end
             % insert recording info to recording table
             rec.exp_id = iexp.exp_id;
             rec.subj_initial = iSubj.subj_initial;
-            insert(varprecision.Recording,rec)
+            if isempty(varprecision.Recording & rec)
+                insert(varprecision.Recording,rec)
+            end
             % generate or load fake stimuli
             nTrials = 3000;
             pars.setsizes = exp.setsize;
@@ -49,6 +53,9 @@ for iexp = exps'
                 end
                 
                 [~,response] = f_dr(xMat,pars);
+                if ismember(imodel.model_name,{'CPG','VPG'})
+                    response = varprecision.utils.addLapseTrials(response, pars.guess);
+                end
                 data = [target_stimuli,response'];
             else
                 stimuliMat = [];
@@ -70,6 +77,9 @@ for iexp = exps'
                     setsizeMat = [setsizeMat;repmat(setsize,ntrials,1)];
                     stimuliMat = [stimuliMat;target_stimuli];
                     responseMat = [responseMat;response'];
+                end
+                if ismember(imodel.model_name,{'CPG','VPG'})
+                    responseMat = varprecision.utils.addLapseTrials(responseMat, pars.guess);
                 end
                 data = [stimuliMat,responseMat,setsizeMat];
             end

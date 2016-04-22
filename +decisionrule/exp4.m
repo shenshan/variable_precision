@@ -1,4 +1,4 @@
-function prediction = exp4(x,pars)
+function [prediction, response] = exp4(x,pars)
 %EXP4 computes prediction of reporting right given noisy
 %measurements and model parameters
 
@@ -17,8 +17,8 @@ function prediction = exp4(x,pars)
         nTrials = size(x, 2);
         nStimuli = 1;
     end
-    
-    p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
+        
+        p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
     if ismember(pars.model_name,{'CP','CPG'})
         sigma = sqrt(1/pars.lambda);
@@ -42,8 +42,10 @@ function prediction = exp4(x,pars)
         term2 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 - erf(x_c)),1));
             
     end
+    
     obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj) - bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
     prediction = (sum(obs_response>0,2) + .5*sum(obs_response==0,2))/nTrials;
-
-
     prediction = squeeze(prediction);
+    response = obs_response;
+    response(obs_response>0) = 1;
+    response(obs_response<=0) = -1;

@@ -1,5 +1,9 @@
-function [stimuli,response,set_size] = readData(key)
+function [stimuli,response,set_size] = readData(key,type)
+%READDATA load the data from .mat file
+%   function [stimuli,response,set_size] = readData(key,type)
+%   type specifies which type of data to read, real or fake.
 
+    assert(ismember(type, {'real','fake'}), 'Invalid type input, please enter real or fake.')
     datapath = fetch1(varprecision.Experiment & key, 'data_path');
     [subjid, exp_id] = fetch1(varprecision.Recording & key, 'subj_initial', 'exp_id');
     % get list of filenames
@@ -19,7 +23,11 @@ function [stimuli,response,set_size] = readData(key)
         elseif ismember(exp_id, [3,5])
             stimuli = [stimuli; data(:,1)];
             response = [response; data(:,2)];
-            set_size = [set_size; data(:,5)];
+            if strcmp(type,'fake')
+                set_size = [set_size; data(:,3)];
+            else
+                set_size = [set_size; data(:,5)];
+            end
         elseif exp_id == 6
                 stimuli = [stimuli; data(:,1:4)];
                 response = [response; data(:,5)];
