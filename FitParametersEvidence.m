@@ -66,7 +66,7 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                 lml = llmax + log(sum(exp(ll(:)))) -log(numel(ll));
            
             else
-                %% non-parametric fitting
+                %% non-parametric fitting for experiments with multiple set sizes
                 key.lambda_hat = zeros(1,length(setsizes));
                 switch pars.model_name
                     case 'CP'
