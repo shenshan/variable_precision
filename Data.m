@@ -17,7 +17,8 @@ classdef Data < dj.Relvar & dj.AutoPopulate
 	methods(Access=protected)
 
 		function makeTuples(self, key)
-            [key.stimuli, key.response, key.set_size] = varprecision.utils.readData(key);
+            type = fetch1(varprecision.Subject & key, 'subj_type');
+            [key.stimuli, key.response, key.set_size] = varprecision.utils.readData(key,type);
             key.ntrials = length(key.response);
 			self.insert(key)
 		end

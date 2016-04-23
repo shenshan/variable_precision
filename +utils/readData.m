@@ -7,7 +7,11 @@ function [stimuli,response,set_size] = readData(key,type)
     datapath = fetch1(varprecision.Experiment & key, 'data_path');
     [subjid, exp_id] = fetch1(varprecision.Recording & key, 'subj_initial', 'exp_id');
     % get list of filenames
-    files = dir([datapath '/' subjid '*.mat']);
+    if strcmp(type,'fake')
+        files = dir([datapath '_fake/' subjid '*.mat']);
+    else
+        files = dir([datapath '/' subjid '*.mat']);
+    end
     
     % read every file
     stimuli = [];
@@ -15,7 +19,11 @@ function [stimuli,response,set_size] = readData(key,type)
     set_size = [];
     
     for ii = 1:length(files)
-        load([datapath '/' files(ii).name]);
+        if strcmp(type,'fake')
+            load([datapath '_fake/' files(ii).name]);
+        else
+            load([datapath '/' files(ii).name]);
+        end
         if ismember(exp_id, [1,2,4])
             stimuli = [stimuli; data(:,1)];
             response = [response; data(:,2)];

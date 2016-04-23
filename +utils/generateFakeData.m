@@ -28,15 +28,12 @@ for iexp = exps'
             pars.method = mode;
             
             % insert fake pars into fakeparams table
-            if isempty(varprecision.FakeDataParams & pars)
-                insert(varprecision.FakeDataParams,pars)
-            end
+            insert(varprecision.FakeDataParams,pars)
+ 
             % insert recording info to recording table
             rec.exp_id = iexp.exp_id;
             rec.subj_initial = iSubj.subj_initial;
-            if isempty(varprecision.Recording & rec)
-                insert(varprecision.Recording,rec)
-            end
+            insert(varprecision.Recording,rec)
             % generate or load fake stimuli
             nTrials = 3000;
             pars.setsizes = exp.setsize;
