@@ -19,13 +19,12 @@ for iexp = exps'
     f_dr = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
     
     for imodel = models'
-        subjs = fetch(varprecision.Subject & ['model_name="' imodel.model_name '"']);
+        subjs = fetch(varprecision.Subject & ['model_name="' imodel.model_name '"'] & ['fake_param_method="' mode '"']);
         for iSubj = subjs'
             % generate fake parameters
             pars = varprecision.utils.generateFakeParams(mode,imodel);
             pars.exp_id = iexp.exp_id;
             pars.subj_initial = iSubj.subj_initial;
-            pars.method = mode;
             
             % insert fake pars into fakeparams table
             insert(varprecision.FakeDataParams,pars)

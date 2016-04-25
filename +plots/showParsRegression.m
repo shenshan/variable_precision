@@ -1,10 +1,12 @@
-function showParsRegression(varargin)
+function showParsRegression(mode, varargin)
 %SHOWPARSREGRESSION shows true parameters versus the fit parameters 
 %   function showParsRegression(varargin)
 %   varargin includes restriction of experiments and model
 
-subjs = fetch(varprecision.Subject & 'subj_type="fake"');
-exps = fetch(varprecision.Experiment & varargin);
+subjs = fetch(varprecision.Subject & 'subj_type="fake"' & ['fake_param_method="' mode '"']);
+key_res = fetch(varprecision.FakeDataParams & varargin);
+exps = fetch(varprecision.Experiment & key_res);
+
 
 wid = 30;
 height = 40;
@@ -12,21 +14,25 @@ edge = 10;
 
 for iexp = exps'
     
-    models = fetch(varprecision.Model & iexp & varargin);
+    models = fetch(varprecision.Model & iexp & key_res);
     setsizes = fetch1(varprecision.Experiment & iexp, 'setsize');
     nlambda = length(setsizes);
     
     for imodel = models'
         % fetch corresponding tables for real parameters and fit parameters
         subj = fetch(varprecision.Subject & subjs & ['model_name="' imodel.model_name '"']);
-        [p_rightMat,lambdaMat,thetaMat,guessMat] = fetchn(varprecision.FakeDataParams & imodel & subj, 'p_right','lambda','theta','guess');
-        [p_rightMat_fit,lambdaMat_fit,thetaMat_fit,guessMat_fit] = fetchn(varprecision.FitParametersEvidence & imodel & subj, 'p_right_hat','lambda_hat','theta_hat','guess_hat');
+        [p_rightMat,lambdaMat,thetaMat,guessMat] = fetchn(varprecision.FakeDataParams & imodel & subj & key_res, 'p_right','lambda','theta','guess');
+        [p_rightMat_fit,lambdaMat_fit,thetaMat_fit,guessMat_fit] = fetchn(varprecision.FitParametersEvidence & imodel & subj & key_res, 'p_right_hat','lambda_hat','theta_hat','guess_hat');
         
         p_right_real = varprecision.utils.decell(p_rightMat);
         lambda_real = squeeze(varprecision.utils.decell(lambdaMat));
         
         p_right_fit = varprecision.utils.decell(p_rightMat_fit);
         lambda_fit = squeeze(varprecision.utils.decell(lambdaMat_fit));
+        if iscolumn(lambda_real)
+            lambda_real = lambda_real';
+            lambda_fit = lambda_fit';
+        end
         
         switch imodel.model_name
             case 'CP'
