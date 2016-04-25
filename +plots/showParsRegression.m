@@ -1,6 +1,7 @@
 function showParsRegression(mode, varargin)
 %SHOWPARSREGRESSION shows true parameters versus the fit parameters 
-%   function showParsRegression(varargin)
+%   function showParsRegression(mode,varargin)
+%   mode specifies the method that was used to generate fake data parameters.
 %   varargin includes restriction of experiments and model
 
 subjs = fetch(varprecision.Subject & 'subj_type="fake"' & ['fake_param_method="' mode '"']);
