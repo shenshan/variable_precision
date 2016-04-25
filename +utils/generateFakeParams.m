@@ -44,7 +44,8 @@ else
     
     exp = fetch(varprecision.Experiment & keys2);
     if ismember(exp.exp_id,[3,5,7])
-        pars.lambda = repmat(pars_set.lambda,1,length(pars_set.setsize)) + rand*range(pars_set.lambda);
+        setsize = fetch1(varprecision.Experiment & models,'setsize');
+        pars.lambda = repmat(pars_set.lambda,1,length(setsize)) + rand*range(pars_set.lambda);
     else
         pars.lambda = min(pars_set.lambda) + rand*range(pars_set.lambda);
     end

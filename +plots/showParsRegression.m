@@ -21,7 +21,7 @@ for iexp = exps'
     
     for imodel = models'
         % fetch corresponding tables for real parameters and fit parameters
-        subj = fetch(varprecision.Subject & subjs & ['model_name="' imodel.model_name '"']);
+        subj = fetch(varprecision.Subject & subjs & ['model_gene="' imodel.model_name '"']);
         [p_rightMat,lambdaMat,thetaMat,guessMat] = fetchn(varprecision.FakeDataParams & imodel & subj & key_res, 'p_right','lambda','theta','guess');
         [p_rightMat_fit,lambdaMat_fit,thetaMat_fit,guessMat_fit] = fetchn(varprecision.FitParametersEvidence & imodel & subj & key_res, 'p_right_hat','lambda_hat','theta_hat','guess_hat');
         

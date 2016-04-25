@@ -63,7 +63,7 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                 % compute evidence
                 llmax = max(LLMat(:));
                 ll = LLMat - llmax;
-                lml = llmax + log(sum(exp(ll(:)))) -log(numel(ll));
+                lml = llmax + log(sum(exp(ll(:)))) - log(numel(ll));
            
             else
                 %% non-parametric fitting for experiments with multiple set sizes
