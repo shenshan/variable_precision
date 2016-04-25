@@ -3,6 +3,13 @@ function [outMat,dim,len] = decell(inMat)
 %   length of inMat becomes the last dimension of outMat, dim returns
 %   number of dimesions for outMat, and len returns the size of the last dimension.
 
+if ~iscell(inMat)
+    outMat = inMat;
+    dim = 1;
+    len = 1;
+    return
+end
+
 if length(inMat)==1
     outMat = [inMat{:}];
 else
