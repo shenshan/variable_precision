@@ -22,17 +22,8 @@ for iexp = exps'
         subjs = fetch(varprecision.Subject & ['model_gene="' imodel.model_name '"'] & ['fake_param_method="' mode '"']);
         for iSubj = subjs'
             % generate fake parameters
-            pars = varprecision.utils.generateFakeParams(mode,imodel);
-            pars.exp_id = iexp.exp_id;
-            pars.subj_initial = iSubj.subj_initial;
-            
-            % insert fake pars into fakeparams table
-            insert(varprecision.FakeDataParams,pars)
- 
-            % insert recording info to recording table
-            rec.exp_id = iexp.exp_id;
-            rec.subj_initial = iSubj.subj_initial;
-            insert(varprecision.Recording,rec)
+            pars = fetch(varprecision.FakeDataParams & iSubj & imodel,'*');
+          
             % generate or load fake stimuli
             nTrials = 3000;
             pars.setsizes = exp.setsize;

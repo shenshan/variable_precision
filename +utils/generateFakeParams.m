@@ -6,12 +6,12 @@ function pars = generateFakeParams(mode,varargin)
 %   varargin should contain exp_id, model_name.
 
 assert(ismember(mode,{'real','random'}),'Invalid mode input, please enter real or random.')
-keys1 = fetch(varprecision.FitParametersEvidence & varargin);
+varargins1 = fetch(varprecision.FitParametersEvidence & varargin);
 if strcmp(mode,'random')
-    assert(~isempty(keys1), 'Real fitting parameters does not exist.')
+    assert(~isempty(varargins1), 'Real fitting parameters does not exist.')
 end
-keys2 = fetch(varprecision.ParameterSet & varargin);
-assert(~isempty(keys2),'No paramter set found. Please check the validity of the inputs.')
+varargins2 = fetch(varprecision.ParameterSet & varargin);
+assert(~isempty(varargins2),'No paramter set found. Please check the validity of the inputs.')
 models = fetch(varprecision.Model & varargin,'*');
 assert(length(models)==1,'Please make sure that only one experiment and model is included.')
 
@@ -42,7 +42,7 @@ else
     
     pars.p_right = min(pars_set.p_right) + rand*range(pars_set.p_right);
     
-    exp = fetch(varprecision.Experiment & keys2);
+    exp = fetch(varprecision.Experiment & varargins2);
     if ismember(exp.exp_id,[3,5,7])
         setsize = fetch1(varprecision.Experiment & models,'setsize');
         pars.lambda = repmat(pars_set.lambda,1,length(setsize)) + rand*range(pars_set.lambda);
