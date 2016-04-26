@@ -28,11 +28,12 @@ for iexp = exps'
         end
         confdiag(ii) = confMat(ii,ii);
     end
-    confMat = bsxfun(@minus, confMat, confdiag);
+    confMat = bsxfun(@minus, confMat, confdiag'); 
+    
     
     fig = Figure(105, 'size',[60,40]);
     
-    imagesc(confMat); colorbar
+    imagesc(confMat); colorbar; caxis([-50,10])
     set(gca, 'XTick', 1:length(models), 'YTick', 1:length(models),'XTickLabel', model_names, 'YTickLabel', model_names)
     xlabel('Fitting models'); ylabel('Models to generate data')
     fig.cleanup
