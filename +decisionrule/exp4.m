@@ -3,7 +3,7 @@ function [prediction, response] = exp4(x,pars)
 %measurements and model parameters
 
 %   x is the noisy sensory measurements, could be a vector (N_items x 1) or
-%   a matrix (N_items x N_trials) or (N_items x N_stimuli) or (N_items x N_stimuli x N_trials)
+%   a matrix (N_items x N_trials) or (N_items x N_stimuli x N_trials)
 %   pars is the parameters used in this model, usually composed of the
 %   following fields: pars.model 'CP', 'VP', pars.lambda,
 %   pars.p_right. pars.lambda is scalar for CP model, pars.lambdaMat is matrix for VP model,

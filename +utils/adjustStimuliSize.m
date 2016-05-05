@@ -5,9 +5,11 @@ function stimulusMat = adjustStimuliSize(exp_id,stimuli,setsize)
 %   size of the input: nStimuli x 1
 %   size of the output: nStimuli x N_items
 
-assert(ismember(exp_id,[2,3,4,5]),'Invalid experiment id, please enter 2-5.')
+assert(ismember(exp_id,[1,2,3,4,5]),'Invalid experiment id, please enter 1-5.')
 
-if ismember(exp_id,[2,3])
+if exp_id==1
+    stimulusMat = stimuli;
+elseif ismember(exp_id,[2,3])
     stimulusMat = repmat(stimuli,1,setsize);
 else
     if setsize == 1;
