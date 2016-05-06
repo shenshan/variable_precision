@@ -47,7 +47,7 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
                 responseMat = [];
                 setsizeMat = [];
                 ntrials = nTrials/length(pars.setsizes);
-                for iSetsize = pars.setsizes
+                for iSetsize = 1:length(pars.setsizes)
                     setsize = pars.setsizes(iSetsize);
                     pars2 = pars;
                     pars2.lambda = pars.lambda(iSetsize);
