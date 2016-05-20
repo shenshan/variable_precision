@@ -7,6 +7,7 @@ prediction_plot : longblob      # prdiction p_right, ready for plot
 
 %}
 
+
 classdef FitPrediction < dj.Relvar & dj.AutoPopulate
 	
     properties
@@ -20,6 +21,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
 			[exp_id,setsizes] = fetch1(varprecision.Experiment & key, 'exp_id','setsize');
             pars = fetch(varprecision.ParameterSet & key, '*');
             fit_pars = fetch(varprecision.FitParametersEvidence & key,'*');
+            gaussModelIdx = [1,2,3,4,5,9];
 
             if ismember(exp_id,1:5)
                 pretable = fetch1(varprecision.PrecomputedTable & key,'prediction_table');
@@ -59,10 +61,37 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                             end
                     end
                 end
+                key.prediction = 0;
             end
   
-            % for exp6-11, compute the predictions trial by trial --to be done
-            key.prediction = 0;
+            % for exp6-11, compute the predictions trial by trial 
+            [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
+            stimuli = stimuli*pi/180;
+            pars.pre = 0;
+            pars.p_right = pars.p_right_hat;
+            pars.lambda = pars.lambda_hat;
+            pars.theta = pars.theta_hat;
+            pars.guess = pars.guess_hat;
+            prediction = zeros(1,length(stimuli));
+            for ii = 1:length(stimuli)
+                if ismember(key.model_name,{'CP','CPG'})
+                    if ismember(key.exp_id,gaussModelIdx)
+                        noiseMat = normrnd(0,1/sqrt(pars.lambda),[set_size(ii),pars.trial_num_sim]);
+                    else
+                        noiseMat = circ_vmrnd(zeros(setsize(ii),pars.trial_num_sim),1/sqrt(pars.lambda))/2;
+                    end
+                elseif ismember(key.model_name,{'VP','VPG'})
+                    pars.lambdaMat = gamrnd(lambda/pars.theta, pars.theta(ii), [setsizes, trial_num_sim]);
+                    if ismember(key.exp_id,gaussModelIdx)
+                        noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+                    else
+                        noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+                    end
+                end
+                
+            end
+            
+            
             key.prediction_plot = prediction_plot;
             self.insert(key)
 		end

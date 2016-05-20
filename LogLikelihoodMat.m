@@ -3,7 +3,7 @@ varprecision.LogLikelihoodMat (computed) # compute prediction table based on the
 ->varprecision.PrecomputedTable
 ->varprecision.DataStats
 -----
-ll_mat_path     : longblob     # path for log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
+ll_mat_path     : varchar(256)     # path for log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 
 %}
 
@@ -28,8 +28,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             end
             
             % reset 0 or 1 to avoid numerical problems
-            prediction(prediction==1) = 1-1/trial_num_sim;
-            prediction(prediction==0) = 1/trial_num_sim;
+            prediction = varprecision.utils.correctNumErr(prediction,trial_num_sim);
             
             % compute prediction table
             [cnt_l,cnt_r] = fetch1(varprecision.DataStats & key, 'cnt_l','cnt_r');
@@ -48,8 +47,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
             filename = [subj_info.subj_initial '_' pars.model_name '_' num2str(pars.parset_id) '.mat'];
             
             key.ll_mat_path = [ll_mat_path filename];
-            save(key.ll_mat_path,'ll_mat');
-            
+            save(key.ll_mat_path,'ll_mat');            
             
             self.insert(key)
             makeTuples(varprecision.LogLikelihoodMatAll,key)

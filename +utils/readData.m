@@ -37,25 +37,29 @@ function [stimuli,response,set_size] = readData(key,type)
                 set_size = [set_size; data(:,5)];
             end
         elseif exp_id == 6
-                stimuli = [stimuli; data(:,1:4)];
-                response = [response; data(:,5)];
-                set_size = [set_size; 4];
+            stimuli = [stimuli; data(:,1:4)];
+            response = [response; data(:,5)];
+            set_size = [set_size; 4];
         elseif exp_id == 7
-                stimuli = [stimuli; data(:,[1,8:10])];
-                response = [response; data(:,2)];
-                set_size = [set_size; data(:,5)];
+            stimuli = [stimuli; data(:,[1,8:10])];
+            response = [response; data(:,2)];
+            set_size = [set_size; data(:,5)];
         elseif exp_id == 8
-                stimuli = [stimuli; data(:,1:2)];
-                response = [response; data(:,3)];
-                set_size = [set_size; 2];
+            stimuli = [stimuli; data(:,1:2)];
+            response = [response; data(:,3)];
+            set_size = [set_size; 2];
         elseif exp_id == 9
-                stimuli = [stimuli; data(:,1:2)];
-                response = [response; data(:,3)];
-                set_size = [set_size; 2];
+            stimuli = [stimuli; data(:,1:2)];
+            response = [response; data(:,3)];
+            set_size = [set_size; 2];
         elseif exp_id == 10
-                stimuli = [stimuli; data.orts];
-                response = [response; data.C_hat];
-                set_size = [set_size; data.N];        
+            stimuli = [stimuli; data.orts];
+            response = [response; data.C_hat];
+            set_size = [set_size; data.N];
+        elseif exp_id == 11
+            stimuli = [stimuli; datamatrix(:,10:17)];
+            response = [response; datamatrix(:,4)];
+            set_size = [set_size; datamatrix(:,2)];
         end
     end
     

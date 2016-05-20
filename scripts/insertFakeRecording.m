@@ -1,6 +1,6 @@
 % This script inserts fake data information into the Recording Table
 
-exps = fetch(varprecision.Experiment & 'exp_id in (4,5)');
+exps = fetch(varprecision.Experiment & 'exp_id in (3)');
 subjs = fetch(varprecision.Subject & 'subj_type="fake"');
 
 for exp = exps'
