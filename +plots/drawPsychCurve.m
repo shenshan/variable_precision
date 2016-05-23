@@ -107,8 +107,11 @@ for ii = 1:length(exps)
             end
                 
         end
+        
     end
     fig.cleanup
+    fig.save(['~/Documents/MATLAB/local/+varprecision/figures/exp' num2str(models(1).exp_id) '_psy.eps'])
+end
 end
 
 

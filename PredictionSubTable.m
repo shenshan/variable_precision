@@ -116,7 +116,7 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
                             setsize = setsizes(jj);
                             stimuli_sub = stimuli(set_size==setsize,:);
                             response_sub = response(set_size==setsize);
-                            predtable_temp = zeros(length(pars.p_right),length(stimuli));
+                            predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
                             pars.lambdaMat = gamrnd(lambda/pars.theta(ii), pars.theta(ii), [setsize, pars.trial_num_sim]);
                             if ismember(key.exp_id,gaussModelIdx)
                                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));

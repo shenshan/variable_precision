@@ -62,37 +62,46 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                     end
                 end
                 key.prediction = 0;
-            end
-  
-            % for exp6-11, compute the predictions trial by trial 
-            [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
-            stimuli = stimuli*pi/180;
-            pars.pre = 0;
-            pars.p_right = pars.p_right_hat;
-            pars.lambda = pars.lambda_hat;
-            pars.theta = pars.theta_hat;
-            pars.guess = pars.guess_hat;
-            prediction = zeros(1,length(stimuli));
-            for ii = 1:length(stimuli)
-                if ismember(key.model_name,{'CP','CPG'})
-                    if ismember(key.exp_id,gaussModelIdx)
-                        noiseMat = normrnd(0,1/sqrt(pars.lambda),[set_size(ii),pars.trial_num_sim]);
-                    else
-                        noiseMat = circ_vmrnd(zeros(setsize(ii),pars.trial_num_sim),1/sqrt(pars.lambda))/2;
+                key.prediction_plot = prediction_plot;
+            
+            elseif ismember(exp_id,[10,11]) 
+                % for exp6-11, compute the predictions trial by trial 
+                [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
+                stimuli = stimuli*pi/180;
+                fit_pars.pre = 0;
+                fit_pars.p_right = fit_pars.p_right_hat;
+                fit_pars.trial_num_sim = 1000;
+                fit_pars.theta = fit_pars.theta_hat;
+
+                f_dr = eval(['@varprecision.decisionrule.exp' num2str(key.exp_id)]);
+                key.prediction = zeros(1,length(stimuli));
+                for ii = 1:length(stimuli)
+                    
+                    fit_pars.lambda = fit_pars.lambda_hat(setsizes==set_size(ii));
+                    if ismember(key.model_name,{'CP','CPG'})
+                        if ismember(key.exp_id,gaussModelIdx)
+                            noiseMat = normrnd(0,1/sqrt(fit_pars.lambda),[set_size(ii),fit_pars.trial_num_sim]);
+                        else
+                            noiseMat = circ_vmrnd(zeros(set_size(ii),fit_pars.trial_num_sim),fit_pars.lambda)/2;
+                        end
+                    elseif ismember(key.model_name,{'VP','VPG'})
+                        fit_pars.lambdaMat = gamrnd(fit_pars.lambda/fit_pars.theta, fit_pars.theta, [set_size(ii), fit_pars.trial_num_sim]);
+                        if ismember(key.exp_id,gaussModelIdx)
+                            noiseMat = normrnd(0,1./sqrt(fit_pars.lambdaMat));
+                        else
+                            noiseMat = circ_vmrnd(0,fit_pars.lambdaMat)/2;
+                        end
                     end
-                elseif ismember(key.model_name,{'VP','VPG'})
-                    pars.lambdaMat = gamrnd(lambda/pars.theta, pars.theta(ii), [setsizes, trial_num_sim]);
-                    if ismember(key.exp_id,gaussModelIdx)
-                        noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
-                    else
-                        noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
-                    end
+                    x = repmat(stimuli(ii,1:set_size(ii)),fit_pars.trial_num_sim,1)'+noiseMat;
+                    key.prediction(ii) = f_dr(x,fit_pars);               
                 end
-                
+                if ismember(key.model_name,{'CPG','VPG'})
+                    key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
+                end
+            else
+                % exp 6-10
             end
-            
-            
-            key.prediction_plot = prediction_plot;
+              
             self.insert(key)
 		end
 	end
