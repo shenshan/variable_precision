@@ -1,5 +1,6 @@
 function [out_mean, out_s] = getMeanStd(inputMat,type,dim)
 %GETMEANSTD computes mean and standard error of the mean for a given matrix
+%   function [out_mean, out_s] = getMeanStd(inputMat,type,dim)
 %   type specifies what kind of variance
 %   dim specifies which dimension to compute mean and sem
 %   type specifies sem or std
