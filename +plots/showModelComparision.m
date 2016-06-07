@@ -8,10 +8,11 @@ assert(ismember(cmp_type, {'aic','aicc','bic','lml'}), 'Non-existing comparison 
 
 
 exps = fetch(varprecision.Experiment & varargin(1));
+subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
 for exp = exps'
     
-    keys_rec = fetch(varprecision.Recording & exp);
+    keys_rec = fetch(varprecision.Recording & exp & subjs);
     models = fetch(varprecision.Model & exp);
     
     eviMat = zeros(length(keys_rec),length(models));
@@ -23,31 +24,37 @@ for exp = exps'
     
     % fetch the evidence for VPG
     evi = fetchn(varprecision.FitParametersEvidence & keys_rec  & varargin & 'model_name="VPG"', cmp_type);
-    
+    model_names = fetchn(varprecision.Model & exp, 'model_name');
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);
     end
     
     
     if strcmp(data_type,'mean')
-        fig = Figure(105,'size',[40,30]); hold on
-        eviMat_mean = mean(eviMat);
-        eviMat_sem = std(eviMat)/sqrt(size(eviMat,1));
-        bar(eviMat_mean)
-        errorbar(eviMat_mean,eviMat_sem, 'LineStyle','None')
+        fig = Figure(105,'size',[40,30]); hold on       
+        bar_custom(eviMat(:,1:3),'mean')
         ylim([-100,10])
+        set(gca,'XTick',1:length(models)-1,'XTickLabel',model_names(1:3))
     else
-        fig = Figure(105,'size',[100,30]); hold on
-        bar(eviMat')
+        nSubjs = size(eviMat,1);
+        if nSubjs>10
+            fig = Figure(105, 'size',[80,30]);
+        else
+            fig = Figure(105, 'size',[50,30]);
+        end
+        hold on
+        bar_custom(eviMat(:,1:3),'group')
+        
+        set(gca,'Xtick',1:nSubjs)
     end
     
-    model_names = fetchn(varprecision.Model & exp, 'model_name');
+    
     ylabel('LML')
-    set(gca,'XTick',1:length(models),'XTickLabel',model_names)
+    title('evidences')
     
     
     fig.cleanup
-    fig.save(['~/Documents/MATLAB/local/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '.eps'])
+    fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '.eps'])
 end
 
 

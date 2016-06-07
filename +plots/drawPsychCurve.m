@@ -32,7 +32,7 @@ for ii = 1:length(exps)
     
     fig = Figure(102,'size',[90,60]);
     hold on
-    xLim = max(stims)*1.2;
+    xLim = max(stims)*1.1;
     text_x = -max(stims)*0.8;
     if strcmp(type,'data')
         if length(subjs)==1
@@ -104,14 +104,15 @@ for ii = 1:length(exps)
                 end
                 xlim([-xLim,xLim]);
                 text(text_x,0.9,model_name)
+                set(gca,'YTick',0:0.2:1)
+                set(gca,'XTick',-15:5:15);
             end
                 
         end
         
     end
     fig.cleanup
-    fig.save(['~/Documents/MATLAB/local/+varprecision/figures/exp' num2str(models(1).exp_id) '_psy.eps'])
-end
+    fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_psy.eps'])
 end
 
 
