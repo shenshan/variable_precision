@@ -71,6 +71,7 @@ for ii = 1:length(exps)
             end
             xlim([-xLim,xLim])
             text(text_x,0.9,model_name)
+            ylim([0,1])
         else
             for jj = 1:length(models)
                 if length(models)==4
@@ -106,6 +107,7 @@ for ii = 1:length(exps)
                 text(text_x,0.9,model_name)
                 set(gca,'YTick',0:0.2:1)
                 set(gca,'XTick',-15:5:15);
+                ylim([0,1])
             end
                 
         end
