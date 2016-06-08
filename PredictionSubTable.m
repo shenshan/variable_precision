@@ -2,6 +2,7 @@
 varprecision.PredictionSubTable (computed) # compute prediction sub table for experiments 6-11
 ->varprecision.PredictionSubTableIdx
 ->varprecision.Data
+->varprecision.JbarKappaMap
 -----
 prediction_mat_sub :  longblob   # length of each dimension is the length of the parameters, the values in the row other than lambda_idx are zeros.
 
@@ -10,7 +11,7 @@ prediction_mat_sub :  longblob   # length of each dimension is the length of the
 classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = varprecision.PredictionSubTableIdx * (varprecision.Data & (varprecision.Subject & 'subj_type="real"'))
+        popRel = varprecision.PredictionSubTableIdx * (varprecision.Data & (varprecision.Subject & 'subj_type="real"')) * varprecision.JbarKappaMap
     end
 	
     methods(Access=protected)
@@ -23,6 +24,7 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
             stimuli = stimuli*pi/180;
             lambda = fetch1(varprecision.PredictionSubTableIdx & key,'lambda_value');
             pars = fetch(varprecision.ParameterSet & key, '*');
+            [kmap,jmap] = fetch1(varprecision.JbarKappaMap & key, 'kmap','jmap');
             pars.pre = 0;
             pars.trial_num_sim = 1000;
             exp_id = pars.exp_id;
@@ -35,9 +37,12 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
             f_dr = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
             
             if ismember(key.model_name,{'CP','CPG'})
-                
+                if key.jkmap_id == 2
+                    pars.lambda = interp1(jmap,kmap,pars.lambda);
+                end
                 if length(setsizes)==1
                     predtable_temp = zeros(length(pars.p_right),length(stimuli)); 
+                    
                     if ismember(key.exp_id,gaussModelIdx)
                         noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,pars.trial_num_sim]);
                     else
@@ -86,12 +91,21 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
                     else
                         predtable = zeros(length(pars.p_right),length(pars.theta),length(pars.guess));
                     end
-                    for ii = 1:length(pars.theta)                        
+                    for ii = 1:length(pars.theta)                     
                         predtable_temp = zeros(length(pars.p_right,length(stimuli)));
                         pars.lambdaMat = gamrnd(lambda/pars.theta(ii), pars.theta(ii), [setsizes, pars.trial_num_sim]);
+                        
                         if ismember(key.exp_id,gaussModelIdx)
-                            noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+                            if key.jkmap_id == 2
+                                return
+                            else
+                                noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+                            end
                         else
+                            if key.jkmap_id == 2
+                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                            end
                             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                         end
                         for jj = 1:length(stimuli)
@@ -119,8 +133,17 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
                             predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
                             pars.lambdaMat = gamrnd(lambda/pars.theta(ii), pars.theta(ii), [setsize, pars.trial_num_sim]);
                             if ismember(key.exp_id,gaussModelIdx)
-                                noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+                                if key.jkmap_id == 2
+                                    return
+                                else
+                                    noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+                                end
+                               
                             else
+                                if key.jkmap_id == 2
+                                    pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                                    pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                end
                                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                             end
                             for kk = 1:length(stimuli_sub)

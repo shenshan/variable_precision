@@ -3,6 +3,7 @@ varprecision.LogLikelihoodMatAll (computed) # table that stores the log likeihoo
 # of reports on all trials, for all experiments
 ->varprecision.ParameterSet
 ->varprecision.Data
+->varprecision.JbarKappaMap
 -----
 ll_mat_path     : varchar(256)    # data path to save log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 

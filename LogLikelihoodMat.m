@@ -2,6 +2,7 @@
 varprecision.LogLikelihoodMat (computed) # compute prediction table based on the precomputed tables
 ->varprecision.PrecomputedTable
 ->varprecision.DataStats
+->varprecision.JbarKappaMap
 -----
 ll_mat_path     : varchar(256)     # path for log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 
@@ -10,7 +11,7 @@ ll_mat_path     : varchar(256)     # path for log likelihood matrix for all comb
 classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
 	
     properties
-        popRel = varprecision.PrecomputedTable * varprecision.DataStats;
+        popRel = varprecision.PrecomputedTable * varprecision.DataStats * (varprecision.JbarKappaMap & 'jkmap_id=1');
     end
     
     methods(Access=protected)
@@ -39,7 +40,7 @@ classdef LogLikelihoodMat < dj.Relvar & dj.AutoPopulate
                 ll_mat = squeeze(sum(bsxfun(@times, cnt_r, log(prediction))  + bsxfun(@times, cnt_l, log(1 - prediction)),2));
             end
             
-            ll_mat_path = ['~/Documents/MATLAB/local/+varprecision/results/exp_' num2str(pars.exp_id) '/'];
+            ll_mat_path = ['~/Dropbox/VR/+varprecision/results/exp_' num2str(pars.exp_id) '/'];
             
             if ~exist(ll_mat_path,'dir')
                 mkdir(ll_mat_path)

@@ -2,6 +2,7 @@
 varprecision.LogLikelihoodMatCombined(computed) # combine prediction subtables
 -> varprecision.Data
 -> varprecision.ParameterSet
+-> varprecision.JbarKappaMap
 -----
 ll_mat_path     : longblob     # log likelihood matrix for all combination of parameters, length of each dimention is the length of the parameters
 %}
@@ -30,7 +31,7 @@ classdef LogLikelihoodMatCombined < dj.Relvar & dj.AutoPopulate
             else
                 ll_mat = permute(ll_mat,[1:3,length(sz),4:length(sz)-1]);
             end
-            ll_mat_path = ['~/Documents/MATLAB/local/+varprecision/results/exp_' num2str(key.exp_id) '/'];
+            ll_mat_path = ['~/Dropbox/VR/+varprecision/results/exp_' num2str(key.exp_id) '/'];
             
             if ~exist(ll_mat_path,'dir')
                 mkdir(ll_mat_path)
