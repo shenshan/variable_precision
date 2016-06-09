@@ -148,7 +148,9 @@ classdef PredictionSubTable < dj.Relvar & dj.AutoPopulate
                             end
                             for kk = 1:length(stimuli_sub)
                                 xMat = repmat(stimuli_sub(kk,1:setsize),pars.trial_num_sim,1)'+noiseMat;
+%                                 tic
                                 predtable_temp(:,kk) = f_dr(xMat,pars);
+%                                 toc
                             end
                             if strcmp(key.model_name,'VP')
                                 predtable(jj,:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response_sub,pars);
