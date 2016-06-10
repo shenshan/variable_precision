@@ -10,7 +10,7 @@ ll_mat_path     : longblob     # log likelihood matrix for all combination of pa
 classdef LogLikelihoodMatCombined < dj.Relvar & dj.AutoPopulate
 	
     properties
-        popRel = varprecision.Data * varprecision.ParameterSet & varprecision.PredictionSubTable
+        popRel = varprecision.Data * varprecision.ParameterSet * varprecision.JbarKappaMap & varprecision.PredictionSubTable
     end
     
     methods(Access=protected)

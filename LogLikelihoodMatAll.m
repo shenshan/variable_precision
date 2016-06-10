@@ -1,6 +1,5 @@
 %{
-varprecision.LogLikelihoodMatAll (computed) # table that stores the log likeihood matrix, that is, for individual parameter combination, log joint probability
-# of reports on all trials, for all experiments
+varprecision.LogLikelihoodMatAll (computed) # table that stores the log likeihood matrix, that is, for individual parameter combination, log joint probability of reports on all trials, for all experiments
 ->varprecision.ParameterSet
 ->varprecision.Data
 ->varprecision.JbarKappaMap

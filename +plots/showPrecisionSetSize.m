@@ -5,6 +5,7 @@ subjs = fetch(varprecision.Subject & 'subj_type="real"');
 J_bar = fetchn(varprecision.FitParametersEvidence & exp & model & subjs, 'lambda_hat');
 
 exp = fetch(varprecision.Experiment & exp);
+model = fetch(varprecision.Model & model);
 
 setsize = fetch1(varprecision.Experiment & exp, 'setsize');
 
@@ -20,12 +21,12 @@ else
     ylim([0,400]);
 end
 xlim([0,10]);
-set(gca,'XTick',setsize)
+set(gca,'XTick',[1,2,3,4,8])
 xlabel('Set size')
 ylabel('Mean precision')
 
 fig.cleanup
-
+fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_jbar_ss_' model(1).model_name '.eps'])
 
 
 
