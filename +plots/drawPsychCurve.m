@@ -88,11 +88,11 @@ for ii = 1:length(exps)
                     plot(stims,fit_pred)
 
                 else
-                    fit_pred = fetchn(varprecision.FitPrediction & exp & keys & models,'prediction_plot');
+                    fit_pred = fetchn(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
                     [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                     fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
                     if length(setsizes)==1
-                        patch([stims;wrev(stims)]',fit_patch,[0.8,0.8,0.8],'LineStyle','None')
+                        patch([stims;wrev(stims)]',fit_patch,[0.5,0.5,0.5],'LineStyle','None')
                         errorbar(stims,p_right_mean,p_right_sem,'k','LineStyle','None')
                     else
                         colorvec = get(gca, 'ColorOrder');
