@@ -1,8 +1,8 @@
-function showPrecisionSetSize(exp,model)
+function showPrecisionSetSize(exp,model,varargin)
 %SHOWPRECISIONSETSIZE shows the encoding precision as a function of set size
 %   function showPrecisionSetSize(exp,model)
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-J_bar = fetchn(varprecision.FitParametersEvidence & exp & model & subjs, 'lambda_hat');
+J_bar = fetchn(varprecision.FitParametersEvidence & exp & model & subjs & varargin, 'lambda_hat');
 
 exp = fetch(varprecision.Experiment & exp);
 model = fetch(varprecision.Model & model);

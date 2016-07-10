@@ -72,8 +72,8 @@ function drawPsychCurveDetection(varargin)
         end
 
         fig2.cleanup
-        fig1.save(['~/Documents/MATLAB/local/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_ss.eps'])
-        fig2.save(['~/Documents/MATLAB/local/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_bin.eps'])
+        fig1.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_ss.eps'])
+        fig2.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_bin.eps'])
     end
 end
 

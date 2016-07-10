@@ -104,9 +104,10 @@ for ii = 1:length(exps)
                     end
                 end
                 xlim([-xLim,xLim]);
+                
                 text(text_x,0.9,model_name)
                 set(gca,'YTick',0:0.2:1)
-                set(gca,'XTick',-15:5:15);
+                set(gca,'XTick',-20:10:20);
                 ylim([0,1])
             end
                 

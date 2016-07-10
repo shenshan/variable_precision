@@ -71,6 +71,8 @@ function [stimuli,response,set_size] = readData(key,type)
             stimuli = [stimuli,zeros(length(stimuli),3)];
         case 9
             stimuli = [stimuli(:,1), repmat(stimuli(:,2),1,3)];
+        case 10
+            stimuli = stimuli*90/pi;
     end
     
     

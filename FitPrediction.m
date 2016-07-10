@@ -28,7 +28,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 if ismember(pars.model_name,{'CPG','VPG'})
                     pretable = varprecision.utils.computePredGuessing(pretable,pars.guess);
                 end
-                % multiple set sizes to be done
+                
                 if length(setsizes)==1
                     switch pars.model_name
                         case 'CP'
@@ -99,7 +99,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
                 end
             else
-                % exp 6-10
+                % exp 6-9
             end
               
             self.insert(key)
