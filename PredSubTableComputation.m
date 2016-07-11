@@ -38,10 +38,12 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             if exp_id == 7
                 exp_id = exp_id - 1;
             end
+            if exp_id == 6
+                pars.bessel_kT = besseli0_fast(10);
+            end
             pars.lambda = lambda;
-            gaussModelIdx = [1,2,3,4,5,9];
             
-            if ismember(key.exp_id,gaussModelIdx) && key.jkmap_id == 2
+            if  key.exp_id == 9 && key.jkmap_id == 2
                 return
             end
             
@@ -55,13 +57,13 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                 if length(setsizes)==1
                     predtable_temp = zeros(length(pars.p_right),length(stimuli)); 
                     
-                    if ismember(key.exp_id,gaussModelIdx)
+                    if key.exp_id == 9
                         noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,pars.trial_num_sim]);
                     else
                         noiseMat = circ_vmrnd(zeros(setsizes,pars.trial_num_sim),1/sqrt(pars.lambda))/2;
                     end
                     for ii = 1:length(stimuli)
-                        xMat = repmat(stimuli(ii,:),trial_num_sim,1)' + noiseMat;
+                        xMat = repmat(stimuli(ii,:),pars.trial_num_sim,1)' + noiseMat;
                         predtable_temp(:,ii) = f_dr(xMat,pars);
                     end
                                
@@ -76,7 +78,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                         stimuli_sub = stimuli(set_size==setsize,:);
                         response_sub = response(set_size==setsize);
                         predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
-                        if ismember(key.exp_id,gaussModelIdx)
+                        if  key.exp_id == 9
                             noiseMat = normrnd(0,1/sqrt(lambda),[setsize,pars.trial_num_sim]);
                         else
                             noiseMat = circ_vmrnd(zeros(setsize,pars.trial_num_sim),pars.lambda)/2;
@@ -99,29 +101,30 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                     predtable_G = zeros(length(pars.p_right),length(pars.theta),length(pars.guess));
 
                     for ii = 1:length(pars.theta)                     
-                        predtable_temp = zeros(length(pars.p_right,length(stimuli)));
+                        predtable_temp = zeros(length(pars.p_right),length(stimuli));
                         pars.lambdaMat = gamrnd(lambda/pars.theta(ii), pars.theta(ii), [setsizes, pars.trial_num_sim]);
                         
-                        if ismember(key.exp_id,gaussModelIdx)
+                        if  key.exp_id == 9
                             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                         else
                             pars.lambdaMat = min(max(jmap),pars.lambdaMat);
                             pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
                             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                         end
+                        
                         for jj = 1:length(stimuli)
-                            xMat = repmat(stimuli(jj,:),trial_num_sim,1)'+noiseMat;
+                            xMat = repmat(stimuli(jj,:),pars.trial_num_sim,1)'+noiseMat;
                             predtable_temp(:,jj) = f_dr(xMat,pars);
                         end
                         
-                        predtable(ii,:) = self.adjustPredTable(predtable_temp,key.model_name,response,pars);
-                        predtable_G(ii,:,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response,pars);
+                        predtable(:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response,pars);
+                        predtable_G(:,ii,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response,pars);
 
                     end
                 else
                     predtable = zeros(length(setsizes),length(pars.p_right),length(pars.theta));
                     predtable_G = zeros(length(setsizes),length(pars.p_right),length(pars.theta),length(pars.guess));
-                   
+                 
                     for ii = 1:length(pars.theta)  
                         for jj = 1:length(setsizes)
                             setsize = setsizes(jj);
@@ -129,7 +132,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             response_sub = response(set_size==setsize);
                             predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
                             pars.lambdaMat = gamrnd(lambda/pars.theta(ii), pars.theta(ii), [setsize, pars.trial_num_sim]);
-                            if ismember(key.exp_id,gaussModelIdx)
+                            if  key.exp_id == 9
                                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));      
                             else
                                 pars.lambdaMat = min(max(jmap),pars.lambdaMat);
@@ -142,6 +145,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             end
                             predtable(jj,:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response_sub,pars);
                             predtable_G(jj,:,ii,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response_sub,pars);                            
+                            
                         end
                     end
                 end
