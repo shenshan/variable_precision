@@ -67,7 +67,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
             elseif ismember(exp_id,6:11) 
                 % for exp6-11, compute the predictions trial by trial 
                 [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
-                
+                target_stimuli = stimuli(:,1);
                 % to be deleted
                     if exp_id == 6
                         set_size = ones(length(stimuli),1)*4;
@@ -106,8 +106,9 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
                 end
                
-                target_stimuli = stimuli(:,1);
+                
                 prediction = key.prediction;
+                stims = fetch1(varprecision.DataStats & key, 'stims');
 
                 idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
                 setsizes = unique(set_size);
