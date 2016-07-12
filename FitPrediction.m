@@ -64,9 +64,16 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 key.prediction = 0;
                 key.prediction_plot = prediction_plot;
             
-            elseif ismember(exp_id,[10,11]) 
+            elseif ismember(exp_id,6:11) 
                 % for exp6-11, compute the predictions trial by trial 
                 [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
+                
+                % to be deleted
+                    if exp_id == 6
+                        set_size = ones(length(stimuli),1)*4;
+                    end
+                %
+                
                 stimuli = stimuli*pi/180;
                 fit_pars.pre = 0;
                 fit_pars.p_right = fit_pars.p_right_hat;
@@ -98,8 +105,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 if ismember(key.model_name,{'CPG','VPG'})
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
                 end
-            else
-                % exp 6-9
+
             end
               
             self.insert(key)

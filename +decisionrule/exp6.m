@@ -25,8 +25,8 @@ function [prediction, response] = exp6(x,pars)
     if ismember(pars.model_name,{'CP','CPG'})
         
 %         entire_int = sum(pi*besseli0_fast(sqrt(pars.lambda^2 + tKappa^2 + 2*tKappa*pars.lambda*cos(2*x))),1);
-        term1 = sum(vmproductcdf_trapz_CP(kappa(kk), tKappa, x, 0, pi/2, nItems,30),1);
-        term2 = sum(vmproductcdf_trapz_CP(kappa(kk), tKappa, x, -pi/2, 0, nItems,30),1);
+        term1 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, 0, pi/2, nItems,30),1);
+        term2 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, -pi/2, 0, nItems,30),1);
 %         term2 = entire_int - temp1;
             
     elseif ismember(pars.model_name,{'VP','VPG'})
