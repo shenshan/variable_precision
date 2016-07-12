@@ -45,6 +45,7 @@ for ii = 1:length(exps)
             end
         end
         xlim([-xLim,xLim]);
+        ylim([0,1])
     elseif strcmp(type,'both')
         if length(models)==1
             model_name = fetch1(varprecision.Model & keys);

@@ -3,7 +3,7 @@ varprecision.FitPrediction (computed) # compute the fit prediction with the MAP 
 -> varprecision.FitParametersEvidence
 -----
 prediction   : longblob          # prediction for each trial for exp6-11, a binary vector with the same length of the stimuli
-prediction_plot : longblob      # prdiction p_right, ready for plot
+prediction_plot : longblob      # prediction p_right, ready for plot
 
 %}
 
@@ -104,6 +104,33 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 end
                 if ismember(key.model_name,{'CPG','VPG'})
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
+                end
+               
+                target_stimuli = stimuli(:,1);
+                prediction = key.prediction;
+
+                idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
+                setsizes = unique(set_size);
+
+                if length(setsizes)==1
+                    key.prediction_plot = zeros(size(stims));
+
+                    for ii = 1:length(stims)
+                        prediction_sub = prediction(idx==ii);
+                        key.prediction_plot(ii) = mean(prediction_sub);
+                    end
+                else
+
+                    key.prediction_plot = zeros(length(stims),length(setsizes));
+
+                    for jj = 1:length(setsizes)
+                       idx_ss = idx(set_size==setsizes(jj));
+                       prediction_ss = response(set_size==setsizes(jj));
+                       for ii = 1:length(stims)
+                           prediction_sub = prediction_ss(idx_ss==ii);
+                           key.prediction_plot(ii,jj) = mean(prediction_sub);
+                       end
+                    end
                 end
 
             end

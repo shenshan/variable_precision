@@ -48,9 +48,42 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
 
                  end
             
-            elseif key.exp_id==11
+            elseif ismember(key.exp_id,[6,7])
+                stims = (-16:2:16)';
                 
-                
+                [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
+                target_stimuli = stimuli(:,1);
+                % to be deleted
+                    set_size = 4*ones(length(stimuli),1);
+                %
+            
+                idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
+                setsizes = unique(set_size);
+
+                if length(setsizes)==1
+                    cnt_r = zeros(size(stims));
+                    cnt_l = zeros(size(stims));
+                   
+                    for ii = 1:length(stims)
+                        response_sub = response(idx==ii);
+                        cnt_l(ii) = sum(response_sub==-1);
+                        cnt_r(ii) = sum(response_sub==1);
+                    end
+                else
+                    cnt_r = zeros(length(stims),length(setsizes));
+                    cnt_l = zeros(length(stims),length(setsizes));
+                   
+                    for jj = 1:length(setsizes)
+                       idx_ss = idx(set_size==setsizes(jj));
+                       response_ss = response(set_size==setsizes(jj));
+                       for ii = 1:length(stims)
+                           response_sub = response_ss(idx_ss==ii);
+                           cnt_l(ii,jj) = sum(response_sub==-1);
+                           cnt_r(ii,jj) = sum(response_sub==1);
+                       end
+                    end
+                end
+                stimuli = stims;
             end
             
             cnt = cnt_r + cnt_l;
