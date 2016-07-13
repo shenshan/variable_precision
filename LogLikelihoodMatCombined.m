@@ -27,9 +27,9 @@ classdef LogLikelihoodMatCombined < dj.Relvar & dj.AutoPopulate
             ll_mat = varprecision.utils.decell(pred_sub_tables);
             sz = size(ll_mat);
             if length(setsizes)==1
-                ll_mat = permute(ll_mat,[1:2,length(sz),3:length(sz)-1]);
+                ll_mat = permute(ll_mat,[1,length(sz),2:length(sz)-1]);
             else
-                ll_mat = permute(ll_mat,[1:3,length(sz),4:length(sz)-1]);
+                ll_mat = permute(ll_mat,[1:2,length(sz),3:length(sz)-1]);
             end
             ll_mat_path = ['~/Dropbox/VR/+varprecision/results/exp_' num2str(key.exp_id) '/'];
             
