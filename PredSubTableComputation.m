@@ -38,9 +38,6 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             if exp_id == 7
                 exp_id = exp_id - 1;
             end
-            if exp_id == 6
-                pars.bessel_kT = besseli0_fast(10);
-            end
             pars.lambda = lambda;
             
             if  key.exp_id == 9 && key.jkmap_id == 2
@@ -60,7 +57,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                     if key.exp_id == 9
                         noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,pars.trial_num_sim]);
                     else
-                        noiseMat = circ_vmrnd(zeros(setsizes,pars.trial_num_sim),1/sqrt(pars.lambda))/2;
+                        noiseMat = circ_vmrnd(zeros(setsizes,pars.trial_num_sim),pars.lambda)/2;
                     end
                     for ii = 1:length(stimuli)
                         xMat = repmat(stimuli(ii,:),pars.trial_num_sim,1)' + noiseMat;
