@@ -30,13 +30,20 @@ function [prediction, response] = exp6(x,pars)
 %         term2 = entire_int - temp1;
             
     elseif ismember(pars.model_name,{'VP','VPG'})
-        entire_int = sum(pi*besseli0_fast(sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x))),1);
+        entire_int = pi*besseli0_fast(sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x)));
 %         disp(['besseli time: ' num2str(toc) ' sec'])
 %         tic
-        term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30),1);
+        temp1 = vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30);
 %         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
 %         disp(['vmcdf time: ' num2str(toc) ' sec'])
-        term2 = entire_int - term1;
+        temp2 = entire_int - temp1;
+        term1 = sum(temp1./besseli0_fast(pars.lambdaMat),1);
+        term2 = sum(temp2./besseli0_fast(pars.lambdaMat),1);
+
+%         term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30),1);
+%         entire_int = sum(pi*besseli0_fast(sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x))),1);
+%         term2 = entire_int - term1;
+% %         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
     end
     
     obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj) - bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
