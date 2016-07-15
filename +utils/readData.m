@@ -45,7 +45,7 @@ function [stimuli,response,set_size] = readData(key,type)
             response = [response; data(:,5)];
             set_size = [set_size; 4*ones(size(data(:,1)))];
         elseif exp_id == 7
-            stimuli = [stimuli; data(:,[1,8:10])];
+            stimuli = [stimuli; data(:,[1,8:14])];
             response = [response; data(:,2)];
             set_size = [set_size; data(:,5)];
         elseif exp_id == 8
