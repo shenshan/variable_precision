@@ -79,8 +79,11 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 fit_pars.p_right = fit_pars.p_right_hat;
                 fit_pars.trial_num_sim = 1000;
                 fit_pars.theta = fit_pars.theta_hat;
-
-                f_dr = eval(['@varprecision.decisionrule.exp' num2str(key.exp_id)]);
+                
+                if exp_id == 7
+                    exp_id = exp_id - 1;
+                end
+                f_dr = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
                 key.prediction = zeros(1,length(stimuli));
                 for ii = 1:length(stimuli)
                     
