@@ -129,7 +129,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
 
                     for jj = 1:length(setsizes)
                        idx_ss = idx(set_size==setsizes(jj));
-                       prediction_ss = response(set_size==setsizes(jj));
+                       prediction_ss = prediction(set_size==setsizes(jj));
                        for ii = 1:length(stims)
                            prediction_sub = prediction_ss(idx_ss==ii);
                            key.prediction_plot(ii,jj) = mean(prediction_sub);
