@@ -17,6 +17,8 @@ fig = Figure(101,'size',[60,40]);
 errorbar(setsize, mean_Jbar,sem_Jbar,'k')
 if exp.exp_id < 6
     ylim([0,0.5]);
+elseif exp.exp_id == 7
+    ylim([0,200]);
 else
     ylim([0,400]);
 end

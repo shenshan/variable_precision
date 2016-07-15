@@ -67,16 +67,16 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
                         cnt_r(ii) = sum(response_sub==1);
                     end
                 else
-                    cnt_r = zeros(length(stims),length(setsizes));
-                    cnt_l = zeros(length(stims),length(setsizes));
+                    cnt_r = zeros(length(setsizes),length(stims));
+                    cnt_l = zeros(length(setsizes),length(stims));
                    
                     for jj = 1:length(setsizes)
                        idx_ss = idx(set_size==setsizes(jj));
                        response_ss = response(set_size==setsizes(jj));
                        for ii = 1:length(stims)
                            response_sub = response_ss(idx_ss==ii);
-                           cnt_l(ii,jj) = sum(response_sub==-1);
-                           cnt_r(ii,jj) = sum(response_sub==1);
+                           cnt_l(jj,ii) = sum(response_sub==-1);
+                           cnt_r(jj,ii) = sum(response_sub==1);
                        end
                     end
                 end

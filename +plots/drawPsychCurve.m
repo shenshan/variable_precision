@@ -67,7 +67,7 @@ for ii = 1:length(exps)
                     for jj = 1:length(setsizes)
                         patch([stims;wrev(stims)]',fit_patch(jj,:),colorvec(jj,:),'LineStyle','None')                        
                     end
-                    errorbar(repmat(stims,1,length(setsizes)),p_right_mean',p_right_sem','LineStyle','None')
+                    errorbar(repmat(stims,1,length(setsizes)),p_right_mean,p_right_sem,'LineStyle','None')
                 end
             end
             xlim([-xLim,xLim])
