@@ -73,6 +73,10 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                         set_size = ones(length(stimuli),1)*4;
                     end
                 %
+                if exp_id ~= 9
+                    [jmap,kmap] = fetch1(varprecision.JbarKappaMap & key,'jmap','kmap');
+                    fit_pars.lambda_hat = interp1(jmap,kmap,fit_pars.lambda_hat);
+                end
                 
                 stimuli = stimuli*pi/180;
                 fit_pars.pre = 0;
@@ -125,14 +129,14 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                     end
                 else
 
-                    key.prediction_plot = zeros(length(stims),length(setsizes));
+                    key.prediction_plot = zeros(length(setsizes),length(stims));
 
                     for jj = 1:length(setsizes)
                        idx_ss = idx(set_size==setsizes(jj));
                        prediction_ss = prediction(set_size==setsizes(jj));
                        for ii = 1:length(stims)
                            prediction_sub = prediction_ss(idx_ss==ii);
-                           key.prediction_plot(ii,jj) = mean(prediction_sub);
+                           key.prediction_plot(jj,ii) = mean(prediction_sub);
                        end
                     end
                 end

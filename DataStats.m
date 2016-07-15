@@ -53,9 +53,6 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
                 
                 [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
                 target_stimuli = stimuli(:,1);
-                % to be deleted
-                    set_size = 4*ones(length(stimuli),1);
-                %
             
                 idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
                 setsizes = unique(set_size);

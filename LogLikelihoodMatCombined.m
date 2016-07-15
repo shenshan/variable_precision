@@ -22,7 +22,7 @@ classdef LogLikelihoodMatCombined < dj.Relvar & dj.AutoPopulate
             if length(lambda)~=length(keys)
                 return
             end
-            setsizes = fetch(varprecision.Experiment & key, 'setsize');
+            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             pred_sub_tables = fetchn(varprecision.PredictionSubTable & key, 'prediction_mat_sub');
             ll_mat = varprecision.utils.decell(pred_sub_tables);
             sz = size(ll_mat);
