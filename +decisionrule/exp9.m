@@ -45,7 +45,7 @@ function [prediction, response] = exp9(x,pars)
             prefactor(jj,:) = sqrt(1./(sum(pars.lambdaMat) - pars.lambdaMat(jj,:) + lambda_s));
             term(jj,:) = (sum(temp1)-temp1(jj,:)).^2/(sum(pars.lambdaMat) - pars.lambdaMat(jj,:) + lambda_s)/2 - (sum(temp2) - temp2(jj,:))/2;
         end
-        f = exp(-x.^2./(sigmaMat.^2+pars.sigma_s^2)/2).*exp(term).*prefactor;
+        f = exp(-x.^2./(sigmaMat.^2+pars.sigma_s^2)/2).*exp(term).*prefactor.*sqrt(1./(pars.lambdaMat + lambda_s));
         x_c = x.*pars.lambdaMat./sqrt(2*(pars.lambdaMat+lambda_s));
         term1 = squeeze(sum((1+erf(x_c)).*f));
         term2 = squeeze(sum((1-erf(x_c)).*f));
