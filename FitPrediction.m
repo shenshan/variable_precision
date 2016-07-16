@@ -69,16 +69,19 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
                 target_stimuli = stimuli(:,1);
                 % to be deleted
-                    if exp_id == 6
+                    if ismember(exp_id, [6,9])
                         set_size = ones(length(stimuli),1)*4;
                     end
                 %
                 if exp_id ~= 9
                     [jmap,kmap] = fetch1(varprecision.JbarKappaMap & key,'jmap','kmap');
                     fit_pars.lambda_hat = interp1(jmap,kmap,fit_pars.lambda_hat);
+                    stimuli = stimuli*pi/180;
+                else
+                    fit_pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
                 end
                 
-                stimuli = stimuli*pi/180;
+                
                 fit_pars.pre = 0;
                 fit_pars.p_right = fit_pars.p_right_hat;
                 fit_pars.trial_num_sim = 1000;

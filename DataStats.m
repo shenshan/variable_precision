@@ -48,7 +48,7 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
 
                  end
             
-            elseif ismember(key.exp_id,[6,7])
+            elseif ismember(key.exp_id,[6,7,9])
                 stims = (-16:2:16)';
                 
                 [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
