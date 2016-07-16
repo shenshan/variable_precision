@@ -20,7 +20,11 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             % load data
             setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
-            stimuli = stimuli*pi/180;
+            
+            if key.exp_id~=9
+                stimuli = stimuli*pi/180;
+            end
+            
             lambda = fetch1(varprecision.PredictionSubTableIdx & key,'lambda_value');
             
             tuple = key;
@@ -37,6 +41,8 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             exp_id = pars.exp_id;
             if exp_id == 7
                 exp_id = exp_id - 1;
+            elseif exp_id == 9
+                pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
             end
             pars.lambda = lambda;
             
