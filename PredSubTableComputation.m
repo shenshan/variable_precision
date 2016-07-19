@@ -10,7 +10,7 @@ varprecision.PredSubTableComputation (computed) # Compute prediction subtable, t
 classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = (varprecision.PredictionSubTableIdx & 'model_name in ("CP","VP")') * (varprecision.Data & (varprecision.Subject & 'subj_type="real"')) * varprecision.JbarKappaMap
+        popRel = (varprecision.PredictionSubTableIdx & 'model_name in ("CP","VP","OP")') * (varprecision.Data & (varprecision.Subject & 'subj_type="real"')) * varprecision.JbarKappaMap
     end
 	
     methods(Access=protected)
@@ -32,6 +32,8 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                 tuple.model_name = 'CPG';
             elseif strcmp(key.model_name, 'VP')
                 tuple.model_name = 'VPG';
+            elseif strcmp(key.model_name, 'OP')
+                tuple.model_name = 'OPG';
             end
             
             pars = fetch(varprecision.ParameterSet & tuple, '*');
@@ -150,8 +152,62 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             predtable_G(jj,:,ii,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response_sub,pars);                            
                             
                         end
-                    end
+                    end              
                 end
+            elseif strcmp(key.model_name,'OP')
+                sigma_baseline = 1/sqrt(lambda)*180/pi;
+                if length(setsizes)==1
+ 
+                    predtable = zeros(length(pars.p_right),length(pars.theta));
+                    predtable_G = zeros(length(pars.p_right),length(pars.theta),length(pars.guess));
+
+                    for ii = 1:length(pars.theta)                     
+                        predtable_temp = zeros(length(pars.p_right),length(stimuli));           
+                        for jj = 1:length(stimuli)
+                            sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*stimuli(jj,:))))/180*pi;
+
+                            pars.lambdaMat = 1./sigma.^2;
+                            pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                            pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                            pars.lambdaMat = repmat(pars.lambdaMat,pars.trial_num_sim,1)';
+                            noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+                            
+                            xMat = repmat(stimuli(jj,:),pars.trial_num_sim,1)' + noiseMat;
+                            predtable_temp(:,jj) = f_dr(xMat,pars);
+                        end
+                        
+                        predtable(:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response,pars);
+                        predtable_G(:,ii,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response,pars);
+
+                    end
+                else
+                    predtable = zeros(length(setsizes),length(pars.p_right),length(pars.theta));
+                    predtable_G = zeros(length(setsizes),length(pars.p_right),length(pars.theta),length(pars.guess));
+                 
+                    for ii = 1:length(pars.theta)  
+                        for jj = 1:length(setsizes)
+                            setsize = setsizes(jj);
+                            stimuli_sub = stimuli(set_size==setsize,:);
+                            response_sub = response(set_size==setsize);
+                            predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
+                            for kk = 1:length(stimuli_sub)
+                                sigma = sigma_baseline*(1+pars.theta(ii)*abs(sin(2*stimuli(jj,:))))/180*pi;
+                                pars.lambdaMat = 1./sigma.^2;
+                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                pars.lambdaMat = repmat(pars.lambdaMat,pars.trial_num_sim,1)';
+                                noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+                                
+                                xMat = repmat(stimuli_sub(kk,1:setsize),pars.trial_num_sim,1)' + noiseMat;
+                                predtable_temp(:,kk) = f_dr(xMat,pars);
+                            end
+                            predtable(jj,:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response_sub,pars);
+                            predtable_G(jj,:,ii,:) = self.adjustPredTable(predtable_temp,tuple.model_name,response_sub,pars);                            
+                            
+                        end
+                    end              
+                end
+                
             end
             
             self.insert(key)
@@ -172,10 +228,10 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             % taking log of predtable and sum over all trials.
             res = min(unique(response));
             
-            if ismember(model_name, {'CP','VP'})
+            if ismember(model_name, {'CP','VP','OP'})
                     predtable_temp = varprecision.utils.correctNumErr(predtable_temp,pars.trial_num_sim);
                     predtable_temp(:,response==res) = 1 - predtable_temp(:,response==res);
-            elseif ismember(model_name,{'CPG','VPG'})
+            elseif ismember(model_name,{'CPG','VPG','OPG'})
                     predtable_temp = varprecision.utils.computePredGuessing(predtable_temp,pars.guess);
                     predtable_temp = varprecision.utils.correctNumErr(predtable_temp,pars.trial_num_sim);
                     predtable_temp(:,response==res,:) = 1 - predtable_temp(:,response==res,:);
