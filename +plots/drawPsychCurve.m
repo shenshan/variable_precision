@@ -75,8 +75,8 @@ for ii = 1:length(exps)
             ylim([0,1])
         else
             for jj = 1:length(models)
-                if length(models)==4
-                    subplot(2,2,jj)
+                if ismember(length(models), [4,6])
+                    subplot(2,length(models)/2,jj)
                 else
                     subplot(1,length(models),jj)
                 end

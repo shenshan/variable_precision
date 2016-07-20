@@ -33,13 +33,13 @@ for exp = exps'
     
     if strcmp(data_type,'mean')
         fig = Figure(105,'size',[40,30]); hold on       
-        bar_custom(eviMat(:,1:3),'mean')
+        bar_custom(eviMat(:,1:length(model_names)-1),'mean')
         if ismember(cmp_type,{'lml','llmax'})
             ylim([-100,10])
         else
             ylim([-10,100])
         end
-        set(gca,'XTick',1:length(models)-1,'XTickLabel',model_names(1:3))
+        set(gca,'XTick',1:length(models)-1,'XTickLabel',model_names(1:length(model_names)-1))
     else
         nSubjs = size(eviMat,1);
         if nSubjs>10
@@ -48,7 +48,7 @@ for exp = exps'
             fig = Figure(105, 'size',[50,30]);
         end
         hold on
-        bar_custom(eviMat(:,1:3),'group')
+        bar_custom(eviMat(:,1:length(model_names)-1),'group')
         if ismember(cmp_type,{'lml','llmax'})
             ylim([-100,10])
         else
