@@ -38,27 +38,26 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                                   
             if length(setsizes)==1
                 [~,idx] = max(LLMat(:));
-                switch pars.model_name
-                    case 'CP'
-                        [key.p_right_idx,key.lambda_idx] = ind2sub(size(LLMat),idx);
-                        key.p_right_hat  = pars.p_right(key.p_right_idx);
-                        key.lambda_hat = pars.lambda(key.lambda_idx);
-                    case 'CPG'
-                        [key.p_right_idx,key.lambda_idx,key.guess_idx] = ind2sub(size(LLMat),idx);
-                        key.p_right_hat  = pars.p_right(key.p_right_idx);
-                        key.lambda_hat = pars.lambda(key.lambda_idx);
-                        key.guess_hat = pars.guess(key.guess_idx);
-                    case 'VP'
-                        [key.p_right_idx,key.lambda_idx,key.theta_idx] = ind2sub(size(LLMat),idx);
-                        key.p_right_hat  = pars.p_right(key.p_right_idx);
-                        key.lambda_hat = pars.lambda(key.lambda_idx);
-                        key.theta_hat = pars.theta(key.theta_idx);
-                    case 'VPG'
-                        [key.p_right_idx,key.lambda_idx,key.theta_idx,key.guess_idx] = ind2sub(size(LLMat),idx);
-                        key.p_right_hat  = pars.p_right(key.p_right_idx);
-                        key.lambda_hat = pars.lambda(key.lambda_idx);
-                        key.theta_hat = pars.theta(key.theta_idx);
-                        key.guess_hat = pars.guess(key.guess_idx);
+                if strcmp(key.model_name, 'CP')
+                    [key.p_right_idx,key.lambda_idx] = ind2sub(size(LLMat),idx);
+                    key.p_right_hat  = pars.p_right(key.p_right_idx);
+                    key.lambda_hat = pars.lambda(key.lambda_idx);
+                elseif strcmp(key.model_name, 'CPG')
+                    [key.p_right_idx,key.lambda_idx,key.guess_idx] = ind2sub(size(LLMat),idx);
+                    key.p_right_hat  = pars.p_right(key.p_right_idx);
+                    key.lambda_hat = pars.lambda(key.lambda_idx);
+                    key.guess_hat = pars.guess(key.guess_idx);
+                elseif ismember(key.model_name, {'VP','OP'})
+                    [key.p_right_idx,key.lambda_idx,key.theta_idx] = ind2sub(size(LLMat),idx);
+                    key.p_right_hat  = pars.p_right(key.p_right_idx);
+                    key.lambda_hat = pars.lambda(key.lambda_idx);
+                    key.theta_hat = pars.theta(key.theta_idx);
+                elseif ismember(key.model_name, {'VPG','OPG'})
+                    [key.p_right_idx,key.lambda_idx,key.theta_idx,key.guess_idx] = ind2sub(size(LLMat),idx);
+                    key.p_right_hat  = pars.p_right(key.p_right_idx);
+                    key.lambda_hat = pars.lambda(key.lambda_idx);
+                    key.theta_hat = pars.theta(key.theta_idx);
+                    key.guess_hat = pars.guess(key.guess_idx);
                 end
                 % compute evidence
                 llmax = max(LLMat(:));

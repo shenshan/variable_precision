@@ -75,7 +75,6 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 %
                 if exp_id ~= 9
                     [jmap,kmap] = fetch1(varprecision.JbarKappaMap & key,'jmap','kmap');
-                    fit_pars.lambda_hat = interp1(jmap,kmap,fit_pars.lambda_hat);
                     stimuli = stimuli*pi/180;
                 else
                     fit_pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
@@ -95,10 +94,12 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 for ii = 1:length(stimuli)
                     
                     fit_pars.lambda = fit_pars.lambda_hat(setsizes==set_size(ii));
+                    lambda = fit_pars.lambda_hat(setsizes==set_size(ii));
                     if ismember(key.model_name,{'CP','CPG'})
                         if ismember(key.exp_id,gaussModelIdx)
                             noiseMat = normrnd(0,1/sqrt(fit_pars.lambda),[set_size(ii),fit_pars.trial_num_sim]);
                         else
+                            fit_pars.lambda = interp1(jmap,kmap,fit_pars.lambda);
                             noiseMat = circ_vmrnd(zeros(set_size(ii),fit_pars.trial_num_sim),fit_pars.lambda)/2;
                         end
                     elseif ismember(key.model_name,{'VP','VPG'})
@@ -106,13 +107,23 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                         if ismember(key.exp_id,gaussModelIdx)
                             noiseMat = normrnd(0,1./sqrt(fit_pars.lambdaMat));
                         else
+                            fit_pars.lambdaMat = min(max(jmap),fit_pars.lambdaMat);
+                            fit_pars.lambdaMat = interp1(jmap,kmap,fit_pars.lambdaMat);
                             noiseMat = circ_vmrnd(0,fit_pars.lambdaMat)/2;
                         end
+                    elseif ismember(key.model_name,{'OP','OPG'})
+                        sigma_baseline = 1/sqrt(lambda)*180/pi;
+                        sigma = sigma_baseline*(1 + fit_pars.theta_hat*abs(sin(2*stimuli(ii,1:set_size(ii)))))/180*pi;
+                        fit_pars.lambdaMat = 1./sigma.^2;
+                        fit_pars.lambdaMat = min(max(jmap),fit_pars.lambdaMat);
+                        fit_pars.lambdaMat = interp1(jmap,kmap,fit_pars.lambdaMat);
+                        fit_pars.lambdaMat = repmat(fit_pars.lambdaMat,fit_pars.trial_num_sim,1)';                      
+                        noiseMat = circ_vmrnd(0,fit_pars.lambdaMat)/2;
                     end
                     x = repmat(stimuli(ii,1:set_size(ii)),fit_pars.trial_num_sim,1)'+noiseMat;
                     key.prediction(ii) = f_dr(x,fit_pars);               
                 end
-                if ismember(key.model_name,{'CPG','VPG'})
+                if ismember(key.model_name,{'CPG','VPG','OPG'})
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
                 end
                

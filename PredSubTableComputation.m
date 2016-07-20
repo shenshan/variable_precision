@@ -191,7 +191,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             response_sub = response(set_size==setsize);
                             predtable_temp = zeros(length(pars.p_right),length(stimuli_sub));
                             for kk = 1:length(stimuli_sub)
-                                sigma = sigma_baseline*(1+pars.theta(ii)*abs(sin(2*stimuli(jj,:))))/180*pi;
+                                sigma = sigma_baseline*(1+pars.theta(ii)*abs(sin(2*stimuli_sub(kk,1:setsize))))/180*pi;
                                 pars.lambdaMat = 1./sigma.^2;
                                 pars.lambdaMat = min(max(jmap),pars.lambdaMat);
                                 pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
