@@ -10,7 +10,7 @@ varprecision.PredSubTableComputation (computed) # Compute prediction subtable, t
 classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = (varprecision.PredictionSubTableIdx & 'model_name in ("CP","VP","OP")') * (varprecision.Data & (varprecision.Subject & 'subj_type="real"')) * varprecision.JbarKappaMap
+        popRel = (varprecision.PredictionSubTableIdx & 'model_name in ("CP","VP","OP","XP")') * (varprecision.Data & (varprecision.Subject & 'subj_type="real"')) * varprecision.JbarKappaMap
     end
 	
     methods(Access=protected)
@@ -28,12 +28,9 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             lambda = fetch1(varprecision.PredictionSubTableIdx & key,'lambda_value');
             
             tuple = key;
-            if strcmp(key.model_name, 'CP')
-                tuple.model_name = 'CPG';
-            elseif strcmp(key.model_name, 'VP')
-                tuple.model_name = 'VPG';
-            elseif strcmp(key.model_name, 'OP')
-                tuple.model_name = 'OPG';
+            
+            if ismember(key.model_name, {'CP','VP','OP','XP'})
+                tuple.model_name = [key.model_name 'G'];
             end
             
             pars = fetch(varprecision.ParameterSet & tuple, '*');
@@ -154,7 +151,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                         end
                     end              
                 end
-            elseif strcmp(key.model_name,'OP')
+            elseif ismember(key.model_name,{'OP','XP'})
                 sigma_baseline = 1/sqrt(lambda)*180/pi;
                 if length(setsizes)==1
  
@@ -173,6 +170,13 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                             
                             xMat = repmat(stimuli(jj,:),pars.trial_num_sim,1)' + noiseMat;
+                            
+                            if strcmp(key.model_name,'XP')
+                                sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*xMat)))/180*pi;
+                                pars.lambdaMat = 1./sigma.^2;
+                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                            end
                             predtable_temp(:,jj) = f_dr(xMat,pars);
                         end
                         
@@ -199,6 +203,12 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                                 
                                 xMat = repmat(stimuli_sub(kk,1:setsize),pars.trial_num_sim,1)' + noiseMat;
+                                if strcmp(key.model_name,'XP')
+                                    sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*xMat)))/180*pi;
+                                    pars.lambdaMat = 1./sigma.^2;
+                                    pars.lambdaMat = min(max(jmap),pars.lambdaMat);
+                                    pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                end
                                 predtable_temp(:,kk) = f_dr(xMat,pars);
                             end
                             predtable(jj,:,ii) = self.adjustPredTable(predtable_temp,key.model_name,response_sub,pars);
@@ -228,10 +238,10 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
             % taking log of predtable and sum over all trials.
             res = min(unique(response));
             
-            if ismember(model_name, {'CP','VP','OP'})
+            if ismember(model_name, {'CP','VP','OP','XP'})
                     predtable_temp = varprecision.utils.correctNumErr(predtable_temp,pars.trial_num_sim);
                     predtable_temp(:,response==res) = 1 - predtable_temp(:,response==res);
-            elseif ismember(model_name,{'CPG','VPG','OPG'})
+            elseif ismember(model_name,{'CPG','VPG','OPG','XPG'})
                     predtable_temp = varprecision.utils.computePredGuessing(predtable_temp,pars.guess);
                     predtable_temp = varprecision.utils.correctNumErr(predtable_temp,pars.trial_num_sim);
                     predtable_temp(:,response==res,:) = 1 - predtable_temp(:,response==res,:);
