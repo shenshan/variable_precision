@@ -14,14 +14,13 @@ J_bar = squeeze(varprecision.utils.decell(J_bar));
 [mean_Jbar, sem_Jbar] = varprecision.utils.getMeanStd(J_bar,'sem',2);
 
 fig = Figure(101,'size',[60,40]);
-errorbar(setsize, mean_Jbar,sem_Jbar,'k')
-if exp.exp_id < 6
-    ylim([0,0.5]);
-elseif exp.exp_id == 7
-    ylim([0,200]);
-else
-    ylim([0,400]);
+if exp.exp_id > 6
+    mean_Jbar = 4*mean_Jbar*pi^2/180^2;
+    sem_Jbar = 4*sem_Jbar*pi^2/180^2;
 end
+errorbar(setsize, mean_Jbar,sem_Jbar,'k')
+
+ylim([0,0.5]);
 xlim([0,10]);
 set(gca,'XTick',[1,2,3,4,8])
 xlabel('Set size')

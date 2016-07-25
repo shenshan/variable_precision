@@ -30,7 +30,7 @@ for ii = 1:length(exps)
         p_right_sem = std(p_right,[],dim)./sqrt(len);
     end
     
-    fig = Figure(102,'size',[90,60]);
+    fig = Figure(102,'size',[120,60]);
     hold on
     xLim = max(stims)*1.1;
     text_x = -max(stims)*0.8;

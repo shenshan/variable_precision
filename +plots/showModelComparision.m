@@ -32,7 +32,7 @@ for exp = exps'
     
     
     if strcmp(data_type,'mean')
-        fig = Figure(105,'size',[40,30]); hold on       
+        fig = Figure(105,'size',[60,30]); hold on       
         bar_custom(eviMat(:,1:length(model_names)-1),'mean')
         if ismember(cmp_type,{'lml','llmax'})
             ylim([-100,10])
