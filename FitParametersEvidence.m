@@ -67,108 +67,108 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
             else
                 %% non-parametric fitting for experiments with multiple set sizes
                 key.lambda_hat = zeros(1,length(setsizes));
-                switch pars.model_name
-                    case 'CP'
-                        % matrix to save the index of lambda that gives the maximum likelihood given a combination of p_right, theta and guess
-                        idxMat = zeros(length(setsizes),length(pars.p_right));
-                        % matrix to save the maximum value of likelihood for each combination of p_right, theta and guess
-                        maxMat = zeros(size(idxMat));
-                        
-                        % find the maximum likelihood and the corresponding index of lambda given a combination of the rest of the parameters
-                        for ii = 1:length(setsizes)
-                            for jj = 1:length(pars.p_right)
-                                tempMat = squeeze(LLMat(ii,jj,:));
-                                [maxMat(ii,jj),idxMat(ii,jj)] = max(tempMat(:));
+                
+                if strcmp(key.model_name,'CP')
+                    % matrix to save the index of lambda that gives the maximum likelihood given a combination of p_right, theta and guess
+                    idxMat = zeros(length(setsizes),length(pars.p_right));
+                    % matrix to save the maximum value of likelihood for each combination of p_right, theta and guess
+                    maxMat = zeros(size(idxMat));
+
+                    % find the maximum likelihood and the corresponding index of lambda given a combination of the rest of the parameters
+                    for ii = 1:length(setsizes)
+                        for jj = 1:length(pars.p_right)
+                            tempMat = squeeze(LLMat(ii,jj,:));
+                            [maxMat(ii,jj),idxMat(ii,jj)] = max(tempMat(:));
+                        end
+                    end
+                    % sum over the set sizes for the maxMat
+                    sum_max = squeeze(sum(maxMat));
+
+                    % get the best parameters p_right,theta and guess
+                     [llmax, key.p_right_idx] = max(sum_max);
+                     key.p_right_hat = pars.p_right(key.p_right_idx);
+
+                    % find the best lambda for each set sizes
+                    for ii = 1:length(setsizes)
+                        key.lambda_idx(ii) = idxMat(ii,key.p_right_idx);
+                    end
+
+
+                elseif strcmp(key.model_name,'CPG')
+
+                    idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.guess));
+                    maxMat = zeros(size(idxMat));
+
+                    for ii = 1:length(setsizes)
+                        for jj = 1:length(pars.p_right)
+                            for kk = 1:length(pars.guess)
+                                tempMat = squeeze(LLMat(ii,jj,:,kk));
+                                [maxMat(ii,jj,kk),idxMat(ii,jj,kk)] = max(tempMat(:));
                             end
                         end
-                        % sum over the set sizes for the maxMat
-                        sum_max = squeeze(sum(maxMat));
-                        
-                        % get the best parameters p_right,theta and guess
-                         [llmax, key.p_right_idx] = max(sum_max);
-                         key.p_right_hat = pars.p_right(key.p_right_idx);
-                        
-                        % find the best lambda for each set sizes
-                        for ii = 1:length(setsizes)
-                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx);
+                    end
+
+                    sum_max = squeeze(sum(maxMat));
+
+                    [llmax, idx] = max(sum_max(:));
+                    [key.p_right_idx,key.guess_idx] = ind2sub(size(sum_max),idx);
+                    key.p_right_hat = pars.p_right(key.p_right_idx);
+                    key.guess_hat = pars.guess(key.guess_idx);
+
+                    for ii = 1:length(setsizes)
+                        key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.guess_idx);
+                    end
+
+                elseif ismember(key.model_name,{'VP','OP','XP'})
+
+                    idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.theta));
+                    maxMat = zeros(size(idxMat));
+
+                    for ii = 1:length(setsizes)
+                        for jj = 1:length(pars.p_right)
+                            for kk = 1:length(pars.theta)
+                                tempMat = squeeze(LLMat(ii,jj,:,kk));
+                                [maxMat(ii,jj,kk),idxMat(ii,jj,kk)] = max(tempMat(:));
+                            end
                         end
-                        
-                        
-                    case 'CPG'
-                        
-                        idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.guess));
-                        maxMat = zeros(size(idxMat));
-                        
-                        for ii = 1:length(setsizes)
-                            for jj = 1:length(pars.p_right)
-                                for kk = 1:length(pars.guess)
-                                    tempMat = squeeze(LLMat(ii,jj,:,kk));
-                                    [maxMat(ii,jj,kk),idxMat(ii,jj,kk)] = max(tempMat(:));
+                    end
+
+                    sum_max = squeeze(sum(maxMat));
+
+                    [llmax, idx] = max(sum_max(:));
+                    [key.p_right_idx,key.theta_idx] = ind2sub(size(sum_max),idx);
+                    key.p_right_hat = pars.p_right(key.p_right_idx);
+                    key.theta_hat = pars.theta(key.theta_idx);
+
+                    for ii = 1:length(setsizes)
+                        key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx);
+                    end
+
+                elseif ismember(key.model_name,{'VPG','OPG','XPG'})
+                    idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.theta),length(pars.guess));
+                    maxMat = zeros(size(idxMat));
+
+                    for ii = 1:length(setsizes)
+                        for jj = 1:length(pars.p_right)
+                            for kk = 1:length(pars.theta)
+                                for ij = 1:length(pars.guess)
+                                    tempMat = squeeze(LLMat(ii,jj,:,kk,ij));
+                                    [maxMat(ii,jj,kk,ij),idxMat(ii,jj,kk,ij)] = max(tempMat(:));
                                 end
                             end
                         end
-                        
-                        sum_max = squeeze(sum(maxMat));
-                        
-                        [llmax, idx] = max(sum_max(:));
-                        [key.p_right_idx,key.guess_idx] = ind2sub(size(sum_max),idx);
-                        key.p_right_hat = pars.p_right(key.p_right_idx);
-                        key.guess_hat = pars.guess(key.guess_idx);
-                        
-                        for ii = 1:length(setsizes)
-                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.guess_idx);
-                        end
-                        
-                    case 'VP'
-                        
-                        idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.theta));
-                        maxMat = zeros(size(idxMat));
-                        
-                        for ii = 1:length(setsizes)
-                            for jj = 1:length(pars.p_right)
-                                for kk = 1:length(pars.theta)
-                                    tempMat = squeeze(LLMat(ii,jj,:,kk));
-                                    [maxMat(ii,jj,kk),idxMat(ii,jj,kk)] = max(tempMat(:));
-                                end
-                            end
-                        end
-                        
-                        sum_max = squeeze(sum(maxMat));
-                        
-                        [llmax, idx] = max(sum_max(:));
-                        [key.p_right_idx,key.theta_idx] = ind2sub(size(sum_max),idx);
-                        key.p_right_hat = pars.p_right(key.p_right_idx);
-                        key.theta_hat = pars.theta(key.theta_idx);
-                        
-                        for ii = 1:length(setsizes)
-                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx);
-                        end
-                        
-                    case 'VPG'
-                        idxMat = zeros(length(setsizes),length(pars.p_right),length(pars.theta),length(pars.guess));
-                        maxMat = zeros(size(idxMat));
-                        
-                        for ii = 1:length(setsizes)
-                            for jj = 1:length(pars.p_right)
-                                for kk = 1:length(pars.theta)
-                                    for ij = 1:length(pars.guess)
-                                        tempMat = squeeze(LLMat(ii,jj,:,kk,ij));
-                                        [maxMat(ii,jj,kk,ij),idxMat(ii,jj,kk,ij)] = max(tempMat(:));
-                                    end
-                                end
-                            end
-                        end
-                        
-                        sum_max = squeeze(sum(maxMat));
-                        [llmax, idx] = max(sum_max(:));
-                        [key.p_right_idx,key.theta_idx,key.guess_idx] = ind2sub(size(sum_max),idx);
-                        key.p_right_hat = pars.p_right(key.p_right_idx);
-                        key.theta_hat = pars.theta(key.theta_idx);
-                        key.guess_hat = pars.guess(key.guess_idx);
-                        
-                        for ii = 1:length(setsizes)
-                            key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx,key.guess_idx);
-                        end
+                    end
+
+                    sum_max = squeeze(sum(maxMat));
+                    [llmax, idx] = max(sum_max(:));
+                    [key.p_right_idx,key.theta_idx,key.guess_idx] = ind2sub(size(sum_max),idx);
+                    key.p_right_hat = pars.p_right(key.p_right_idx);
+                    key.theta_hat = pars.theta(key.theta_idx);
+                    key.guess_hat = pars.guess(key.guess_idx);
+
+                    for ii = 1:length(setsizes)
+                        key.lambda_idx(ii) = idxMat(ii,key.p_right_idx,key.theta_idx,key.guess_idx);
+                    end
                        
                 end
                 key.lambda_hat = pars.lambda(key.lambda_idx);
