@@ -23,7 +23,7 @@ function [prediction, response] = exp11(x,pars)
     
     if ismember(pars.model_name,{'CP','CPG'})
         term = squeeze(1/nItems*sum(exp(pars.lambda*cos(2*x))/besseli0_fast(pars.lambda),1));
-    elseif ismember(pars.model_name,{'VP','VPG','OP','OPG'})
+    else
         term = squeeze(1/nItems*sum(exp(pars.lambdaMat.*(cos(2*x)-1))./besseli0_fast(pars.lambdaMat,1),1));
     end
     
