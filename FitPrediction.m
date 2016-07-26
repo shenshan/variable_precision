@@ -111,7 +111,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                             fit_pars.lambdaMat = interp1(jmap,kmap,fit_pars.lambdaMat);
                             noiseMat = circ_vmrnd(0,fit_pars.lambdaMat)/2;
                         end
-                    elseif ismember(key.model_name,{'OP','OPG'})
+                    elseif ismember(key.model_name,{'OP','OPG','XP','XPG'})
                         sigma_baseline = 1/sqrt(lambda)*180/pi;
                         sigma = sigma_baseline*(1 + fit_pars.theta_hat*abs(sin(2*stimuli(ii,1:set_size(ii)))))/180*pi;
                         fit_pars.lambdaMat = 1./sigma.^2;
@@ -121,9 +121,15 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                         noiseMat = circ_vmrnd(0,fit_pars.lambdaMat)/2;
                     end
                     x = repmat(stimuli(ii,1:set_size(ii)),fit_pars.trial_num_sim,1)'+noiseMat;
-                    key.prediction(ii) = f_dr(x,fit_pars);               
+                    if ismember(key.model_name,{'XP','XPG'})
+                        sigma = sigma_baseline*(1 + fit_pars.theta_hat*abs(sin(2*x)))/180*pi;
+                        fit_pars.lambdaMat = 1./sigma.^2;
+                        fit_pars.lambdaMat = min(max(jmap),fit_pars.lambdaMat);
+                        fit_pars.lambdaMat = interp1(jmap,kmap,fit_pars.lambdaMat);
+                    end
+                    key.prediction(ii) = f_dr(x,fit_pars);
                 end
-                if ismember(key.model_name,{'CPG','VPG','OPG'})
+                if ismember(key.model_name,{'CPG','VPG','OPG','XPG'})
                     key.prediction = key.prediction*(1-fit_pars.guess_hat) + .5*fit_pars.guess_hat;
                 end
                

@@ -47,12 +47,12 @@ classdef FitParametersEvidence < dj.Relvar & dj.AutoPopulate
                     key.p_right_hat  = pars.p_right(key.p_right_idx);
                     key.lambda_hat = pars.lambda(key.lambda_idx);
                     key.guess_hat = pars.guess(key.guess_idx);
-                elseif ismember(key.model_name, {'VP','OP'})
+                elseif ismember(key.model_name, {'VP','OP','XP'})
                     [key.p_right_idx,key.lambda_idx,key.theta_idx] = ind2sub(size(LLMat),idx);
                     key.p_right_hat  = pars.p_right(key.p_right_idx);
                     key.lambda_hat = pars.lambda(key.lambda_idx);
                     key.theta_hat = pars.theta(key.theta_idx);
-                elseif ismember(key.model_name, {'VPG','OPG'})
+                elseif ismember(key.model_name, {'VPG','OPG','XPG'})
                     [key.p_right_idx,key.lambda_idx,key.theta_idx,key.guess_idx] = ind2sub(size(LLMat),idx);
                     key.p_right_hat  = pars.p_right(key.p_right_idx);
                     key.lambda_hat = pars.lambda(key.lambda_idx);
