@@ -136,7 +136,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 
                 prediction = key.prediction;
                 
-                if ismember(key.exp_id,[6,7])
+                if ismember(key.exp_id,[6,7,9])
                     stims = fetch1(varprecision.DataStats & key, 'stims');
 
                     idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');

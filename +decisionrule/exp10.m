@@ -1,5 +1,5 @@
 function [prediction, response] = exp10(x,pars)
-%EXP10 computes prediction of reporting right given noisy
+%EXP10 computes prediction of reporting right given noisy, Gaussian
 %measurements and model parameters, this one does not work for pre table
 
 %   function [prediction, response] = exp10(x,pars)
@@ -9,7 +9,8 @@ function [prediction, response] = exp10(x,pars)
 %   following fields: pars.model 'CP', 'VP', pars.lambda,
 %   pars.p_right. pars.lambda is scalar for CP model, pars.lambdaMat is matrix for VP model,
 %   and pars.p_right is a vector
-%   pars.pre indicates whether it is to generate a pre-computed table.
+%   
+pars.pre indicates whether it is to generate a pre-computed table.
     
     if pars.pre
         nTrials = size(x, 3);
@@ -24,14 +25,15 @@ function [prediction, response] = exp10(x,pars)
     sT = 0;
     k0 = 32.8;
     
+    % to be moved outside the function
+    j0 = 4*k0*besseli(1,k0)/besseli(0,k0);
+    sigma_s = 1/sqrt(j0)*180/pi;
+    
     if ismember(pars.model_name, {'CP','CPG'})
         pars.lambdaMat = pars.lambda;
     end
     if nItems == 1
-        kappa1 = k0;
-        kappa0 = sqrt((k0.*cos(2*sT)+pars.lambdaMat.*cos(2*x)).^2 ...
-                    + (k0.*sin(2*sT)+pars.lambdaMat.*sin(2*x)).^2);
-        term = exp(pars.lambdaMat.*cos(2*(x-sT))+kappa1-kappa0).*besseli0_fast(kappa1,1)./besseli0_fast(kappa0,1);
+        term = exp(-x*pars.lambdaMat)
     else
         kappa1 = sqrt((repmat(sum(pars.lambdaMat.*cos(2*x)),nItems,1) - pars.lambdaMat.*cos(2*x) + k0*cos(2*sT)).^2 ...
                    + ((repmat(sum(pars.lambdaMat.*sin(2*x)),nItems,1) - pars.lambdaMat.*sin(2*x) + k0*sin(2*sT)).^2));

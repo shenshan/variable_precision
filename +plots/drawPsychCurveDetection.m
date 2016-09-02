@@ -25,7 +25,7 @@ function drawPsychCurveDetection(varargin)
         model_pres_ss_patch = getPatch(model_pres_ssMat); 
         model_abs_ss_patch = getPatch(model_abs_ssMat); 
 
-        fig1 = Figure(101,'size',[45,36]); hold on
+        fig1 = Figure(101,'size',[35,25]); hold on
 
         patch([setsizes, wrev(setsizes)], model_pres_ss_patch,[0.65,0.65,1],'LineStyle','None');
         patch([setsizes, wrev(setsizes)], model_abs_ss_patch, [1,0.65,0.65],'LineStyle','None');
@@ -46,7 +46,7 @@ function drawPsychCurveDetection(varargin)
         model_abs_bin_patch = getPatch(model_abs_binMat); 
 
 
-        fig2 = Figure(103,'size',[250,40]); 
+        fig2 = Figure(103,'size',[180,30]); 
         for ii = 1:length(setsizes)
             if ii==1
                 subplot(1,4,ii)

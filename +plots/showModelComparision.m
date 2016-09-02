@@ -8,13 +8,14 @@ assert(ismember(cmp_type, {'aic','aicc','bic','lml','llmax'}), 'Non-existing com
 
 
 exps = fetch(varprecision.Experiment & varargin(1));
+res = fetch(varprecision.FitParametersEvidence & varargin);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
 
 for exp = exps'
     
     keys_rec = fetch(varprecision.Recording & exp & subjs);
-    models = fetch(varprecision.Model & exp);
+    models = fetch(varprecision.Model & exp & res);
     
     eviMat = zeros(length(keys_rec),length(models));
     for ikey = 1:length(keys_rec)
@@ -24,22 +25,27 @@ for exp = exps'
     end
     
     % fetch the evidence for VPG
-    evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin & 'model_name="VPG"', cmp_type);
-    model_names = fetchn(varprecision.Model & exp, 'model_name');
+    evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
+    model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);
     end
     
     
     if strcmp(data_type,'mean')
-        fig = Figure(105,'size',[60,30]); hold on       
-        bar_custom(eviMat(:,1:length(model_names)-1),'mean')
+        if length(model_names)>7
+            fig = Figure(105,'size',[80,30]);
+        else
+            fig = Figure(105,'size',[40,30]);
+        end
+        hold on 
+        bar_custom(eviMat(:,1:length(model_names)),'mean')
         if ismember(cmp_type,{'lml','llmax'})
-            ylim([-100,10])
+            ylim([-100,20])
         else
             ylim([-10,100])
         end
-        set(gca,'XTick',1:length(models)-1,'XTickLabel',model_names(1:length(model_names)-1))
+        set(gca,'XTick',1:length(models),'XTickLabel',model_names)
     else
         nSubjs = size(eviMat,1);
         if nSubjs>10
@@ -48,9 +54,9 @@ for exp = exps'
             fig = Figure(105, 'size',[50,30]);
         end
         hold on
-        bar_custom(eviMat(:,1:length(model_names)-1),'group')
+        bar_custom(eviMat(:,1:length(model_names)),'group')
         if ismember(cmp_type,{'lml','llmax'})
-            ylim([-100,10])
+            ylim([-100,20])
         else
             ylim([-10,100])
         end

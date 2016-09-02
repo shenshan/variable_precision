@@ -27,3 +27,5 @@ fig = Figure(105,'size',[60,40]); hold on
 bar_custom(bar_mat(:,1:5),'mean')
 
 set(gca,'XTick',1:size(bar_mat,2)-1,'XTickLabel',{'CP','CPG','VP','VPG','VP_sub'})
+
+fig.save('~/Google Drive/Shan_Variable_Precision/Manuscripts/draft figures/figures_160716/LML_all_models')

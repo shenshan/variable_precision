@@ -29,8 +29,17 @@ for ii = 1:length(exps)
         p_right_mean = mean(p_right,dim);
         p_right_sem = std(p_right,[],dim)./sqrt(len);
     end
-    
-    fig = Figure(102,'size',[120,60]);
+    if length(models)==4
+        fig = Figure(102,'size',[100,60]);
+    elseif length(models)==6
+        fig = Figure(102,'size',[140,60]);
+    elseif length(models)==8
+        fig = Figure(102,'size',[160,60]);
+    else
+        fig = Figure(102,'size',[30*length(models)+10,30]);
+    end
+        
+        
     hold on
     xLim = max(stims)*1.1;
     text_x = -max(stims)*0.8;
@@ -75,7 +84,7 @@ for ii = 1:length(exps)
             ylim([0,1])
         else
             for jj = 1:length(models)
-                if ismember(length(models), [4,6])
+                if ismember(length(models), [4,6,8])
                     subplot(2,length(models)/2,jj)
                 else
                     subplot(1,length(models),jj)

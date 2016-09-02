@@ -109,8 +109,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                         if  key.exp_id == 9
                             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                         else
-                            pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                            pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                         end
                         
@@ -137,8 +136,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             if  key.exp_id == 9
                                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));      
                             else
-                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                             end
                             for kk = 1:length(stimuli_sub)
@@ -164,8 +162,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*stimuli(jj,:))))/180*pi;
 
                             pars.lambdaMat = 1./sigma.^2;
-                            pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                            pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                             pars.lambdaMat = repmat(pars.lambdaMat,pars.trial_num_sim,1)';
                             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                             
@@ -174,8 +171,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             if strcmp(key.model_name,'XP')
                                 sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*xMat)))/180*pi;
                                 pars.lambdaMat = 1./sigma.^2;
-                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                             end
                             predtable_temp(:,jj) = f_dr(xMat,pars);
                         end
@@ -197,8 +193,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                             for kk = 1:length(stimuli_sub)
                                 sigma = sigma_baseline*(1+pars.theta(ii)*abs(sin(2*stimuli_sub(kk,1:setsize))))/180*pi;
                                 pars.lambdaMat = 1./sigma.^2;
-                                pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                                pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                                 pars.lambdaMat = repmat(pars.lambdaMat,pars.trial_num_sim,1)';
                                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                                 
@@ -206,8 +201,7 @@ classdef PredSubTableComputation < dj.Relvar & dj.AutoPopulate
                                 if strcmp(key.model_name,'XP')
                                     sigma = sigma_baseline*(1 + pars.theta(ii)*abs(sin(2*xMat)))/180*pi;
                                     pars.lambdaMat = 1./sigma.^2;
-                                    pars.lambdaMat = min(max(jmap),pars.lambdaMat);
-                                    pars.lambdaMat = interp1(jmap,kmap,pars.lambdaMat);
+                                    pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                                 end
                                 predtable_temp(:,kk) = f_dr(xMat,pars);
                             end

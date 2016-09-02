@@ -28,20 +28,51 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
             pars.pre = 0;
             pars.model_name = model;
             
+            exps_gauss = [1:5,9,10];
+            [jmap,kmap] = fetch1(varprecision.JbarKappaMap & 'jkmap_id=2','jmap','kmap');
+            
             if length(pars.setsizes)==1
-                [target_stimuli,stimuli] = varprecision.utils.generateFakeStimuli(pars.exp_id,pars.setsizes,nTrials);
+                [target_stimuli,stimuli,set_size] = varprecision.utils.generateFakeStimuli(pars.exp_id,pars.setsizes,nTrials);
                 if ismember(model,{'VP','VPG'})
                     pars.lambdaMat = gamrnd(pars.lambda/pars.theta, pars.theta,[pars.setsizes,nTrials]);
-                    xMat = stimuli' + normrnd(0,1./sqrt(pars.lambdaMat));
-                else
-                    xMat = stimuli' + normrnd(0,1/sqrt(pars.lambda),[pars.setsizes,nTrials]);
+                    if ismember(key.exp_id, exps_gauss)
+                        xMat = stimuli' + normrnd(0,1./sqrt(pars.lambdaMat));
+                    else
+                        pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                        xMat = stimuli' + circ_vmrnd(0,pars.lambdaMat)/2;
+                    end
+                elseif ismember(model,{'XP','XPG'})
+                    sigma_baseline = 1/sqrt(pars.lambda)*180/pi; 
+                    sigma = sigma_baseline*(1 + pars.theta*abs(sin(2*stimuli)))/180*pi;
+
+                    pars.lambdaMat = 1./sigma.^2;
+                    pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                    noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+                    
+                    xMat = stimuli' + noiseMat';
+                    sigma = sigma_baseline*(1 + pars.theta*abs(sin(2*xMat)))/180*pi;
+                    pars.lambdaMat = 1./sigma.^2;
+                    pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                elseif ismember(model,{'CP','CPG'})
+                    if ismember(key.exp_id, exps_gauss)
+                        xMat = stimuli' + normrnd(0,1/sqrt(pars.lambda),[pars.setsizes,nTrials]);
+                    else
+                        pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
+                        xMat = stimuli' + circ_vmrnd(zeros(pars.setsizes,nTrials),pars.lambda);
+                    end
                 end
                 
                 [~,response] = f_dr(xMat,pars);
-                if ismember(model,{'CPG','VPG'})
+                if ismember(model,{'CPG','VPG','XPG'})
                     response = varprecision.utils.addLapseTrials(response, pars.guess);
                 end
-                data = [target_stimuli,response'];
+                if key.exp_id<6
+                    data = [target_stimuli,response'];
+                elseif ismember(key.exp_id,[6,8]) 
+                    data = [stimuli,response'];
+                else
+                    data = [stimuli,response',set_size'];
+                end
             else
                 stimuliMat = [];
                 responseMat = [];
