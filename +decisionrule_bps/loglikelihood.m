@@ -58,17 +58,19 @@ else
     for jj = 1:length(setsizes)
         setsize = setsizes(jj);
         stimuli_sub = stimuli(set_size==setsize);
+        response_sub = response(set_size==setsize);
         if ismember(key.model_name,{'CP','CPG'})
-            noiseMat = normrnd(0,1/sqrt(pars.lambda(jj)),[setsize,trial_num_sim]);
+            pars.lambda = pars.lambdaVec(jj);
+            noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
         else
-            pars.lambdaMat = gamrnd(pars.lambda(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
+            pars.lambdaMat = gamrnd(pars.lambdaVec(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
         end
         stimuliMat = varprecision.utils.adjustStimuliSize(exp_id,stimuli_sub,setsize);
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
-            x = repmat(stimulus, [1,trial_num_sim]) + noiseMat;
+            x = repmat(stimulus', [1,trial_num_sim]) + noiseMat;
         	predMat_sub(ii) = f(x,pars);
         end
         predMat(set_size==setsize) = predMat_sub;
