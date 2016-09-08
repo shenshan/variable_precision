@@ -1,4 +1,4 @@
-function showModelComparision(data_type, cmp_type, subtract, jkmap, varargin)
+function showModelComparision(data_type, cmp_type, subtract, varargin)
 %SHOWMODELCOMPARISION plots the model comparison results
 %   varargin can specify the expriment, models, subjects, parameter sets
 %   type specifies the type of evidence needed
@@ -8,9 +8,9 @@ assert(ismember(cmp_type, {'aic','aicc','bic','lml','llmax'}), 'Non-existing com
 
 
 exps = fetch(varprecision.Experiment & varargin(1));
-res = fetch(varprecision.FitParametersEvidence & varargin);
+res = fetch(varprecision.FitParsEviBps & varargin);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
+% jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
 
 for exp = exps'
     
@@ -20,12 +20,14 @@ for exp = exps'
     eviMat = zeros(length(keys_rec),length(models));
     for ikey = 1:length(keys_rec)
         key_rec = keys_rec(ikey);
-        evi = fetchn(varprecision.FitParametersEvidence & key_rec & jkmap & varargin, cmp_type);
+%         evi = fetchn(varprecision.FitParametersEvidence & key_rec & jkmap & varargin, cmp_type);
+        evi = fetchn(varprecision.FitParsEviBps & key_rec & varargin, cmp_type);
         eviMat(ikey,:) = evi;
     end
     
     % fetch the evidence for VPG
-    evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
+%     evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
+    evi = fetchn(varprecision.FitParsEviBps & keys_rec & varargin & 'model_name="VPG"', cmp_type);
     model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);
@@ -69,7 +71,8 @@ for exp = exps'
 %     
     
     fig.cleanup
-    fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '_' num2str(jkmap_id) '.eps'])
+%     fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '_' num2str(jkmap_id) '.eps'])
+fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '.eps'])
 end
 
 

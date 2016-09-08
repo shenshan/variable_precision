@@ -1,7 +1,8 @@
-function LL = exp1(params,key)
+function LL = loglikelihood(params,key)
 %EXP1 compute likelihood given all trials and one set of parameters
 
 [stimuli, response] = fetch1(varprecision.Data & key ,'stimuli','response');
+f = eval(['@varprecision.decisionrule.exp' num2str(key.exp_id)]);
 
 pars.p_right = params(1);
 pars.lambda = params(2);
@@ -16,7 +17,7 @@ switch key.model_name
         pars.guess = params(4);
 end
 pars.model_name = key.model_name;
-
+pars.pre = 0;
 pars.sigma_s = 9.38;
 trial_num_sim = 5000;
 
@@ -32,7 +33,7 @@ end
 for ii = 1:length(stimuli)    
     stimulus = stimuli(ii);
     x = repmat(stimulus,[1,trial_num_sim]) + noiseMat;
-    predMat(ii) = varprecision.decisionrule.exp1(x,pars);    
+    predMat(ii) = f(x,pars);    
 end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
