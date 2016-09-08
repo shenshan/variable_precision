@@ -27,17 +27,34 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
 
             [pars,llmax] = bps(@(params)varprecision.decisionrule_bps.loglikelihood(params,key),x0,lb,ub,plb,pub);
             
-            key.p_right_hat = pars(1);
-            key.lambda_hat = pars(2);
+            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
             
-            switch key.model_name
-                case 'CPG'
-                    key.guess_hat = pars(3);
-                case 'VP'
-                    key.theta_hat = pars(3);
-                case 'VPG'
-                    key.theta_hat = pars(3);
-                    key.guess_hat = pars(4);
+            if length(setsizes)==1
+                key.p_right_hat = pars(1);
+                key.lambda_hat = pars(2);
+
+                switch key.model_name
+                    case 'CPG'
+                        key.guess_hat = pars(3);
+                    case 'VP'
+                        key.theta_hat = pars(3);
+                    case 'VPG'
+                        key.theta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                end
+            else
+                key.p_right_hat = pars(1);
+                key.lambda_hat = pars(2:5);
+
+                switch key.model_name
+                    case 'CPG'
+                        key.guess_hat = pars(6);
+                    case 'VP'
+                        key.theta_hat = pars(6);
+                    case 'VPG'
+                        key.theta_hat = pars(6);
+                        key.guess_hat = pars(7);
+                end
             end
             
             nTrials = fetch1(varprecision.Data & key, 'ntrials');
