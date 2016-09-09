@@ -29,7 +29,7 @@ function [prediction, response] = exp6(x,pars)
         term2 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, -pi/2, 0, nItems,30),1);
 %         term2 = entire_int - temp1;
             
-    elseif ismember(pars.model_name,{'VP','VPG','OP','OPG','XP','XPG'})
+    elseif ismember(pars.model_name,{'VP','VPG','OP','OPG','XP','XPG','XPVP','XPVPG'})
         entire_int = pi*besseli0_fast(sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x)));
 %         disp(['besseli time: ' num2str(toc) ' sec'])
 %         tic
