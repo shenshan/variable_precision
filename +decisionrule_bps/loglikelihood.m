@@ -5,6 +5,12 @@ function LL = loglikelihood(params,key)
 setsizes = fetch1(varprecision.Experiment & key, 'setsize');
 exp_id = key.exp_id;
 
+if ismember(key.exp_id,[6,7,8,10,11])
+    vm = 1;
+    [jmap,kmap] = fetch1(varprecision.JbarKappaMap & 'jkmap_id=2','jmap','kmap');
+else
+    vm = 0;
+end
 % get parameters correctly
 if ismember(key.exp_id,[3,5,7,10,11])
     exp_id = exp_id - 1;
@@ -43,10 +49,23 @@ predMat = zeros(size(response));
 
 if length(setsizes)==1
     if ismember(key.model_name,{'CP','CPG'})
-        noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
+        if vm == 0
+            noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
+        else
+            pars.lambda = pars.lambda*180^2/pi^2/4;
+            % map jbar to kappa
+            pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
+            noiseMat = circ_vmrnd(zeros(setsizes,trial_num_sim),pars.lambda)/2;
+        end
     else
         pars.lambdaMat = gamrnd(pars.lambda/pars.theta,pars.theta,[setsizes,trial_num_sim]);
-        noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+        if vm == 0
+            noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+        else
+            pars.lambdaMat = pars.lambdaMat*180^2/pi^2/4;
+            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+            noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+        end
     end
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
@@ -61,10 +80,22 @@ else
         response_sub = response(set_size==setsize);
         if ismember(key.model_name,{'CP','CPG'})
             pars.lambda = pars.lambdaVec(jj);
-            noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
+            if vm == 0            
+                noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
+            else
+                pars.lambda = pars.lambda*180^2/pi^2/4;
+                pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
+                noiseMat = circ_vmrnd(zeros(setsize,trial_num_sim),pars.lambda)/2;
+            end  
         else
             pars.lambdaMat = gamrnd(pars.lambdaVec(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
-            noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+            if vm == 0
+                noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
+            else
+                pars.lambdaMat = pars.lambdaMat*180^2/pi^2/4;
+                pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
+            end
         end
         stimuliMat = varprecision.utils.adjustStimuliSize(exp_id,stimuli_sub,setsize);
         predMat_sub = zeros(size(response_sub));

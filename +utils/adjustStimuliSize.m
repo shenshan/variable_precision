@@ -13,6 +13,8 @@ elseif ismember(exp_id,[4,5])
     else
         stimulusMat = [stimuli, zeros(length(stimuli),setsize-1)];
     end
-else
+elseif ismember(exp_id,[1,9])
     stimulusMat = stimuli;
+else
+    stimulusMat = stimuli*pi/180;
 end
