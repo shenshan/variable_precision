@@ -23,6 +23,7 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
 
 		function makeTuples(self, key)
             
+            tuple = key;
             [x0,lb,ub,plb,pub] = fetch1(varprecision.ParamsRange & key, 'start_point','lower_bound','upper_bound','plb','pub');
 
             [pars,llmax] = bps(@(params)varprecision.decisionrule_bps.loglikelihood(params,key),x0,lb,ub,plb,pub);
@@ -41,6 +42,18 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
                     case 'VPG'
                         key.theta_hat = pars(3);
                         key.guess_hat = pars(4);
+                    case 'XP'
+                        beta_hat = pars(3);
+                    case 'XPG'
+                        beta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                    case 'XPVP'
+                        key.theta_hat = pars(3);
+                        beta_hat = pars(4);
+                    case 'XPVPG'
+                        key.theta_hat = pars(3);
+                        beta_hat = pars(4);
+                        key.guess_hat = pars(5);
                 end
             else
                 key.p_right_hat = pars(1);
@@ -65,6 +78,7 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
             key.llmax = -llmax;
             
 			self.insert(key)
+            makeTuples(varprecision.FitParsXP,tuple,beta_hat)
 		end
 	end
 
