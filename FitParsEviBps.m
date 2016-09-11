@@ -78,7 +78,9 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
             key.llmax = -llmax;
             
 			self.insert(key)
-            makeTuples(varprecision.FitParsXP,tuple,beta_hat)
+            if ismember(key.model_name,{'XP','XPG','XPVP','XPVPG'})
+                makeTuples(varprecision.FitParsXP,tuple,beta_hat)
+            end
 		end
 	end
 
