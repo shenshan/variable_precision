@@ -112,12 +112,17 @@ if length(setsizes)==1
             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
         end
         x = repmat(stimulus',[1,trial_num_sim]) + noiseMat;
-        if ismember(key.model_name,{'XPVP','XPVPG'})
+        if ismember(key.model_name,{'XP','XPG'})
+            sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+            pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
+            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+        elseif ismember(key.model_name,{'XPVP','XPVPG'})
             sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
             pars.lambdaMat = 1./sigma.^2;
             pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
             pars.lambdaMat = pars.lambdaMat*180^2/pi^2/4;         
-            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);          
+            pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap); 
+            
         end
         predMat(ii) = f(x,pars);    
     end
