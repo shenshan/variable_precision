@@ -94,7 +94,7 @@ classdef FitPredictionBps < dj.Relvar & dj.AutoPopulate
                     sigma = sigma_baseline*(1 + fit_pars.beta_hat*abs(sin(2*x)));
                     fit_pars.lambdaMat = 1./sigma.^2;
                     fit_pars.lambdaMat = gamrnd(fit_pars.lambdaMat/fit_pars.theta,fit_pars.theta);
-                    fit_pars.lambda = fit_pars.lambda_hat*180^2/pi^2/4;
+                    fit_pars.lambdaMat = fit_pars.lambdaMat*180^2/pi^2/4;
                     fit_pars.lambdaMat = varprecision.utils.mapJK(fit_pars.lambdaMat,jmap,kmap);
                 end
                 key.prediction(ii) = f_dr(x,fit_pars);
