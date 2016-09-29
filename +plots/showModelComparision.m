@@ -14,7 +14,7 @@ subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
 for exp = exps'
     
-    keys_rec = fetch(varprecision.Recording & exp & subjs);
+    keys_rec = fetch(varprecision.Recording & exp & subjs & varargin(1));
     models = fetch(varprecision.Model & exp & res);
     
     eviMat = zeros(length(keys_rec),length(models));

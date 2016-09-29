@@ -2,13 +2,17 @@ function drawPsychCurve(type,varargin)
 %DRAWPSYCHCURVE Draw psychometric curve for a given model
 %   type specifies data, model or both
 
-assert(ismember(type,{'data','both'}),'Invalid input for type, please enter one of the three: data or both.')
+assert(ismember(type,{'data','both','bps'}),'Invalid input for type, please enter one of the three: data or both.')
 
 switch type
     case 'data'
         keys = fetch(varprecision.DataStats & varargin);
     case 'both'
         keys = fetch(varprecision.FitPrediction & varargin);
+        
+    case 'bps'
+        keys = fetch(varprecision.FitPredictionBps & varargin);
+        
 end
 exps = fetch(varprecision.Experiment & keys);
 
@@ -55,16 +59,24 @@ for ii = 1:length(exps)
         end
         xlim([-xLim,xLim]);
         ylim([0,1])
-    elseif strcmp(type,'both')
+    else
         if length(models)==1
             model_name = fetch1(varprecision.Model & keys);
             if length(subjs)==1
-                fit_pred = fetch1(varprecision.FitPrediction & exp & keys,'prediction_plot');
+                if strcmp(type, 'both')
+                    fit_pred = fetch1(varprecision.FitPrediction & exp & keys,'prediction_plot');
+                elseif strcmp(type, 'bps')
+                    fit_pred = fetch1(varprecision.FitPredictionBps & exp & keys,'prediction_plot');
+                end
                 plot(stims,p_right,'o')
                 plot(stims,fit_pred)
                 
             else 
-                fit_pred = fetchn(varprecision.FitPrediction & exp & keys,'prediction_plot');
+                if strcmp(type, 'both')
+                    fit_pred = fetchn(varprecision.FitPrediction & exp & keys,'prediction_plot');
+                elseif strcmp(type, 'bps')
+                    fit_pred = fetchn(varprecision.FitPredictionBps & exp & keys,'prediction_plot');
+                end
                 [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                 fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
                 if length(setsizes)==1
@@ -93,12 +105,20 @@ for ii = 1:length(exps)
                 model = models(jj);
                 model_name = fetch1(varprecision.Model & model & keys, 'model_name');
                 if length(subjs)==1;
-                    fit_pred = fetch1(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
+                    if strcmp(type, 'both')
+                        fit_pred = fetch1(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
+                    elseif strcmp(type, 'bps')
+                        fit_pred = fetch1(varprecision.FitPredictionBps & exp & keys & model,'prediction_plot');
+                    end
                     plot(stims,p_right,'o')
                     plot(stims,fit_pred)
 
                 else
-                    fit_pred = fetchn(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
+                    if strcmp(type, 'both')
+                        fit_pred = fetchn(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
+                    elseif strcmp(type, 'bps')
+                        fit_pred = fetchn(varprecision.FitPredictionBps & exp & keys & model,'prediction_plot');
+                    end
                     [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                     fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
                     if length(setsizes)==1

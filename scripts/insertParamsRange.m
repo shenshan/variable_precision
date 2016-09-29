@@ -1,14 +1,14 @@
 
 exp_id = 6;
-model_names = {'CP','CPG','VP','VPG'};
+% model_names = {'CP','CPG','VP','VPG'};
 % model_names = {'CP','CPG','VP','VPG','XP','XPG','XPVP','XPVPG'};
-% model_names = {'XPVP'};
+model_names = {'XPVPG'};
 
 key2.lower_bound = [0.3,0.001,0.00001,0,0];
 key2.upper_bound = [0.7,1,1,10,0.5];
 key2.plb = [0.4,0.01,0.01,0,0];
 key2.pub = [0.6,0.3,0.2,5,0.2];
-key2.start_point = [0.5,0.03,0.01,0.5,0.02];
+key2.start_point = [0.5,0.03,0.01,0.5,0.005];
 
 for ii = 1:length(model_names)
     model_name = model_names{ii};
