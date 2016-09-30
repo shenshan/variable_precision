@@ -67,6 +67,7 @@ for exp = exps'
             ylim([-10,100])
         end
         set(gca,'Xtick',1:nSubjs)
+        legend(model_names)
     end
     
     
