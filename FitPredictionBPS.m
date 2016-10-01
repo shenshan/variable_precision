@@ -27,8 +27,10 @@ classdef FitPredictionBps < dj.Relvar & dj.AutoPopulate
             gaussModelIdx = [1,2,3,4,5,9];
             target_stimuli = stimuli(:,1);
             % to be deleted
-                if ismember(exp_id, [6,9])
+                if ismember(key.exp_id, [2,4,6,9])
                     set_size = ones(length(stimuli),1)*4;
+                elseif key.exp_id == 1
+                    set_size = ones(length(stimuli),1);
                 end
             %
             if ismember(key.exp_id, [6,7,8,10,11])
