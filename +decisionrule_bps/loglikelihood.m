@@ -67,7 +67,7 @@ f = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
 pars.model_name = key.model_name;
 pars.pre = 0;
 pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
-trial_num_sim = 5000;
+trial_num_sim = key.trial_num_sim;
 
 predMat = zeros(size(response));
 

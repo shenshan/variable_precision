@@ -40,7 +40,7 @@ classdef FitPredictionBps < dj.Relvar & dj.AutoPopulate
                 fit_pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
             end
 
-
+            stimuli = varprecision.utils.adjustStimuliSize(key.exp_id,stimuli,set_size,'full');
             fit_pars.pre = 0;
             fit_pars.p_right = fit_pars.p_right_hat;
             fit_pars.trial_num_sim = 1000;
@@ -107,35 +107,34 @@ classdef FitPredictionBps < dj.Relvar & dj.AutoPopulate
             
             prediction = key.prediction;
                 
-            if ismember(key.exp_id,[6,7,9])
-                stims = fetch1(varprecision.DataStats & key, 'stims');
+%             if ismember(key.exp_id,[6,7,9])
+            stims = fetch1(varprecision.DataStats & key, 'stims');
 
-                idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
-                setsizes = unique(set_size);
+            idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
+            setsizes = unique(set_size);
 
-                if length(setsizes)==1
-                    key.prediction_plot = zeros(size(stims));
+            if length(setsizes)==1
+                key.prediction_plot = zeros(size(stims));
 
-                    for ii = 1:length(stims)
-                        prediction_sub = prediction(idx==ii);
-                        key.prediction_plot(ii) = mean(prediction_sub);
-                    end
-                else
-
-                    key.prediction_plot = zeros(length(setsizes),length(stims));
-
-                    for jj = 1:length(setsizes)
-                       idx_ss = idx(set_size==setsizes(jj));
-                       prediction_ss = prediction(set_size==setsizes(jj));
-                       for ii = 1:length(stims)
-                           prediction_sub = prediction_ss(idx_ss==ii);
-                           key.prediction_plot(jj,ii) = mean(prediction_sub);
-                       end
-                    end
+                for ii = 1:length(stims)
+                    prediction_sub = prediction(idx==ii);
+                    key.prediction_plot(ii) = mean(prediction_sub);
                 end
             else
-                key.prediction_plot = 0;
+
+                key.prediction_plot = zeros(length(setsizes),length(stims));
+
+                for jj = 1:length(setsizes)
+                   idx_ss = idx(set_size==setsizes(jj));
+                   prediction_ss = prediction(set_size==setsizes(jj));
+                   for ii = 1:length(stims)
+                       prediction_sub = prediction_ss(idx_ss==ii);
+                       key.prediction_plot(jj,ii) = mean(prediction_sub);
+                   end
+                end
             end
+
+%             end
 
             self.insert(key);
 		end
