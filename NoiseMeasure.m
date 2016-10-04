@@ -2,7 +2,7 @@
 varprecision.NoiseMeasure (computed) # measure noise of LL computation
 ->varprecision.Data
 ->varprecision.Model
-meaure_idx  : int     # measure index
+measure_idx  : int     # measure index
 -----
 nrun   : int     # number of runs
 ll_mat : double  # all log likelihoods that have benn computed
