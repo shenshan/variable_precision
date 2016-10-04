@@ -50,8 +50,8 @@ classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
             for ii = 1:key.nrun
                 ll_mat(ii) = -varprecision.decisionrule_bps.loglikelihood(params,key);
             end
-            key.ll_mat_mean = mean(llmat);
-            key.ll_mat_std = std(llmat);
+            key.ll_mat_mean = mean(ll_mat);
+            key.ll_mat_std = std(ll_mat);
             key.ll_mat = ll_mat;
             key.run_time = toc;
 			self.insert(key)
