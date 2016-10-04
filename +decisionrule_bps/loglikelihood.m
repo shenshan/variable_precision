@@ -1,5 +1,5 @@
 function [LL,predMat] = loglikelihood(params,key)
-%EXP1 compute likelihood given all trials and one set of parameters
+%loglikelihood computes likelihood given all trials and one set of parameters
 
 [stimuli, response, set_size] = fetch1(varprecision.Data & key ,'stimuli','response','set_size');
 setsizes = fetch1(varprecision.Experiment & key, 'setsize');
