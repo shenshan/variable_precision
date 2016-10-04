@@ -5,13 +5,13 @@ varprecision.NoiseMeasure (computed) # measure noise of LL computation
 measure_idx  : int     # measure index
 -----
 nrun   : int     # number of runs
-ll_mat : double  # all log likelihoods that have benn computed
+ll_mat : longblob # all log likelihoods that have benn computed
 ll_mat_mean : double # mean log likelihood
 ll_mat_std  : double # standard deviation of ll
 ll_mat_range : double # range of ll
 trial_num_sim : int    # number of simulation trials
 run_host: varchar(256) # computer name of this run
-run_time: double    # time of this run, in secs
+run_time: double    # time per ll run, in secs
 %}
 
 classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
@@ -53,7 +53,7 @@ classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
             key.ll_mat_mean = mean(ll_mat);
             key.ll_mat_std = std(ll_mat);
             key.ll_mat = ll_mat;
-            key.run_time = toc;
+            key.run_time = toc/key.nrun;
 			self.insert(key)
             datestr(now)
 		end
