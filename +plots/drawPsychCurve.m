@@ -11,7 +11,7 @@ switch type
         keys = fetch(varprecision.FitPrediction & varargin);
         
     case 'bps'
-        keys = fetch(varprecision.FitPredictionBps & varargin);
+        keys = fetch(varprecision.FitPredictionBpsBest & varargin);
         
 end
 exps = fetch(varprecision.Experiment & keys);
@@ -66,7 +66,7 @@ for ii = 1:length(exps)
                 if strcmp(type, 'both')
                     fit_pred = fetch1(varprecision.FitPrediction & exp & keys,'prediction_plot');
                 elseif strcmp(type, 'bps')
-                    fit_pred = fetch1(varprecision.FitPredictionBps & exp & keys,'prediction_plot');
+                    fit_pred = fetch1(varprecision.FitPredictionBpsBest & exp & keys,'prediction_plot');
                 end
                 plot(stims,p_right,'o')
                 plot(stims,fit_pred)
@@ -75,7 +75,7 @@ for ii = 1:length(exps)
                 if strcmp(type, 'both')
                     fit_pred = fetchn(varprecision.FitPrediction & exp & keys,'prediction_plot');
                 elseif strcmp(type, 'bps')
-                    fit_pred = fetchn(varprecision.FitPredictionBps & exp & keys,'prediction_plot');
+                    fit_pred = fetchn(varprecision.FitPredictionBpsBest & exp & keys,'prediction_plot');
                 end
                 [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                 fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
@@ -108,7 +108,7 @@ for ii = 1:length(exps)
                     if strcmp(type, 'both')
                         fit_pred = fetch1(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
                     elseif strcmp(type, 'bps')
-                        fit_pred = fetch1(varprecision.FitPredictionBps & exp & keys & model,'prediction_plot');
+                        fit_pred = fetch1(varprecision.FitPredictionBpsBest & exp & keys & model,'prediction_plot');
                     end
                     plot(stims,p_right,'o')
                     plot(stims,fit_pred)
@@ -117,7 +117,7 @@ for ii = 1:length(exps)
                     if strcmp(type, 'both')
                         fit_pred = fetchn(varprecision.FitPrediction & exp & keys & model,'prediction_plot');
                     elseif strcmp(type, 'bps')
-                        fit_pred = fetchn(varprecision.FitPredictionBps & exp & keys & model,'prediction_plot');
+                        fit_pred = fetchn(varprecision.FitPredictionBpsBest & exp & keys & model,'prediction_plot');
                     end
                     [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                     fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);

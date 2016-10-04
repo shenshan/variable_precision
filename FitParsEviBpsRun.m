@@ -80,6 +80,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             key.llmax = -llmax;
             
 			self.insert(key)
+            datestr(now)
         
 		end
 	end

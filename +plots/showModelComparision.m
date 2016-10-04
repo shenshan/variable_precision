@@ -8,7 +8,7 @@ assert(ismember(cmp_type, {'aic','aicc','bic','lml','llmax'}), 'Non-existing com
 
 
 exps = fetch(varprecision.Experiment & varargin(1));
-res = fetch(varprecision.FitParsEviBps & varargin);
+res = fetch(varprecision.FitParsEviBpsBest & varargin);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 % jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
 
@@ -21,16 +21,16 @@ for exp = exps'
     for ikey = 1:length(keys_rec)
         key_rec = keys_rec(ikey);
 %         evi = fetchn(varprecision.FitParametersEvidence & key_rec & jkmap & varargin, cmp_type);
-        evi = fetchn(varprecision.FitParsEviBps & key_rec & varargin, cmp_type);
+        evi = fetchn(varprecision.FitParsEviBpsBest & key_rec & varargin, cmp_type);
         eviMat(ikey,:) = evi;
     end
     
     % fetch the evidence for VPG
 %     evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
     if ismember(exp.exp_id,[1:5,9])
-        evi = fetchn(varprecision.FitParsEviBps & keys_rec & varargin & 'model_name="VPG"', cmp_type);
+        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="VPG"', cmp_type);
     else
-        evi = fetchn(varprecision.FitParsEviBps & keys_rec & varargin & 'model_name="XPVPG"', cmp_type);
+        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="XPVPG"', cmp_type);
     end
     model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract

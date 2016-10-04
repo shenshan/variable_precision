@@ -29,7 +29,7 @@ else
         stimulusMat = repmat(stimuli,1,max(setsize));
     elseif ismember(exp_id,[4,5])
         stimulusMat = [stimuli, zeros(length(stimuli),max(setsize)-1)];
-    else ismember(exp_id,[1,9])
+    else
         stimulusMat = stimuli;
     end
 end
