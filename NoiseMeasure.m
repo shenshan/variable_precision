@@ -2,7 +2,7 @@
 varprecision.NoiseMeasure (computed) # measure noise of LL computation
 ->varprecision.Data
 ->varprecision.Model
-measure_idx  : int     # measure index
+->varprecision.NoiseMeasureRun
 -----
 nrun   : int     # number of runs
 ll_mat : longblob # all log likelihoods that have benn computed
@@ -17,7 +17,7 @@ run_time: double    # time per ll run, in secs
 classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = (varprecision.Data * varprecision.Model) & varprecision.FitParsEviBpsBest
+        popRel = (varprecision.Data * varprecision.Model * varprecision.NoiseMeasureRun) & varprecision.FitParsEviBpsBest
     end
 	methods(Access=protected)
 
@@ -44,16 +44,18 @@ classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
                 case 'XPVPG'
                     params = [p_right,lambda,theta,beta,guess];
             end
-            key.nrun = 20;
-            key.trial_num_sim = 1000;
+            [key.nrun,key.trial_num_sim] = fetch1(varprecision.NoiseMeasureRun & key, 'nruns','run_trial_num_sim');
+            
             ll_mat = zeros(1,key.nrun);
             for ii = 1:key.nrun
                 ll_mat(ii) = -varprecision.decisionrule_bps.loglikelihood(params,key);
             end
             key.ll_mat_mean = mean(ll_mat);
             key.ll_mat_std = std(ll_mat);
+            key.ll_mat_range = range(ll_mat);
             key.ll_mat = ll_mat;
             key.run_time = toc/key.nrun;
+            
 			self.insert(key)
             datestr(now)
 		end
