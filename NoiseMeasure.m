@@ -23,7 +23,6 @@ classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
 
 		function makeTuples(self, key)
             tic
-            key.measure_idx = 1;
             [~,key.run_host] = system('hostname');
 			[p_right,lambda,theta,beta,guess] = fetch1(varprecision.FitParsEviBpsBest & key,'p_right_hat','lambda_hat','theta_hat','beta_hat','guess_hat');
             switch key.model_name
