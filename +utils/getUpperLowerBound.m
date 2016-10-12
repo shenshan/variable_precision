@@ -13,6 +13,10 @@ if isvector(out_up) && size(out_low,2)==1
     out_up = out_up';
     out_low = out_low';
 end
-        
-patch = [out_up, fliplr(out_low)];
+
+if size(inputMat,1)>4
+    patch = cat(1,out_up, flipud(out_low));
+else        
+    patch = [out_up, fliplr(out_low)];
+end
 
