@@ -73,6 +73,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                         key.beta_hat = pars(6);
                     case 'XPG'
                         key.beta_hat = pars(6);
+                        key.guess_hat = pars(7);
                     case 'XPVP'
                         key.theta_hat = pars(6);
                         key.beta_hat = pars(7);

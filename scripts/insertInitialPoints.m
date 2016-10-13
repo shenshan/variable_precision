@@ -1,10 +1,12 @@
-initial_point_vec = [0.5,0.05,0.01,1,0.02];
+% initial_point_vec = [0.5,0.05,0.01,0,0.02];
+
+initial_point_vec = [0.5,0.6,0.2,0.01,0.01,0.06,3,0.2];
 
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=11');
 
 for iKey = keys'
-    iKey.int_point_id=1;
+    iKey.int_point_id=5;
     if ~ismember(iKey.exp_id,[3,5,7,10,11])
         switch iKey.model_name
             case 'CP'
@@ -26,22 +28,39 @@ for iKey = keys'
         end
     else
         switch iKey.model_name
+%             case 'CP'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2]);
+%             case 'CPG'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,5]);
+%             case 'VP'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3]);
+%             case 'VPG'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,5]);
+%             case 'XP'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,4]);
+%             case 'XPG'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,4,5]);
+%             case 'XPVP'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4]);
+%             case 'XPVPG'
+%                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4,5]);
             case 'CP'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2]);
+                iKey.initial_point = initial_point_vec(1:5);
             case 'CPG'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,5]);
+                iKey.initial_point = initial_point_vec([1:5,8]);
             case 'VP'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,3]);
+                iKey.initial_point = initial_point_vec(1:6);
             case 'VPG'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,3,5]);
+                iKey.initial_point = initial_point_vec([1:6,8]);
             case 'XP'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,4]);
+                iKey.initial_point = initial_point_vec([1:5,7]);
             case 'XPG'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,4,5]);
+                iKey.initial_point = initial_point_vec([1:5,7,8]);
             case 'XPVP'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4]);
+                iKey.initial_point = initial_point_vec(1:7);
             case 'XPVPG'
-                iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4,5]);
+                iKey.initial_point = initial_point_vec(1:8);
+                
         end
     end
     insert(varprecision.InitialPoint, iKey)

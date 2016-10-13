@@ -1,5 +1,5 @@
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-keys = fetch(varprecision.InitialPoint & 'exp_id = 11' & 'int_point_id in (1)');
+keys = fetch(varprecision.InitialPoint & 'exp_id = 11' & 'int_point_id in (2,3,4)');
 
 for iKey = keys'
     iKey.run_idx = 1;
