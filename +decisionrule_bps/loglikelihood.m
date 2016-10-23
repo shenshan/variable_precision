@@ -1,5 +1,8 @@
-function [LL,predMat] = loglikelihood(params,key)
+function [LL,predMat,prediction] = loglikelihood(params,key)
 %loglikelihood computes likelihood given all trials and one set of parameters
+%   LL is the negative log likelihood, predMat is the likelihood of a model
+%   for each trial given subject's response, prediction is the model
+%   prediction of reporting "right" or "present" for each trial.
 
 [stimuli, response, set_size] = fetch1(varprecision.Data & key ,'stimuli','response','set_size');
 setsizes = fetch1(varprecision.Experiment & key, 'setsize');
@@ -160,7 +163,7 @@ else
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
-        stimuliMat = varprecision.utils.adjustStimuliSize(exp_id,stimuli_sub,setsize);
+        stimuliMat = varprecision.utils.adjustStimuliSize(key.exp_id,stimuli_sub,setsize);
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
@@ -200,13 +203,17 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
+if ismember(key.model_name,{'CPG','VPG','XPG','XPVPG'})
+    predMat = predMat*(1-pars.guess) + .5*pars.guess;
+end
+
+prediction = predMat;
+
 if ~ismember(key.exp_id,[10,11])
     predMat(response==-1) = 1-predMat(response==-1);
 else
     predMat(response==0) = 1-predMat(response==0);
 end
 
-if ismember(key.model_name,{'CPG','VPG','XPG','XPVPG'})
-    predMat = predMat*(1-pars.guess) + .5*pars.guess;
-end
+
 LL = -sum(log(predMat));

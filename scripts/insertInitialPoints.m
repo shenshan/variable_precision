@@ -1,12 +1,12 @@
 % initial_point_vec = [0.5,0.05,0.01,0,0.02];
 
-initial_point_vec = [0.5,0.6,0.2,0.01,0.01,0.06,3,0.2];
+initial_point_vec = [0.5,0.05,0.05,0.05,0.05,0.01,3,0.2];
 
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=11');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=7');
 
 for iKey = keys'
-    iKey.int_point_id=5;
+    iKey.int_point_id=1;
     if ~ismember(iKey.exp_id,[3,5,7,10,11])
         switch iKey.model_name
             case 'CP'

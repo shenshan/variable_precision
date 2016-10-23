@@ -1,11 +1,11 @@
-function [outMat,dim,len] = decell(inMat)
+function [outMat,ndim,len] = decell(inMat)
 %DECELL Covert a cell array to a matrix with desired size
 %   length of inMat becomes the last dimension of outMat, dim returns
 %   number of dimesions for outMat, and len returns the size of the last dimension.
 
 if ~iscell(inMat)
     outMat = inMat;
-    dim = 1;
+    ndim = 1;
     len = 1;
     return
 end
@@ -23,4 +23,4 @@ else
 end
 
 sz = size(outMat);
-dim = length(sz); len = sz(end);
+ndim = length(sz); len = sz(end);

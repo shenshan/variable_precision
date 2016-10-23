@@ -5,8 +5,8 @@ function drawPsychCurve2D(type, varargin)
 assert(ismember(type, {'data','both'}), 'please select one of the following: data, both:')
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
-res_data = cellfun(@isempty,strfind(varargin,'model_name'));
-res_model = cellfun(@isempty,strfind(varargin,'subj_initial'));
+res_data = varprecision.utils.parseVarargin('subj',varargin);
+res_model = varprecision.utils.parseVarargin('model',varargin);
 keys = fetch(varprecision.DataStats2D & varargin(res_data) & subjs);
 
 
