@@ -25,7 +25,9 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             tuple = key;
             [lb,ub,plb,pub] = fetch1(varprecision.ParamsRange & key,'lower_bound','upper_bound','plb','pub');
+            sub = 0;
             if ~isempty(strfind(key.subj_initial,'_ss_'))
+                sub = 1;
                 if strcmp(key.model_name,'CP')
                     idx = 1:2;
                 else
@@ -41,7 +43,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             [pars,llmax] = bps(@(params)varprecision.decisionrule_bps.loglikelihood(params,tuple),x0,lb,ub,plb,pub);
             
-            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
+            setsizes = unique(fetch1(varprecision.Data & key, 'set_size'));
             
             if length(setsizes)==1
                 key.p_right_hat = pars(1);
@@ -97,6 +99,9 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             nTrials = fetch1(varprecision.Data & key, 'ntrials');
             npars = fetch1(varprecision.Model & key, 'npars');
+            if sub == 1
+                npars = npars - 3;
+            end
             key.bic = llmax + 0.5*npars*log(nTrials);
             key.aic = llmax + npars;
             key.aicc = key.aic + npars*(npars+1)/(nTrials-npars-1);
