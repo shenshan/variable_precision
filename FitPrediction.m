@@ -68,11 +68,7 @@ classdef FitPrediction < dj.Relvar & dj.AutoPopulate
                 % for exp6-11, compute the predictions trial by trial 
                 [stimuli,set_size] = fetch1(varprecision.Data & key,'stimuli','set_size');
                 target_stimuli = stimuli(:,1);
-                % to be deleted
-                    if ismember(exp_id, [6,9])
-                        set_size = ones(length(stimuli),1)*4;
-                    end
-                %
+                
                 if exp_id ~= 9
                     [jmap,kmap] = fetch1(varprecision.JbarKappaMap & key,'jmap','kmap');
                     stimuli = stimuli*pi/180;

@@ -1,9 +1,9 @@
-% initial_point_vec = [0.5,0.05,0.01,0,0.02];
+initial_point_vec = [0.5,0.05,0.01,0,0.02];
 
-initial_point_vec = [0.5,0.05,0.05,0.05,0.05,0.01,3,0.2];
+% initial_point_vec = [0.5,0.1,0.05,0.03,0.01,0.05,3,0.01];
 
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=7');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=9');
 
 for iKey = keys'
     iKey.int_point_id=1;

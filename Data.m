@@ -17,8 +17,24 @@ classdef Data < dj.Relvar & dj.AutoPopulate
 	methods(Access=protected)
 
 		function makeTuples(self, key)
+            
+                      
             type = fetch1(varprecision.Subject & key, 'subj_type');
-            [key.stimuli, key.response, key.set_size] = varprecision.utils.readData(key,type);
+            
+            if strcmp(type,'real_sub')
+                tuple = key; 
+                str = regexp(key.subj_initial, '_ss_','split');
+                tuple.subj_initial = str{1};
+                setsize = str2double(str{2});
+                type = 'real';
+                [stimuli, response, set_size] = varprecision.utils.readData(tuple,type);
+                key.stimuli = stimuli(set_size==setsize,:);
+                key.response = response(set_size==setsize);
+                key.set_size = set_size(set_size==setsize);
+            else
+                [key.stimuli, key.response, key.set_size] = varprecision.utils.readData(key,type);
+            end                
+ 
             key.ntrials = length(key.response);
 			self.insert(key)
 		end

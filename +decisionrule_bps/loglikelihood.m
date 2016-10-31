@@ -5,7 +5,7 @@ function [LL,predMat,prediction] = loglikelihood(params,key)
 %   prediction of reporting "right" or "present" for each trial.
 
 [stimuli, response, set_size] = fetch1(varprecision.Data & key ,'stimuli','response','set_size');
-setsizes = fetch1(varprecision.Experiment & key, 'setsize');
+setsizes = unique(set_size);
 exp_id = key.exp_id;
 
 if ismember(key.exp_id,[6,7,8,10,11])
@@ -18,7 +18,9 @@ end
 if ismember(key.exp_id,[3,5,7])
     exp_id = exp_id - 1;
 end
-if ismember(key.exp_id,[3,5,7,10,11])
+
+subj_type = fetch1(varprecision.Subject & ['subj_initial="' key.subj_initial '"'],'subj_type');
+if ismember(key.exp_id,[3,5,7,10,11]) && ismember(subj_type,{'real','fake'})
     
     pars.p_right = params(1);
     pars.lambdaVec = params(2:5);

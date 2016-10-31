@@ -1,7 +1,7 @@
 
-exp_id = 7;
-% model_names = {'CP','CPG','VP','VPG'};
-model_names = {'XPVP','XPVPG'};
+exp_id = 9;
+model_names = {'CP','CPG','VP','VPG'};
+% model_names = {'XPVP','XPVPG'};
 % model_names = {'XPVPG'};
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0];

@@ -28,7 +28,7 @@ classdef FitParsEviBps < dj.Relvar & dj.AutoPopulate
 
             [pars,llmax] = bps(@(params)varprecision.decisionrule_bps.loglikelihood(params,key),x0,lb,ub,plb,pub);
             
-            setsizes = fetch1(varprecision.Experiment & key, 'setsize');
+            setsizes = unique(fetch1(varprecision.Data & key, 'set_size'));
             
             if length(setsizes)==1
                 key.p_right_hat = pars(1);

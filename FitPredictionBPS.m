@@ -26,13 +26,7 @@ classdef FitPredictionBps < dj.Relvar & dj.AutoPopulate
             fit_pars = fetch(varprecision.FitParsEviBps & key,'*');
             gaussModelIdx = [1,2,3,4,5,9];
             target_stimuli = stimuli(:,1);
-            % to be deleted
-                if ismember(key.exp_id, [2,4,6,9])
-                    set_size = ones(length(stimuli),1)*4;
-                elseif key.exp_id == 1
-                    set_size = ones(length(stimuli),1);
-                end
-            %
+            
             if ismember(key.exp_id, [6,7,8,10,11])
                 [jmap,kmap] = fetch1(varprecision.JbarKappaMap  & 'jkmap_id = 2' & key,'jmap','kmap');
                 stimuli = stimuli*pi/180;
