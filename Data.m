@@ -29,6 +29,7 @@ classdef Data < dj.Relvar & dj.AutoPopulate
                 type = 'real';
                 [stimuli, response, set_size] = varprecision.utils.readData(tuple,type);
                 key.stimuli = stimuli(set_size==setsize,:);
+                key.stimuli = stimuli(:,1:setsize);
                 key.response = response(set_size==setsize);
                 key.set_size = set_size(set_size==setsize);
             else

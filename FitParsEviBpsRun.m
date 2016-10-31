@@ -25,6 +25,17 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             tuple = key;
             [lb,ub,plb,pub] = fetch1(varprecision.ParamsRange & key,'lower_bound','upper_bound','plb','pub');
+            if ~isempty(strfind(key.subj_initial,'_ss_'))
+                if strcmp(key.model_name,'CP')
+                    idx = 1:2;
+                else
+                    idx = [1,2,6:length(lb)];
+                end
+                lb = lb(idx);
+                ub = ub(idx);
+                plb = plb(idx);
+                pub = pub(idx);
+            end
             x0 = fetch1(varprecision.InitialPoint & key, 'initial_point');           
             tuple.trial_num_sim = fetch1(varprecision.RunBps & key, 'trial_num_sim');
             

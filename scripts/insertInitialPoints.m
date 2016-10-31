@@ -1,13 +1,14 @@
-initial_point_vec = [0.5,0.05,0.01,0,0.02];
+initial_point_vec = [0.5,0.05,0.01,0,0.01];
 
 % initial_point_vec = [0.5,0.1,0.05,0.03,0.01,0.05,3,0.01];
 
-subjs = fetch(varprecision.Subject & 'subj_type="real"');
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=9');
+subj_type = 'real_sub';
+subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=11');
 
 for iKey = keys'
     iKey.int_point_id=1;
-    if ~ismember(iKey.exp_id,[3,5,7,10,11])
+    if ~ismember(iKey.exp_id,[3,5,7,10,11]) || strcmp(subj_type,'real_sub')
         switch iKey.model_name
             case 'CP'
                 iKey.initial_point = initial_point_vec(1:2);
