@@ -1,20 +1,21 @@
-function showModelComparision(data_type, cmp_type, subtract, varargin)
+function showModelComparision(data_type, subj_type, cmp_type, subtract, varargin)
 %SHOWMODELCOMPARISION plots the model comparison results
 %   varargin can specify the expriment, models, subjects, parameter sets
 %   type specifies the type of evidence needed
 
 assert(ismember(data_type, {'mean','ind'}), 'Non-existing data type, please enter "mean" or "ind"')
+assert(ismember(subj_type, {'real','real_sub'}), 'Non-existing data type, please enter "mean" or "ind"')
 assert(ismember(cmp_type, {'aic','aicc','bic','lml','llmax'}), 'Non-existing comparison type, please enter one of the following: aic, aicc, bic, lml')
 
 
 exps = fetch(varprecision.Experiment & varargin(1));
 res = fetch(varprecision.FitParsEviBpsBest & varargin);
-subjs = fetch(varprecision.Subject & 'subj_type="real"');
+subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
 % jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
 
 for exp = exps'
     
-    keys_rec = fetch(varprecision.Recording & exp & subjs & varargin(1));
+    keys_rec = fetch(varprecision.Recording & exp & subjs & varargin);
     models = fetch(varprecision.Model & exp & res);
     
     eviMat = zeros(length(keys_rec),length(models));
@@ -27,7 +28,7 @@ for exp = exps'
     
     % fetch the evidence for VPG
 %     evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
-    if ismember(exp.exp_id,[1:5,9])
+    if ismember(exp.exp_id,[1:5,9,10])
         evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="VPG"', cmp_type);
     else
         evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="XPVPG"', cmp_type);

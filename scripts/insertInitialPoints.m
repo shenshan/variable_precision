@@ -1,10 +1,10 @@
-initial_point_vec = [0.5,0.05,0.01,0,0.01];
+initial_point_vec = [0.5,0.05,0.02,0,0.02];
 
 % initial_point_vec = [0.5,0.1,0.05,0.03,0.01,0.05,3,0.01];
 
-subj_type = 'real_sub';
+subj_type = 'real';
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id=11');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("XP","XPG","XPVP","XPVPG")' & 'exp_id=9');
 
 for iKey = keys'
     iKey.int_point_id=1;
