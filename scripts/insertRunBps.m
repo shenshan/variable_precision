@@ -1,5 +1,5 @@
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
-keys = fetch(varprecision.InitialPoint & subjs & 'model_name in ("XP","XPG","XPVP","XPVPG")' & 'exp_id = 9' & 'int_point_id in (2,3,4,5)');
+keys = fetch(varprecision.InitialPoint & subjs & 'model_name in ("XP","XPG","XPVP","XPVPG")' & 'exp_id = 9' & 'int_point_id in (1)');
 
 for iKey = keys'
     iKey.run_idx = 1;
