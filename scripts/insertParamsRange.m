@@ -1,6 +1,7 @@
 
-exp_id = 9;
-model_names = {'XP','XPG','XPVP','XPVPG'};
+exp_id = 10;
+model_names = {'CP','CPG','VP','VPG'};
+% model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
 % model_names = {'XPVPG'};
 

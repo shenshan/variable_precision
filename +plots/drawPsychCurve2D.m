@@ -6,8 +6,9 @@ assert(ismember(type, {'data','both'}), 'please select one of the following: dat
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
 res_data = varprecision.utils.parseVarargin('subj',varargin);
+res_exp = varprecision.utils.parseVarargin('exp',varargin);
 res_model = varprecision.utils.parseVarargin('model',varargin);
-keys = fetch(varprecision.DataStats2D & varargin(res_data) & subjs);
+keys = fetch(varprecision.DataStats2D & res_data & res_exp & subjs);
 
 
 if length(keys)==1
@@ -38,7 +39,7 @@ if strcmp(type,'data')
     ylim([0,1])
     fig.cleanup
 else
-    models = fetch(varprecision.Model & varargin(res_model));
+    models = fetch(varprecision.Model & res_exp & res_model);
     if length(models) == 1
         fig = Figure(102,'size',[80,50]);
     elseif length(models)==4
@@ -79,7 +80,7 @@ else
             end
             hold on
             model = models(jj);
-            model_name = fetch1(varprecision.Model & model & keys, 'model_name');
+            model_name = fetch1(varprecision.Model & res_exp & model, 'model_name');
             if length(keys)==1;
 
                 fit_pred = fetch1(varprecision.FitPredictionBpsBest2D & keys & model,'prediction_plot_2d');

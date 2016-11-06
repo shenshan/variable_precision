@@ -28,9 +28,14 @@ classdef DataStats2D < dj.Relvar & dj.AutoPopulate
             [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
             target_stimuli = stimuli(:,1);
             dist_stimuli = stimuli(:,2:end);
-            [~, min_idx] = min(abs(dist_stimuli),[],2);
-            min_idx = sub2ind(size(dist_stimuli),(1:length(dist_stimuli))',min_idx);
-            min_dist_stimuli = dist_stimuli(min_idx);
+            
+            if ismember(key.exp_id,[6,7])
+                [~, min_idx] = min(abs(dist_stimuli),[],2);
+                min_idx = sub2ind(size(dist_stimuli),(1:length(dist_stimuli))',min_idx);
+                min_dist_stimuli = dist_stimuli(min_idx);
+            else
+                min_dist_stimuli = dist_stimuli(:,1);
+            end
 
             idx1 = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
             idx2 = interp1(dist,1:length(dist),min_dist_stimuli, 'nearest','extrap');

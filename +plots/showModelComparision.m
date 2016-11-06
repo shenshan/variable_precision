@@ -7,16 +7,20 @@ assert(ismember(data_type, {'mean','ind'}), 'Non-existing data type, please ente
 assert(ismember(subj_type, {'real','real_sub'}), 'Non-existing data type, please enter "mean" or "ind"')
 assert(ismember(cmp_type, {'aic','aicc','bic','lml','llmax'}), 'Non-existing comparison type, please enter one of the following: aic, aicc, bic, lml')
 
+exp_res = varprecision.utils.parseVarargin('exp',varargin);
+subj_res = varprecision.utils.parseVarargin('subj',varargin);
+model_res = varprecision.utils.parseVarargin('model',varargin);
 
-exps = fetch(varprecision.Experiment & varargin(1));
+exps = fetch(varprecision.Experiment & exp_res);
+
 res = fetch(varprecision.FitParsEviBpsBest & varargin);
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
 % jkmap_id = fetch1(varprecision.JbarKappaMap & jkmap,'jkmap_id');
 
 for exp = exps'
     
-    keys_rec = fetch(varprecision.Recording & exp & subjs & varargin);
-    models = fetch(varprecision.Model & exp & res);
+    keys_rec = fetch(varprecision.Recording & exp & subjs & subj_res);
+    models = fetch(varprecision.Model & exp & model_res);
     
     eviMat = zeros(length(keys_rec),length(models));
     for ikey = 1:length(keys_rec)

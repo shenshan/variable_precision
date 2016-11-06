@@ -9,8 +9,7 @@ function [prediction, response] = exp10(x,pars)
 %   following fields: pars.model 'CP', 'VP', pars.lambda,
 %   pars.p_right. pars.lambda is scalar for CP model, pars.lambdaMat is matrix for VP model,
 %   and pars.p_right is a vector
-%   
-pars.pre indicates whether it is to generate a pre-computed table.
+%   pars.pre indicates whether it is to generate a pre-computed table.
     
     if pars.pre
         nTrials = size(x, 3);
@@ -22,25 +21,23 @@ pars.pre indicates whether it is to generate a pre-computed table.
     nItems = size(x,1);
     p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
-    sT = 0;
-    k0 = 32.8;
+    j0 = 0.0394;
     
-    % to be moved outside the function
-    j0 = 4*k0*besseli(1,k0)/besseli(0,k0);
-    sigma_s = 1/sqrt(j0)*180/pi;
     
     if ismember(pars.model_name, {'CP','CPG'})
         pars.lambdaMat = pars.lambda;
     end
     if nItems == 1
-        term = exp(-x*pars.lambdaMat)
+        term = sqrt(pars.lambdaMat/j0)./exp(x.^2.*pars.lambdaMat./(pars.lambdaMat + j0));
     else
-        kappa1 = sqrt((repmat(sum(pars.lambdaMat.*cos(2*x)),nItems,1) - pars.lambdaMat.*cos(2*x) + k0*cos(2*sT)).^2 ...
-                   + ((repmat(sum(pars.lambdaMat.*sin(2*x)),nItems,1) - pars.lambdaMat.*sin(2*x) + k0*sin(2*sT)).^2));
-        kappa0 = sqrt((sum(pars.lambdaMat.*cos(2*x)) + k0*cos(2*sT)).^2 ...
-                    + (sum(pars.lambdaMat.*sin(2*x)) + k0*sin(2*sT)).^2);
-        kappa0 = repmat(kappa0,nItems,1);
-        term = sum(exp(pars.lambdaMat.*cos(2*(x-sT))+kappa1-kappa0).*besseli0_fast(kappa1,1)./besseli0_fast(kappa0,1))/nItems;
+        J_sum_dis = bsxfun(@minus,sum(pars.lambdaMat),pars.lambdaMat) + j0;
+        x2J_sum_dis = bsxfun(@minus,sum(x.^2.*pars.lambdaMat),x.^2.*pars.lambdaMat);
+        
+        J_sum = sum(pars.lambdaMat)+j0;
+        x2J_sum = sum(x.^2.*pars.lambdaMat);
+        nomi = sum(1./sqrt(J_sum_dis).*exp(x2J_sum_dis./J_sum_dis))/nItems;
+        denomi = 1./sqrt(J_sum).*exp(x2J_sum./J_sum);
+        term = nomi./denomi;
     end
     
     obs_response = bsxfun(@times,repmat(term,[1,1,length(pars.p_right)]),p_right_adj./(1-p_right_adj));
