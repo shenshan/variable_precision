@@ -57,15 +57,15 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                     case 'VPG'
                         key.theta_hat = pars(3);
                         key.guess_hat = pars(4);
-                    case 'XP'
+                    case {'OP','XP'}
                         key.beta_hat = pars(3);
-                    case 'XPG'
+                    case {'OPG','XPG'}
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
-                    case 'XPVP'
+                    case {'OPVP','XPVP'}
                         key.theta_hat = pars(3);
                         key.beta_hat = pars(4);
-                    case 'XPVPG'
+                    case {'OPVPG','XPVPG'}
                         key.theta_hat = pars(3);
                         key.beta_hat = pars(4);
                         key.guess_hat = pars(5);
@@ -82,15 +82,15 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                     case 'VPG'
                         key.theta_hat = pars(6);
                         key.guess_hat = pars(7);
-                    case 'XP'
+                    case {'OP','XP'}
                         key.beta_hat = pars(6);
-                    case 'XPG'
+                    case {'OPG','XPG'}
                         key.beta_hat = pars(6);
                         key.guess_hat = pars(7);
-                    case 'XPVP'
+                    case {'OPVP','XPVP'}
                         key.theta_hat = pars(6);
                         key.beta_hat = pars(7);
-                    case 'XPVPG'
+                    case {'OPVPG','XPVPG'}
                         key.theta_hat = pars(6);
                         key.beta_hat = pars(7);
                         key.guess_hat = pars(8);
