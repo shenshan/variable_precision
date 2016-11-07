@@ -25,18 +25,18 @@ function [prediction, response] = exp10(x,pars)
     
     
     if ismember(pars.model_name, {'CP','CPG'})
-        pars.lambdaMat = pars.lambda;
+        pars.lambdaMat = pars.lambda*ones(size(x));
     end
     if nItems == 1
-        term = sqrt(pars.lambdaMat/j0)./exp(x.^2.*pars.lambdaMat./(pars.lambdaMat + j0));
+        term = sqrt((pars.lambdaMat+j0)/j0)./exp(.5*x.^2.*pars.lambdaMat.^2./(pars.lambdaMat + j0));
     else
-        J_sum_dis = bsxfun(@minus,sum(pars.lambdaMat),pars.lambdaMat) + j0;
-        x2J_sum_dis = bsxfun(@minus,sum(x.^2.*pars.lambdaMat),x.^2.*pars.lambdaMat);
-        
-        J_sum = sum(pars.lambdaMat)+j0;
-        x2J_sum = sum(x.^2.*pars.lambdaMat);
-        nomi = sum(1./sqrt(J_sum_dis).*exp(x2J_sum_dis./J_sum_dis))/nItems;
-        denomi = 1./sqrt(J_sum).*exp(x2J_sum./J_sum);
+        J_sum_dis = bsxfun(@minus,sum(pars.lambdaMat,1),pars.lambdaMat) + j0;
+        xJ_sum_dis = bsxfun(@minus,sum(x.*pars.lambdaMat,1),x.*pars.lambdaMat);
+
+        J_sum = sum(pars.lambdaMat,1) + j0;
+        xJ_sum = sum(x.*pars.lambdaMat,1);
+        nomi = sum(1./sqrt(J_sum_dis).*exp(0.5.*bsxfun(@minus, xJ_sum_dis.^2./J_sum_dis, xJ_sum.^2./J_sum)),1)/nItems;
+        denomi = 1./sqrt(J_sum);
         term = nomi./denomi;
     end
     

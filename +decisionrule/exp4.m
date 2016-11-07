@@ -29,7 +29,7 @@ function [prediction, response] = exp4(x,pars)
         term2 = squeeze(sum (f.*(1 - erf(x_c)),1));
 
             
-    elseif ismember(pars.model_name,{'VP','VPG'})
+    else
         sigmaMat = sqrt(1./pars.lambdaMat);
         logf = x.^2*pars.sigma_s^2/2./sigmaMat.^2./(sigmaMat.^2 + pars.sigma_s^2);
         % subtract constant to avoid numerical problems
