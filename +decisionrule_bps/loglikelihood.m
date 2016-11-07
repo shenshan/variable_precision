@@ -32,15 +32,15 @@ if ismember(key.exp_id,[3,5,7,10,11]) && ismember(subj_type,{'real','fake'})
         case 'VPG'
             pars.theta = params(6);
             pars.guess = params(7);
-        case 'XP'
+        case {'OP','XP'}
             pars.beta = params(6);
-        case 'XPG'
+        case {'OPG','XPG'}
             pars.beta = params(6);
             pars.guess = params(7);
-        case 'XPVP'
+        case {'OPVP','XPVP'}
             pars.theta = params(6);
             pars.beta = params(7);
-        case 'XPVPG'
+        case {'OPVPG','XPVPG'}
             pars.theta = params(6);
             pars.beta = params(7);
             pars.guess = params(8);
@@ -56,15 +56,15 @@ else
         case 'VPG'
             pars.theta = params(3);
             pars.guess = params(4);
-        case 'XP'
+        case {'OP','XP'}
             pars.beta = params(3);
-        case 'XPG'
+        case {'OPG','XPG'}
             pars.beta = params(3);
             pars.guess = params(4);
-        case 'XPVP'
+        case {'OPVP','XPVP'}
             pars.theta = params(3);
             pars.beta = params(4);
-        case 'XPVPG'
+        case {'OPVPG','XPVPG'}
             pars.theta = params(3);
             pars.beta = params(4);
             pars.guess = params(5);
@@ -98,13 +98,13 @@ if length(setsizes)==1
             pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
         end
-    elseif ismember(key.model_name, {'XP','XPG','XPVP','XPVPG'})
+    elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG'})
         sigma_baseline = 1/sqrt(pars.lambda);
     end
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
         stimulus = stimuli(ii,:);
-        if ismember(key.model_name, {'XP','XPG'})
+        if ismember(key.model_name, {'OP','OPG','XP','XPG'})
             sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
             if vm
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -116,7 +116,7 @@ if length(setsizes)==1
                 pars.lambdaMat = repmat(pars.lambdaMat,trial_num_sim,1)';
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
             end
-        elseif ismember(key.model_name, {'XPVP','XPVPG'})
+        elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG'})
             sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));           
             pars.lambdaMat = 1./sigma.^2;
             pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
@@ -177,7 +177,7 @@ else
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             end
-        elseif ismember(key.model_name, {'XP','XPG','XPVP','XPVPG'})
+        elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG'})
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
@@ -185,7 +185,7 @@ else
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
-            if ismember(key.model_name, {'XP','XPG'})
+            if ismember(key.model_name, {'OP','OPG','XP','XPG'})
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 if vm
                     pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -197,7 +197,7 @@ else
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                 end
-            elseif ismember(key.model_name, {'XPVP','XPVPG'})
+            elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG'})
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 pars.lambdaMat = 1./sigma.^2;
                 pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
@@ -237,7 +237,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ismember(key.model_name,{'CPG','VPG','XPG','XPVPG'})
+if ismember(key.model_name,{'CPG','VPG','OPG','XPG','XPVPG'})
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 

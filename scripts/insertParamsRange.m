@@ -1,6 +1,6 @@
 
-exp_id = 10;
-model_names = {'CP','CPG','VP','VPG'};
+exp_id = 5;
+model_names = {'OP','OPG','OPVP','OPVPG'};
 % model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
 % model_names = {'XPVPG'};
@@ -24,13 +24,13 @@ for ii = 1:length(model_names)
                 idx = [1,2,2,2,2,3];
             case 'VPG'
                 idx = [1,2,2,2,2,3,5];
-            case 'XP'
+            case {'OP','XP'}
                 idx = [1,2,2,2,2,4];
-            case 'XPG'
+            case {'OPG','XPG'}
                 idx = [1,2,2,2,2,4,5];
-            case 'XPVP'
+            case {'OPVP','XPVP'}
                 idx = [1,2,2,2,2,3,4];
-            case 'XPVPG'
+            case {'OPVPG','XPVPG'}
                 idx = [1,2,2,2,2,3,4,5];
         end
     else
@@ -43,13 +43,13 @@ for ii = 1:length(model_names)
                 idx = 1:3;
             case 'VPG'
                 idx = [1:3,5];
-            case 'XP'
+            case {'OP','XP'}
                 idx = [1,2,4];
-            case 'XPG'
+            case {'OPG','XPG'}
                 idx = [1,2,4,5];
-            case 'XPVP'
+            case {'OPVP','XPVP'}
                 idx = 1:4;
-            case 'XPVPG'
+            case {'OPVPG','XPVPG'}
                 idx = 1:5;
         end
     end

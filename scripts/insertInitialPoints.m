@@ -1,10 +1,10 @@
-initial_point_vec = [0.5,0.05,0.01,1,0.02];
+initial_point_vec = [0.5,0.05,0.01,1,0.01];
 
 % initial_point_vec = [0.5,0.1,0.05,0.03,0.01,0.05,3,0.01];
 
 subj_type = 'real';
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CP","CPG","VP","VPG")' & 'exp_id=10');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("OP","OPG","OPVP","OPVPG")' & 'exp_id in (1,2,3,4,5)');
 
 for iKey = keys'
     iKey.int_point_id=1;
@@ -18,13 +18,13 @@ for iKey = keys'
                 iKey.initial_point = initial_point_vec(1:3);
             case 'VPG'
                 iKey.initial_point = initial_point_vec([1:3,5]);
-            case 'XP'
+            case {'OP','XP'}
                 iKey.initial_point = initial_point_vec([1,2,4]);
-            case 'XPG'
+            case {'OPG','XPG'}
                 iKey.initial_point = initial_point_vec([1,2,4,5]);
-            case 'XPVP'
+            case {'OPVP','XPVP'}
                 iKey.initial_point = initial_point_vec(1:4);
-            case 'XPVPG'
+            case {'OPVPG','XPVPG'}
                 iKey.initial_point = initial_point_vec;
         end
     else
@@ -37,13 +37,13 @@ for iKey = keys'
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3]);
             case 'VPG'
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,5]);
-            case 'XP'
+            case {'OP','XP'}
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,4]);
-            case 'XPG'
+            case {'OPG','XPG'}
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,4,5]);
-            case 'XPVP'
+            case {'OPVP','XPVP'}
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4]);
-            case 'XPVPG'
+            case {'OPVPG','XPVPG'}
                 iKey.initial_point = initial_point_vec([1,2,2,2,2,3,4,5]);
 %             case 'CP'
 %                 iKey.initial_point = initial_point_vec(1:5);
