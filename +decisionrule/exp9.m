@@ -34,7 +34,7 @@ function [prediction, response] = exp9(x,pars)
         term1 = squeeze(sum((1+erf(x_c)).*f));
         term2 = squeeze(sum((1-erf(x_c)).*f));
             
-    elseif ismember(pars.model_name,{'VP','VPG','XP','XPG','XPVP','XPVPG'})
+    elseif ismember(pars.model_name,{'VP','VPG','OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG'})
         sigmaMat = sqrt(1./pars.lambdaMat);
         
         term = zeros(size(x));
