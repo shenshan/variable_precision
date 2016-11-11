@@ -237,7 +237,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ismember(key.model_name,{'CPG','VPG','OPG','XPG','XPVPG'})
+if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG'})
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 
