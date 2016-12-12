@@ -21,6 +21,6 @@ else
         outMat = cat(length(sz)+1,outMat,[entry{:}]);
     end
 end
-
+outMat = squeeze(outMat);
 sz = size(outMat);
 ndim = length(sz); len = sz(end);

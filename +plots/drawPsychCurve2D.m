@@ -61,11 +61,11 @@ else
             
             fit_pred = fetchn(varprecision.FitPredictionBpsBest2D & varargin,'prediction_plot_2d');
             [fit_pred, dim] = varprecision.utils.decell(fit_pred);
-            fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
+            fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim,2);
             colorvec = get(gca, 'ColorOrder');
             colorvec = min(colorvec+.65,1);
             for jj = 1:size(fit_pred,2)
-                patch([stims;wrev(stims)]',fit_patch(:,jj)',colorvec(jj,:),'LineStyle','None')                        
+                patch([stims;wrev(stims)]',fit_patch(jj,:)',colorvec(jj,:),'LineStyle','None')                        
             end
             hold on
             errorbar(repmat(stims,1,size(fit_pred,2)),p_right_mean,p_right_sem,'LineStyle','None')
@@ -91,11 +91,11 @@ else
             else
                 fit_pred = fetchn(varprecision.FitPredictionBpsBest2D & keys & model,'prediction_plot_2d');
                 [fit_pred, dim] = varprecision.utils.decell(fit_pred);
-                fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim);
+                fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim,2);
                 colorvec = get(gca, 'ColorOrder');
                 colorvec = min(colorvec+.65,1);
                 for kk = 1:size(fit_pred,2)
-                    patch([stims;wrev(stims)]',fit_patch(:,kk)',colorvec(kk,:),'LineStyle','None')                        
+                    patch([stims;wrev(stims)]',fit_patch(kk,:)',colorvec(kk,:),'LineStyle','None')                        
                 end
                 errorbar(repmat(stims,1,size(fit_pred,2)),p_right_mean,p_right_sem,'LineStyle','None')
             
@@ -112,6 +112,6 @@ else
     legend('dist<-5','-5<dist<5','dist>5','Location','NorthWest')
     ylim([0,1])
     fig.cleanup
-    
+    fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_psy_2d.eps'])
 end
 

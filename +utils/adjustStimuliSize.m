@@ -19,7 +19,7 @@ if strcmp(tag,'single')
         else
             stimulusMat = [stimuli, zeros(length(stimuli),setsize-1)];
         end
-    elseif ismember(exp_id,[1,9])
+    elseif ismember(exp_id,[1,8,9])
         stimulusMat = stimuli;
     elseif ismember(exp_id,[7,11])
         stimulusMat = stimuli(:,1:setsize)*pi/180;

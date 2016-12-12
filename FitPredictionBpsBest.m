@@ -27,13 +27,13 @@ classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat];
                 case 'VPG'
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.guess_hat];
-                case 'XP'
+                case {'XP','OP'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.beta_hat];
-                case 'XPG'
+                case {'XPG','OPG'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.beta_hat, fit_pars.guess_hat];
-                case 'XPVP'
+                case {'XPVP','OPVP'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat];
-                case 'XPVPG'
+                case {'XPVPG','OPVPG'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.guess_hat];
             end
             

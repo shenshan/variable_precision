@@ -8,7 +8,7 @@ function [LL,predMat,prediction] = loglikelihood(params,key)
 setsizes = unique(set_size);
 exp_id = key.exp_id;
 
-if ismember(key.exp_id,[6,7,8,11])
+if ismember(key.exp_id,[6,7,11])
     vm = 1;
     [jmap,kmap] = fetch1(varprecision.JbarKappaMap & 'jkmap_id=2','jmap','kmap');
 else

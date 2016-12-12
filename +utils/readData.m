@@ -17,6 +17,7 @@ function [stimuli,response,set_size] = readData(key,type)
     stimuli = [];
     response = [];
     set_size = [];
+    stim_diff = [];
     
     for ii = 1:length(files)
         if strcmp(type,'fake')
@@ -52,6 +53,7 @@ function [stimuli,response,set_size] = readData(key,type)
             stimuli = [stimuli; data(:,1:2)];
             response = [response; data(:,3)];
             set_size = [set_size; 2*ones(size(data(:,1)))];
+            stim_diff = [stim_diff; data(:,6)];
         elseif exp_id == 9
             stimuli = [stimuli; data(:,1:2)];
             response = [response; data(:,3)];
@@ -73,6 +75,11 @@ function [stimuli,response,set_size] = readData(key,type)
             stimuli = repmat(stimuli,1,4);
         case [4,5]
             stimuli = [stimuli,zeros(length(stimuli),3)];
+        case 8
+            idx1 = stim_diff>90;
+            stimuli(idx1,1) = stimuli(idx1,1) - 180;
+            idx2 = stim_diff<-90;
+            stimuli(idx2,1) = stimuli(idx2,1) - 180;
         case 9
             stimuli = [stimuli(:,1), repmat(stimuli(:,2),1,3)];
         case 10

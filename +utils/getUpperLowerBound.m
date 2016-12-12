@@ -1,22 +1,22 @@
-function [patch,out_mean,out_sem,out_up,out_low] = getUpperLowerBound(inputMat,dim)
+function [patch,out_mean,out_sem,out_up,out_low] = getUpperLowerBound(inputMat,dim,dim2)
 %GETUPPERLOWERBOUND compute the mean, sem, upper bound, lower bound and
 %patchy edges of a matrix for a give dimension
 %   dim specifies which dimension to compute the mean and sem
+%   dim2 indicates which dimension to wrev.
 
+if ~exist('dim2','var')
+    dim2 = 1;
+end
 out_mean = squeeze(mean(inputMat,dim));
 out_sem = squeeze(std(inputMat,[],dim)/sqrt(size(inputMat,dim)));
 
 out_up = out_mean + out_sem;
 out_low = out_mean - out_sem;
 
-if isvector(out_up) && size(out_low,2)==1
+if iscolumn(out_up) || dim2==2
     out_up = out_up';
     out_low = out_low';
 end
 
-if size(inputMat,1)>4
-    patch = cat(1,out_up, flipud(out_low));
-else        
-    patch = [out_up, fliplr(out_low)];
-end
+patch = [out_up, fliplr(out_low)];
 

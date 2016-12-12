@@ -30,13 +30,9 @@ for exp = exps'
         eviMat(ikey,:) = evi;
     end
     
-    % fetch the evidence for VPG
-%     evi = fetchn(varprecision.FitParametersEvidence & keys_rec & jkmap & varargin(2) & 'model_name="VPG"', cmp_type);
-    if ismember(exp.exp_id,[1:5,9,10])
-        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="VPG"', cmp_type);
-    else
-        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="XPVPG"', cmp_type);
-    end
+    % fetch the evidence for OPVPG
+
+    evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="OPVPG"', cmp_type);
     model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);
@@ -47,7 +43,7 @@ for exp = exps'
         if length(model_names)>7
             fig = Figure(105,'size',[80,30]);
         else
-            fig = Figure(105,'size',[40,30]);
+            fig = Figure(105,'size',[70,40]);
         end
         hold on 
         bar_custom(eviMat(:,1:length(model_names)),'mean')
