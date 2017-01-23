@@ -28,7 +28,7 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
             pars.pre = 0;
             pars.model_name = model;
             
-            exps_gauss = [1:5,9,10];
+            exps_gauss = [1:5,8:10];
             [jmap,kmap] = fetch1(varprecision.JbarKappaMap & 'jkmap_id=2','jmap','kmap');
             
             if length(pars.setsizes)==1
@@ -60,10 +60,34 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
                         pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
                         xMat = stimuli' + circ_vmrnd(zeros(pars.setsizes,nTrials),pars.lambda);
                     end
+                elseif ismember(model,{'OP','OPG'})
+                    sigma_baseline = 1/sqrt(pars.lambda); 
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimuli)));
+                    if ismember(key.exp_id, exps_gauss)
+                        pars.lambdaMat = 1./sigma.^2;
+                        xMat = stimuli' + normrnd(0,pars.lambdaMat);
+                    else
+                        pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
+                        pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                        xMat = stimuli' + circ_vmrnd(0,pars.lambdaMat)/2;
+                    end
+                elseif ismember(model,{'OPVP','OPVPG'})
+                    sigma_baseline = 1/sqrt(pars.lambda);
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));           
+                    pars.lambdaMat = 1./sigma.^2;
+                    pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
+                    
+                    if ismember(key.exp_id, exps_gauss)
+                        xMat = stimuli' + normrnd(0,pars.lambdaMat);
+                    else
+                        pars.lambdaMat = pars.lambdaMat*180^2/pi^2/4;
+                        pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
+                        xMat = stimuli' + circ_vmrnd(0,pars.lambdaMat)/2;
+                    end
                 end
                 
                 [~,response] = f_dr(xMat,pars);
-                if ismember(model,{'CPG','VPG','XPG'})
+                if ismember(model,{'CPG','VPG','XPG','OPG','OPVPG'})
                     response = varprecision.utils.addLapseTrials(response, pars.guess);
                 end
                 if key.exp_id<6
@@ -74,6 +98,25 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
                     data = [stimuli,response',set_size'];
                 end
             else
+                
+                [~,stimuli,set_size] = varprecision.utils.generateFakeStimuli(pars.exp_id,0,0,0);
+                for iSetsize = 1:length(pars.setsizes)
+                    setsize = pars.setsizes(iSetsize);
+                    pars2 = pars;
+                    pars2.lambda = pars.lambda(iSetsize);
+                    stimuli_sub = stimuli(set_size==setsize);
+                    if ismember(model, {'OPVP','OPVPG'})
+                        sigma_baseline = 1/sqrt(pars2.lambda);
+                        sigma = sigma_baseline*(1 + pars2.beta*abs(sin(2*stimuli)));
+                        pars2.lambdaMat = 1./sigma.^2;
+                        
+                        pars2.lambdaMat = gamrnd(pars2.lambdaMat/pars2.theta,pars.theta);
+                        pars2.lambdaMat = pars2.lambdaMat'*180^2/pi^2;
+                        
+                        xMat = stimuli' + circ_vmrnd(0,pars2.lambdaMat)/2;
+                    end
+                    [~,response_sub] = f_dr(xMat,pars2);
+                end
                 stimuliMat = [];
                 responseMat = [];
                 setsizeMat = [];
@@ -86,6 +129,15 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
                     if ismember(model,{'VP','VPG'})
                         pars2.lambdaMat = gamrnd(pars2.lambda/pars2.theta, pars2.theta,[setsize,ntrials]);
                         xMat = stimuli' + normrnd(0,1./sqrt(pars2.lambdaMat));
+                    elseif ismember(model,{'OPVP','OPVPG'})
+                        sigma_baseline = 1/sqrt(pars2.lambda);
+                        sigma = sigma_baseline*(1 + pars2.beta*abs(sin(2*stimuli)));
+                        pars2.lambdaMat = 1./sigma.^2;
+                        
+                        pars2.lambdaMat = gamrnd(pars2.lambdaMat/pars2.theta,pars.theta);
+                        pars2.lambdaMat = pars2.lambdaMat'*180^2/pi^2;
+                        
+                        xMat = stimuli' + circ_vmrnd(0,pars2.lambdaMat)/2;
                     else
                         xMat = stimuli' + normrnd(0,1/sqrt(pars2.lambda),[setsize,ntrials]);
                     end               
@@ -94,7 +146,7 @@ classdef FakeData < dj.Relvar & dj.AutoPopulate
                     stimuliMat = [stimuliMat;target_stimuli];
                     responseMat = [responseMat;response'];
                 end
-                if ismember(model,{'CPG','VPG'})
+                if ismember(model,{'CPG','VPG','OPVPG'})
                     responseMat = varprecision.utils.addLapseTrials(responseMat, pars.guess);
                 end
                 data = [stimuliMat,responseMat,setsizeMat];

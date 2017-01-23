@@ -48,12 +48,16 @@ classdef DataStats < dj.Relvar & dj.AutoPopulate
 
                  end
             
-            elseif ismember(key.exp_id,[6,7,9])
+            elseif ismember(key.exp_id,[6,7,8,9])
                 stims = (-16:2:16)';
                 
                 [stimuli,response,set_size] = fetch1(varprecision.Data & key, 'stimuli','response','set_size');
-                target_stimuli = stimuli(:,1);
-            
+                
+                if key.exp_id==8
+                    target_stimuli = stimuli(:,1) - stimuli(:,2);
+                else
+                    target_stimuli = stimuli(:,1);
+                end
                 idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
                 setsizes = unique(set_size);
 

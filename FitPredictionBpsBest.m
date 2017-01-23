@@ -46,8 +46,12 @@ classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
                 prediction = key.prediction;
                 stims = fetch1(varprecision.DataStats & key, 'stims');
                 [stimuli,set_size] = fetch1(varprecision.Data & key, 'stimuli','set_size');
-                target_stimuli = stimuli(:,1);
-
+                
+                if key.exp_id==8
+                    target_stimuli = stimuli(:,1) - stimuli(:,2);
+                else
+                    target_stimuli = stimuli(:,1);
+                end
                 idx = interp1(stims,1:length(stims),target_stimuli,'nearest','extrap');
                 setsizes = unique(set_size);
 

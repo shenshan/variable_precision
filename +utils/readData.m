@@ -63,9 +63,15 @@ function [stimuli,response,set_size] = readData(key,type)
             response = [response; data.C_hat];
             set_size = [set_size; data.N];
         elseif exp_id == 11
-            stimuli = [stimuli; datamatrix(:,10:17)];
-            response = [response; datamatrix(:,4)];
-            set_size = [set_size; datamatrix(:,2)];
+            if strcmp(type,'fake')
+                stimuli = datamatrix(:,1:8);
+                response = datamatrix(:,9);
+                set_size = datamatrix(:,10);
+            else
+                stimuli = [stimuli; datamatrix(:,10:17)];
+                response = [response; datamatrix(:,4)];
+                set_size = [set_size; datamatrix(:,2)];
+            end
         end
     end
     
@@ -79,7 +85,7 @@ function [stimuli,response,set_size] = readData(key,type)
             idx1 = stim_diff>90;
             stimuli(idx1,1) = stimuli(idx1,1) - 180;
             idx2 = stim_diff<-90;
-            stimuli(idx2,1) = stimuli(idx2,1) - 180;
+            stimuli(idx2,2) = stimuli(idx2,2) - 180;
         case 9
             stimuli = [stimuli(:,1), repmat(stimuli(:,2),1,3)];
         case 10

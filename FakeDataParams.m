@@ -1,11 +1,12 @@
 %{
 varprecision.FakeDataParams (computed) # table that saves the parameters to generate fake data
 -> varprecision.Recording
------
+---
 p_right                     : double                        # prior
 lambda                      : blob                          # lambda, a vector or scalar, depends on different experiments
-theta=null                  : double                        # scale factor of gamma distribution to discribe precision
-guess=null                  : double                        # lapse rate
+theta                       : double                        # scale factor of gamma distribution to discribe precision
+guess                       : double                        # lapse rate
+beta=null                   : double                        # amplitude of orientation dependence
 %}
 
 classdef FakeDataParams < dj.Relvar & dj.AutoPopulate
@@ -31,6 +32,10 @@ classdef FakeDataParams < dj.Relvar & dj.AutoPopulate
             if isfield(pars,'guess')
                 key.guess = pars.guess;
             end
+            if isfield(pars,'beta')
+                key.beta = pars.beta;
+            end
+            
             self.insert(key)
             
         end
