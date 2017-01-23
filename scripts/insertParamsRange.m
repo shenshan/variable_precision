@@ -1,14 +1,14 @@
 
-exp_id = 8;
-model_names = {'CP','CPG','VP','VPG','OP','OPG','OPVP','OPVPG'};
+exp_id = 11;
+model_names = {'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'};
 % model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
 % model_names = {'XPVPG'};
 
-key2.lower_bound = [0.2,0.0001,0.000001,0,0];
-key2.upper_bound = [0.8,1,1,10,0.5];
-key2.plb = [0.4,0.01,0.01,0,0];
-key2.pub = [0.6,0.3,0.2,5,0.2];
+key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
+key2.upper_bound = [0.8,1,1,10,0.5,10];
+key2.plb = [0.4,0.01,0.01,0,0,0.00001];
+key2.pub = [0.6,0.3,0.2,5,0.2,0.2];
 % key2.start_point = [0.5,0.03,0.01,0.5,0.005];
 
 for ii = 1:length(model_names)
@@ -32,6 +32,23 @@ for ii = 1:length(model_names)
                 idx = [1,2,2,2,2,3,4];
             case {'OPVPG','XPVPG'}
                 idx = [1,2,2,2,2,3,4,5];
+            case 'CPN'
+                idx = [1,2,2,2,2,6];
+            case 'CPGN'
+                idx = [1,2,2,2,2,5,6];
+            case 'VPN'
+                idx = [1,2,2,2,2,3,6];
+            case 'VPGN'
+                idx = [1,2,2,2,2,3,5,6];
+            case 'OPN'
+                idx = [1,2,2,2,2,4,6];
+            case 'OPGN'
+                idx = [1,2,2,2,2,4,5,6];
+            case 'OPVPN'
+                idx = [1,2,2,2,2,3,4,6];
+            case 'OPVPGN'
+                idx = [1,2,2,2,2,3,4,5,6];
+                
         end
     else
         switch model_name
@@ -51,6 +68,22 @@ for ii = 1:length(model_names)
                 idx = 1:4;
             case {'OPVPG','XPVPG'}
                 idx = 1:5;
+            case 'CPN'
+                idx = [1,2,6];
+            case 'CPGN'
+                idx = [1,2,5,6];
+            case 'VPN'
+                idx = [1,2,3,6];
+            case 'VPGN'
+                idx = [1,2,3,5,6];
+            case 'OPN'
+                idx = [1,2,4,6];
+            case 'OPGN'
+                idx = [1,2,4,5,6];
+            case 'OPVPN'
+                idx = [1,2,3,4,6];
+            case 'OPVPGN'
+                idx = [1,2,3,4,5,6];
         end
     end
     key = getValues(key2,idx);

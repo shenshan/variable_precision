@@ -27,12 +27,24 @@ for exp = exps'
         key_rec = keys_rec(ikey);
 %         evi = fetchn(varprecision.FitParametersEvidence & key_rec & jkmap & varargin, cmp_type);
         evi = fetchn(varprecision.FitParsEviBpsBest & key_rec & varargin, cmp_type);
-        eviMat(ikey,:) = evi;
+        
+        if strcmp(cmp_type,'bmc')
+            eviMat(ikey,:) = evi;
+        else
+            eviMat(ikey,:) = 2*evi;
+        end
     end
     
-    % fetch the evidence for OPVPG
-
-    evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="OPVPG"', cmp_type);
+    % fetch the evidence for VPG or OPVPG
+    model_names = getfieldall(models, 'model_name');
+    if ismember('OPVPG',model_names)
+        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="OPVPG"', cmp_type);
+    elseif ismember('VPG',model_names)
+        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="VPG"', cmp_type);
+    else
+        evi = 0;
+    end
+    
     model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract
         eviMat = bsxfun(@minus, eviMat, evi);
@@ -43,16 +55,16 @@ for exp = exps'
         if length(model_names)>7
             fig = Figure(105,'size',[80,30]);
         else
-            fig = Figure(105,'size',[70,40]);
+            fig = Figure(105,'size',[50,30]);
         end
         hold on 
-        bar_custom(eviMat(:,1:length(model_names)),'mean')
+        bar_custom(eviMat(:,1:length(model_names)-1),'mean')
         if ismember(cmp_type,{'lml','llmax'})
             ylim([-100,20])
         else
             ylim([-10,100])
         end
-        set(gca,'XTick',1:length(models),'XTickLabel',model_names)
+        set(gca,'XTick',1:length(models)-1,'XTickLabel',model_names)
     else
         nSubjs = size(eviMat,1);
         if nSubjs>10
@@ -78,7 +90,7 @@ for exp = exps'
     
     fig.cleanup
 %     fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '_' num2str(jkmap_id) '.eps'])
-fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '.eps'])
+fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_' cmp_type '_' data_type '_' models(1).model_name '.eps'])
 end
 
 

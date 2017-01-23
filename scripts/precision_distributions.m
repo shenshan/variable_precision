@@ -12,6 +12,21 @@ xlim([-1,3]);
 xlabel('Precision');
 ylabel('Probability');
 set(gca,'XTick',[],'YTick',[])
-legend('VP model', 'FPG model');
+legend('CV model', 'CFG model');
 fig.cleanup
 fig.save('~/Dropbox/VR/+varprecision/figures/precision_distribution')
+
+fig2 = Figure(120,'size',[50,30]);
+
+sigma1 = 1/sqrt(lambda1);
+beta = 0.5;
+x = -90:0.1:90;
+y = 1./(sigma1*(1+beta*abs(sin(x*pi/180*2)))).^2;
+
+plot(x,y,'r');
+xlabel('Orientation/deg')
+ylabel('Precision for OF model')
+set(gca,'YTick',[],'xTick',-90:45:90)
+
+fig2.cleanup
+fig2.save('~/Dropbox/VR/+varprecision/figures/precision_distribution_OF.eps')
