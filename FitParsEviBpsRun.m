@@ -1,16 +1,17 @@
 %{
 varprecision.FitParsEviBpsRun (computed) # compute fit parameters and maximum log likelihood with bps algorithm
 -> varprecision.RunBps
------
-p_right_hat : double    # estimated p_right
-lambda_hat  : blob      # estimated lambda
-theta_hat=null   : double    # estimated theta, NaN if not exist
-guess_hat=null   : double    # estimated guess, NaN if not exist
-beta_hat=null    : double    # estimated beta, NaN if not exist
-llmax       : double    # maximum likelihood
-bic         : double     # bayesian information criterion
-aic         : double     # alkeik information criterion
-aicc        : double     # aicc
+---
+p_right_hat                 : double                        # estimated p_right
+lambda_hat                  : blob                          # estimated lambda
+theta_hat=null              : double                        # estimated theta, NaN if not exist
+guess_hat=null              : double                        # estimated guess, NaN if not exist
+beta_hat=null               : double                        # estimated beta, NaN if not exist
+llmax                       : double                        # maximum likelihood
+bic                         : double                        # bayesian information criterion
+aic                         : double                        # alkeik information criterion
+aicc                        : double                        # aicc
+sigma_dn_hat=null           : double                        # estimated decision noise, NaN if not existed
 %}
 
 classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
@@ -69,6 +70,34 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                         key.theta_hat = pars(3);
                         key.beta_hat = pars(4);
                         key.guess_hat = pars(5);
+                    case 'CPN'
+                        key.sigma_dn_hat = pars(3);
+                    case 'CPGN'
+                        key.guess_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    case 'VPN'
+                        key.theta_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    case 'VPGN'
+                        key.theta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                        key.sigma_dn_hat = pars(5);
+                    case 'OPN'
+                        key.beta_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    case 'OPGN'
+                        key.beta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                        key.sigma_dn_hat = pars(5);
+                    case 'OPVPN'
+                        key.theta_hat = pars(3);
+                        key.beta_hat = pars(4);
+                        key.sigma_dn_hat = pars(5);
+                    case 'OPVPGN'
+                        key.theta_hat = pars(3);
+                        key.beta_hat = pars(4);
+                        key.guess_hat = pars(5);
+                        key.sigma_dn_hat = pars(6);
                 end
             else
                 key.p_right_hat = pars(1);
@@ -94,6 +123,34 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                         key.theta_hat = pars(6);
                         key.beta_hat = pars(7);
                         key.guess_hat = pars(8);
+                    case 'CPN'
+                        key.sigma_dn_hat = pars(6);
+                    case 'CPGN'
+                        key.guess_hat = pars(6);
+                        key.sigma_dn_hat = pars(7);
+                    case 'VPN'
+                        key.theta_hat = pars(6);
+                        key.sigma_dn_hat = pars(7);
+                    case 'VPGN'
+                        key.theta_hat = pars(6);
+                        key.guess_hat = pars(7);
+                        key.sigma_dn_hat = pars(8);
+                    case 'OPN'
+                        key.beta_hat = pars(6);
+                        key.sigma_dn_hat = pars(7);
+                    case 'OPGN'
+                        key.beta_hat = pars(6);
+                        key.guess_hat = pars(7);
+                        key.sigma_dn_hat = pars(8);
+                    case 'OPVPN'
+                        key.theta_hat = pars(6);
+                        key.beta_hat = pars(7);
+                        key.sigma_dn_hat = pars(8);
+                    case 'OPVPGN'
+                        key.theta_hat = pars(6);
+                        key.beta_hat = pars(7);
+                        key.guess_hat = pars(8);
+                        key.sigma_dn_hat = pars(9);
                 end
             end
             

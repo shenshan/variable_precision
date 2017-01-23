@@ -2,20 +2,21 @@
 varprecision.FitParsEviBpsBest (computed) # select the best bps run with maximum llmax
 -> varprecision.Data
 -> varprecision.Model
------
-best_int_pnt_idx: int   # index of the best initial point
-best_run_idx : int      # run idx of the best initial point
-int_pnt_ids : blob      # initial point ids covered by this tuple
-run_ids : blob          # run ids covered by this tuple
-p_right_hat : double    # estimated p_right
-lambda_hat  : blob      # estimated lambda
-theta_hat=null   : double    # estimated theta, NaN if not exist
-guess_hat=null   : double    # estimated guess, NaN if not exist
-beta_hat=null    : double    # estimated beta, NaN if not exist
-llmax       : double    # maximum likelihood
-bic         : double     # bayesian information criterion
-aic         : double     # alkeik information criterion
-aicc        : double     # aicc
+---
+best_int_pnt_idx            : int                           # index of the best initial point
+best_run_idx                : int                           # run idx of the best initial point
+int_pnt_ids                 : blob                          # initial point ids covered by this tuple
+run_ids                     : blob                          # run ids covered by this tuple
+p_right_hat                 : double                        # estimated p_right
+lambda_hat                  : blob                          # estimated lambda
+theta_hat=null              : double                        # estimated theta, NaN if not exist
+guess_hat=null              : double                        # estimated guess, NaN if not exist
+beta_hat=null               : double                        # estimated beta, NaN if not exist
+llmax                       : double                        # maximum likelihood
+bic                         : double                        # bayesian information criterion
+aic                         : double                        # alkeik information criterion
+aicc                        : double                        # aicc
+sigma_dn_hat=null           : double                        # estimated decision noise, NaN if not existed
 %}
 
 classdef FitParsEviBpsBest < dj.Relvar & dj.AutoPopulate

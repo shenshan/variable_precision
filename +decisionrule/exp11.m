@@ -21,15 +21,19 @@ function [prediction, response] = exp11(x,pars)
     nItems = size(x,1);
     p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
-    if ismember(pars.model_name,{'CP','CPG'})
+    if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
         term = squeeze(1/nItems*sum(exp(pars.lambda*cos(2*x))/besseli0_fast(pars.lambda),1));
     else
         term = squeeze(1/nItems*sum(exp(pars.lambdaMat.*(cos(2*x)-1))./besseli0_fast(pars.lambdaMat,1),1));
     end
     
     obs_response = bsxfun(@times,repmat(term,[1,1,length(pars.p_right)]),p_right_adj./(1-p_right_adj));
+    
+    if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
+        obs_response = normrnd(obs_response,pars.sigma_dn);
+    end
     prediction = (sum(obs_response>1,2) + .5*sum(obs_response==1,2))/nTrials;
     prediction = squeeze(prediction);
     response = squeeze(obs_response);
     response(obs_response>1) = 1;
-    response(obs_response<=1) = 0;
+    response(obs_response<1) = 0;

@@ -44,6 +44,34 @@ if ismember(key.exp_id,[3,5,7,10,11]) && ismember(subj_type,{'real','fake'})
             pars.theta = params(6);
             pars.beta = params(7);
             pars.guess = params(8);
+        case 'CPN'
+            pars.sigma_dn = params(6);
+        case 'CPGN'
+            pars.guess = params(6);
+            pars.sigma_dn = params(7);
+        case 'VPN'
+            pars.theta = params(6);
+            pars.sigma_dn = params(7);
+        case 'VPGN'
+            pars.theta = params(6);
+            pars.guess = params(7);
+            pars.sigma_dn = params(8);
+        case 'OPN'
+            pars.beta = params(6);
+            pars.sigma_dn = params(7);
+        case 'OPGN'
+            pars.beta = params(6);
+            pars.guess = params(7);
+            pars.sigma_dn = params(8);
+        case 'OPVPN'
+            pars.theta = params(6);
+            pars.beta = params(7);
+            pars.sigma_dn = params(8);
+        case 'OPVPGN'
+            pars.theta = params(6);
+            pars.beta = params(7);
+            pars.guess = params(8);
+            pars.sigma_dn = params(9);
     end
 else
     pars.p_right = params(1);
@@ -68,6 +96,34 @@ else
             pars.theta = params(3);
             pars.beta = params(4);
             pars.guess = params(5);
+        case 'CPN'
+            pars.sigma_dn = params(3);
+        case 'CPGN'
+            pars.guess = params(3);
+            pars.sigma_dn = params(4);
+        case 'VPN'
+            pars.theta = params(3);
+            pars.sigma_dn = params(3);
+        case 'VPGN'
+            pars.theta = params(3);
+            pars.guess = params(4);
+            pars.sigma_dn = params(5);
+        case 'OPN'
+            pars.beta = params(3);
+            pars.sigma_dn = params(4);
+        case 'OPGN'
+            pars.beta = params(3);
+            pars.guess = params(4);
+            pars.sigma_dn = params(5);
+        case 'OPVPN'
+            pars.theta = params(3);
+            pars.beta = params(4);
+            pars.sigma_dn = params(5);
+        case 'OPVPGN'
+            pars.theta = params(3);
+            pars.beta = params(4);
+            pars.guess = params(5);
+            pars.sigma_dn = params(6);
     end
 end
 
@@ -80,7 +136,7 @@ trial_num_sim = key.trial_num_sim;
 predMat = zeros(size(response));
 
 if length(setsizes)==1
-    if ismember(key.model_name,{'CP','CPG'})
+    if ismember(key.model_name,{'CP','CPG','CPN','CPGN'})
         if vm == 0
             noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
         else
@@ -89,7 +145,7 @@ if length(setsizes)==1
             pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
             noiseMat = circ_vmrnd(zeros(setsizes,trial_num_sim),pars.lambda)/2;
         end
-    elseif ismember(key.model_name, {'VP','VPG'})
+    elseif ismember(key.model_name, {'VP','VPG','VPN','VPGN'})
         pars.lambdaMat = gamrnd(pars.lambda/pars.theta,pars.theta,[setsizes,trial_num_sim]);
         if vm == 0
             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -98,13 +154,13 @@ if length(setsizes)==1
             pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
         end
-    elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG'})
+    elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','OPN','OPGN','OPVPN','OPVPGN'})
         sigma_baseline = 1/sqrt(pars.lambda);
     end
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
         stimulus = stimuli(ii,:);
-        if ismember(key.model_name, {'OP','OPG','XP','XPG'})
+        if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})
             sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
             if vm
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -116,7 +172,7 @@ if length(setsizes)==1
                 pars.lambdaMat = repmat(pars.lambdaMat,trial_num_sim,1)';
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
             end
-        elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG'})
+        elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN'})
             sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));           
             pars.lambdaMat = 1./sigma.^2;
             pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
@@ -159,7 +215,7 @@ else
             stimuli_sub = stimuli(set_size==setsize);
         end
         response_sub = response(set_size==setsize);
-        if ismember(key.model_name,{'CP','CPG'})
+        if ismember(key.model_name,{'CP','CPG','CPN','CPGN'})
             pars.lambda = pars.lambdaVec(jj);
             if vm == 0            
                 noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
@@ -168,7 +224,7 @@ else
                 pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
                 noiseMat = circ_vmrnd(zeros(setsize,trial_num_sim),pars.lambda)/2;
             end  
-        elseif ismember(key.model_name,{'VP','VPG'})
+        elseif ismember(key.model_name,{'VP','VPG','VPN','VPGN'})
             pars.lambdaMat = gamrnd(pars.lambdaVec(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
             if vm == 0
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -177,7 +233,7 @@ else
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             end
-        elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG'})
+        elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','OPN','OPGN','OPVPN','OPVPGN'})
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
@@ -185,7 +241,7 @@ else
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
-            if ismember(key.model_name, {'OP','OPG','XP','XPG'})
+            if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 if vm
                     pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -197,7 +253,7 @@ else
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                 end
-            elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG'})
+            elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN'})
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 pars.lambdaMat = 1./sigma.^2;
                 pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
@@ -237,7 +293,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG'})
+if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG','CPGN','VPGN','OPGN','OPVPGN'})
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 
