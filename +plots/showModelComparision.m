@@ -37,22 +37,27 @@ for exp = exps'
     
     % fetch the evidence for VPG or OPVPG
     model_names = getfieldall(models, 'model_name');
-    if ismember('OPVPG',model_names)
+    if ismember('OPVPGN',model_names)
+        evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="OPVPGN"', cmp_type);
+    elseif ismember('OPVPG',model_names)
         evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="OPVPG"', cmp_type);
     elseif ismember('VPG',model_names)
         evi = fetchn(varprecision.FitParsEviBpsBest & keys_rec & varargin & 'model_name="VPG"', cmp_type);
+    
     else
         evi = 0;
     end
     
     model_names = fetchn(varprecision.Model & exp & res, 'model_name');
     if subtract
-        eviMat = bsxfun(@minus, eviMat, evi);
+        eviMat = bsxfun(@minus, eviMat, 2*evi);
     end
     
     
     if strcmp(data_type,'mean')
-        if length(model_names)>7
+        if length(model_names)>10
+            fig = Figure(105,'size',[150,30]);
+        elseif length(model_names)>7
             fig = Figure(105,'size',[80,30]);
         else
             fig = Figure(105,'size',[50,30]);

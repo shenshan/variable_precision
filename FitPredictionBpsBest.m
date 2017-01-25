@@ -35,6 +35,22 @@ classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat];
                 case {'XPVPG','OPVPG'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.guess_hat];
+                case 'CPN'
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.sigma_dn_hat];
+                case 'CPGN'
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.guess_hat, fit_pars.sigma_dn_hat];
+                case 'VPN'
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.sigma_dn_hat];
+                case 'VPGN'
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.guess_hat, fit_pars.sigma_dn_hat];
+                case {'XPN','OPN'}
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.beta_hat, fit_pars.sigma_dn_hat];
+                case {'XPGN','OPGN'}
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.beta_hat, fit_pars.guess_hat, fit_pars.sigma_dn_hat];
+                case {'XPVPN','OPVPN'}
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.sigma_dn_hat];
+                case {'XPVPGN','OPVPGN'}
+                    params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.guess_hat, fit_pars.sigma_dn_hat];
             end
             
             fit_pars.trial_num_sim = 5000;

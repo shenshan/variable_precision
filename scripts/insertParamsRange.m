@@ -1,5 +1,5 @@
 
-exp_id = 11;
+exp_id = 6;
 model_names = {'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'};
 % model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
@@ -8,7 +8,7 @@ model_names = {'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'};
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,0.5,10];
 key2.plb = [0.4,0.01,0.01,0,0,0.00001];
-key2.pub = [0.6,0.3,0.2,5,0.2,0.2];
+key2.pub = [0.6,0.3,0.2,5,0.2,0.5];
 % key2.start_point = [0.5,0.03,0.01,0.5,0.005];
 
 for ii = 1:length(model_names)

@@ -1,12 +1,12 @@
-% initial_point_vec = [0.5,0.01,0.005,0.5,0.05];
+initial_point_vec = [0.5,0.06,0.03,0.2,0.01,0.4];
 
-initial_point_vec = [0.5,0.7,0.2,0.07,0.01,0.2,0.1,0.01,0.1];
+% initial_point_vec = [0.5,0.4,0.2,0.1,0.005,0.02,1,0.01,0.5];
 
 subj_type = 'real';
 % subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"'] & 'model_gene="OPVPG"');
 
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']); 
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CPN","CPGN","VPN","VPGN","OPN","OPGN","OPVPN","OPVPGN")' & 'exp_id in (11)');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CPN","CPGN","VPN","VPGN","OPN","OPGN","OPVPN","OPVPGN")' & 'exp_id in (6)');
 
 for iKey = keys'
     iKey.int_point_id=1;
@@ -29,11 +29,11 @@ for iKey = keys'
             case {'OPVPG','XPVPG'}
                 iKey.initial_point = initial_point_vec(1:5);
             case 'CPN'
-                iKey.initial_point = initial_point_vec(1:2,6);
+                iKey.initial_point = initial_point_vec([1:2,6]);
             case 'CPGN'
                 iKey.initial_point = initial_point_vec([1:2,5,6]);
             case 'VPN'
-                iKey.initial_point = initial_point_vec(1:3,6);
+                iKey.initial_point = initial_point_vec([1:3,6]);
             case 'VPGN'
                 iKey.initial_point = initial_point_vec([1:3,5,6]);
             case 'OPN'
@@ -41,7 +41,7 @@ for iKey = keys'
             case 'OPGN'
                 iKey.initial_point = initial_point_vec([1,2,4,5,6]);
             case 'OPVPN'
-                iKey.initial_point = initial_point_vec(1:4,6);
+                iKey.initial_point = initial_point_vec([1:4,6]);
             case 'OPVPGN'
                 iKey.initial_point = initial_point_vec; 
         end
