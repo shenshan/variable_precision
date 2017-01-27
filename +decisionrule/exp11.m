@@ -35,5 +35,5 @@ function [prediction, response] = exp11(x,pars)
     prediction = (sum(obs_response>1,2) + .5*sum(obs_response==1,2))/nTrials;
     prediction = squeeze(prediction);
     response = squeeze(obs_response);
-    response(obs_response>1) = 1;
+    response(obs_response>=1) = 1;
     response(obs_response<1) = 0;
