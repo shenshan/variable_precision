@@ -28,7 +28,7 @@ function [prediction, response] = exp8(x,pars)
         term1 = 1+erf_x;
         term2 = 1-erf_x;
     
-    obs_response = term1*pars.p_right./term2*(1-pars.p_right);
+    obs_response = term1.*pars.p_right./(term2.*(1-pars.p_right));
     
     if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
         obs_response = normrnd(obs_response,pars.sigma_dn);
