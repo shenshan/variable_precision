@@ -20,7 +20,7 @@ function [prediction, response] = exp2(x,pars)
         
         p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
-    if ismember(pars.model_name,{'CP','CPG'})
+    if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
         
         pars.lambdaMat = pars.lambda;
      
@@ -32,9 +32,14 @@ function [prediction, response] = exp2(x,pars)
     term2 = 1 - erf(x_c);
 
     
-    obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj) - bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
-    prediction = (sum(obs_response>0,2) + .5*sum(obs_response==0,2))/nTrials;
+    obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
+    
+    if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
+        obs_response = normrnd(obs_response,pars.sigma_dn);
+    end
+    
+    prediction = (sum(obs_response>1,2) + .5*sum(obs_response==1,2))/nTrials;
     prediction = squeeze(prediction);
     response = obs_response;
-    response(obs_response>0) = 1;
-    response(obs_response<=0) = -1;
+    response(obs_response>=1) = 1;
+    response(obs_response<1) = -1;

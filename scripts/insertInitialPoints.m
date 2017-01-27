@@ -1,12 +1,12 @@
-initial_point_vec = [0.5,0.06,0.03,0.2,0.01,0.4];
+% initial_point_vec = [0.5,0.03,0.02,1,0.01,0.1];
 
-% initial_point_vec = [0.5,0.4,0.2,0.1,0.005,0.02,1,0.01,0.5];
+initial_point_vec = [0.5,0.04,0.03,0.02,0.01,0.02,1,0.01,0.1];
 
 subj_type = 'real';
 % subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"'] & 'model_gene="OPVPG"');
 
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']); 
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CPN","CPGN","VPN","VPGN","OPN","OPGN","OPVPN","OPVPGN")' & 'exp_id in (6)');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CPN","CPGN","VPN","VPGN","OPN","OPGN","OPVPN","OPVPGN")' & 'exp_id in (3,5,7,10)');
 
 for iKey = keys'
     iKey.int_point_id=1;

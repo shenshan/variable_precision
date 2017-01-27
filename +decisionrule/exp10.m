@@ -24,7 +24,7 @@ function [prediction, response] = exp10(x,pars)
     j0 = 0.0394;
     
     
-    if ismember(pars.model_name, {'CP','CPG'})
+    if ismember(pars.model_name, {'CP','CPG','CPN','CPGN'})
         pars.lambdaMat = pars.lambda*ones(size(x));
     end
     if nItems == 1
@@ -41,6 +41,11 @@ function [prediction, response] = exp10(x,pars)
     end
     
     obs_response = bsxfun(@times,repmat(term,[1,1,length(pars.p_right)]),p_right_adj./(1-p_right_adj));
+    
+    if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
+        obs_response = normrnd(obs_response,pars.sigma_dn);
+    end
+    
     prediction = (sum(obs_response>1,2) + .5*sum(obs_response==1,2))/nTrials;
     prediction = squeeze(prediction);
     response = squeeze(obs_response);
