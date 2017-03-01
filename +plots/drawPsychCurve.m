@@ -40,7 +40,7 @@ for ii = 1:length(exps)
     elseif length(models)==8
         fig = Figure(102,'size',[160,60]);
     else
-        fig = Figure(102,'size',[30*length(models)+10,30]);
+        fig = Figure(102,'size',[50*length(models)+10,30]);
     end
         
         
@@ -137,7 +137,11 @@ for ii = 1:length(exps)
                 
                 text(text_x,0.9,model_name)
                 set(gca,'YTick',0:0.2:1)
-                set(gca,'XTick',-20:10:20);
+                if exp.exp_id~=3
+                    set(gca,'XTick',-20:10:20);
+                else
+                    set(gca,'XTick',-20:2.5:20);
+                end
                 ylim([0,1])
             end
                 

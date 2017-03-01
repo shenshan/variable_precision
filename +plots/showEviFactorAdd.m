@@ -13,13 +13,13 @@ for ii = 1:length(exp_ids)
     
     switch type
         case 'aic'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_aic','ori_aic','var_aic');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_aic','dn_aic','ori_aic','var_aic','total_var_aic');
         case 'bic'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_bic','ori_bic','var_bic');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_bic','dn_bic','ori_bic','var_bic','total_var_bic');
         case 'aicc'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_aicc','ori_aicc','var_aicc');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_aicc','dn_aicc','ori_aicc','var_aicc','total_var_aicc');
         case 'llmax'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_llmax','ori_llmax','var_llmax');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactorAdd & exp, 'guess_llmax','dn_llmax','ori_llmax','var_llmax','total_var_llmax');
     end
     
 end
@@ -31,7 +31,7 @@ groupbar(eviMat)
 xlabel('Experiment number')
 ylabel(['Evidence of factors, ' type])
 
-legend('Guess','Ori','Var','location','northeast')
+legend('+Guess','+DN','+Ori','+Var','+Ori+Var','location','northeast')
 
 fig.cleanup
 

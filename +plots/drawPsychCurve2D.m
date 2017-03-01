@@ -49,7 +49,7 @@ else
     elseif length(models)==8
         fig = Figure(102,'size',[160,60]);
     else
-        fig = Figure(102,'size',[30*length(models)+10,30]);
+        fig = Figure(102,'size',[50*length(models)+10,30]);
     end
     
     if length(models) == 1
@@ -109,7 +109,7 @@ else
     end
         
     
-    legend('dist<-5','-5<dist<5','dist>5','Location','NorthWest')
+%     legend('dist<-5','-5<dist<5','dist>5','Location','NorthWest')
     ylim([0,1])
     fig.cleanup
     fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(models(1).exp_id) '_psy_2d.eps'])

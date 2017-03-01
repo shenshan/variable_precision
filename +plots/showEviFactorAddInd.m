@@ -10,41 +10,41 @@ for iexp = exps'
         
     records = fetch(varprecision.Recording & iexp & subjs);
     
-    eviMat = zeros(length(records),3);
+    eviMat = zeros(length(records),5);
     
     switch type
         case 'aic'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3)] = fetchn(varprecision.EviFactorAdd & records, 'guess_aic','ori_aic','var_aic');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorAdd & records, 'guess_aic','dn_aic','ori_aic','var_aic','total_var_aic');
             eviMat = -eviMat*2;
         case 'bic'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3)] = fetchn(varprecision.EviFactorAdd & records, 'guess_bic','ori_bic','var_bic');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorAdd & records, 'guess_bic','dn_bic','ori_bic','var_bic','total_var_bic');
             eviMat = -eviMat*2;
         case 'aicc'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3)] = fetchn(varprecision.EviFactorAdd & records, 'guess_aicc','ori_aicc','var_aicc');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorAdd & records, 'guess_aicc','dn_aicc','ori_aicc','var_aicc','total_var_aicc');
             eviMat = -eviMat*2;
         case 'llmax'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3)] = fetchn(varprecision.EviFactorAdd & records, 'guess_llmax','ori_llmax','var_llmax');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorAdd & records, 'guess_llmax','dn_llmax','ori_llmax','var_llmax','total_var_llmax');
     end
     
     mean_evi = mean(eviMat);
     sem_evi = std(eviMat)./sqrt(length(records));
     
-    fig = Figure(101,'size',[60,40]); hold on
+    fig = Figure(101,'size',[75,40]); hold on
     bar(mean_evi,'FaceColor','w');
     errorbar(mean_evi,sem_evi,'k','LineStyle','None')
-    set(gca, 'xTick',[1,2,3],'xTickLabel',{'Guess','Ori','Var'})
+    set(gca, 'xTick',[1,2,3,4,5],'xTickLabel',{'+Guess','+DN','+Ori','+Var','+Ori+Var'})
     xlabel('factor')
     ylabel('AIC difference')
     
     yLim = get(gca,'YLim');
     
-    if min(mean_evi-sem_evi)>-60
-        ylim([-60,20])
+    if min(mean_evi-sem_evi)>-100
+        ylim([-100,20])
     else
         ylim([yLim(1),20])
     end
     
     fig.cleanup
-    fig.save(['~/Dropbox/VR/+varprecision/figures/aic_factor_exp' num2str(iexp.exp_id)]);
+    fig.save(['~/Dropbox/VR/+varprecision/figures/aic_factor_add_exp' num2str(iexp.exp_id)]);
     
 end
