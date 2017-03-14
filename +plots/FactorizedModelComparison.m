@@ -21,14 +21,14 @@ mean_evi = zeros(1,length(models));
 sem_evi = zeros(1,length(models));
 
 if ismember(type,{'all','dn'})
-    eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPGN"','aic');
+    eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPGN"','aic');
 else
-    eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPG"','aic');
+    eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPG"','aic');
 end
 
 for ii = 1:length(models)
 
-    eviMat = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & ['model_name="' models{ii} '"'],'aic');
+    eviMat = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & ['model_name="' models{ii} '"'],'aic');
     eviMat = eviMat - eviRef;
     
     mean_evi(ii) = mean(eviMat);

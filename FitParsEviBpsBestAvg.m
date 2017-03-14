@@ -61,7 +61,7 @@ classdef FitParsEviBpsBestAvg < dj.Relvar & dj.AutoPopulate
                 case 'VP'
                     params = [key.p_right_hat,key.lambda_hat,key.theta_hat];
                 case 'VPN'
-                    params = [key.p_right_hat,key.lambda_hat,key.sigma_dn_hat];
+                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat, key.sigma_dn_hat];
                 case 'VPG'
                     params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.guess_hat];
                 case 'VPGN'
