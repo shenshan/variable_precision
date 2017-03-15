@@ -30,23 +30,26 @@ function [prediction, response] = exp6(x,pars)
 %         term2 = entire_int - temp1;
             
     elseif ismember(pars.model_name,{'VP','VPG','OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
-        entire_int = pi*besseli0_fast(sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x)));
-%         disp(['besseli time: ' num2str(toc) ' sec'])
-%         tic
-        temp1 = vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30);
-%         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
-%         disp(['vmcdf time: ' num2str(toc) ' sec'])
-        temp2 = entire_int - temp1;
-        term1 = sum(temp1./besseli0_fast(pars.lambdaMat),1);
-        term2 = sum(temp2./besseli0_fast(pars.lambdaMat),1);
+        
+%         kappa_c = sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x));
+%         entire_int = pi*besseli0_fast(kappa_c,1);
+% %         disp(['besseli time: ' num2str(toc) ' sec'])
+% %         tic
+%         temp1 = vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30, kappa_c);
+% %         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
+% %         disp(['vmcdf time: ' num2str(toc) ' sec'])
+%         temp2 = entire_int - temp1;
+%         term1 = sum(temp1./besseli0_fast(pars.lambdaMat,1).*exp(kappa_c - pars.lambdaMat),1);
+%         term2 = sum(temp2./besseli0_fast(pars.lambdaMat,1).*exp(kappa_c - pars.lambdaMat),1);
 
-%         term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30),1);
-%         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
+        term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
+        term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
     end
    
     
     obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
     
+
     if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
         obs_response = normrnd(obs_response,pars.sigma_dn);
     end
