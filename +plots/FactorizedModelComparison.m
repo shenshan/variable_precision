@@ -6,8 +6,8 @@ exp = fetch(varprecision.Experiment & exp);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
 if strcmp(type,'all')
-    models = {'CP','CPN','CPG','CPGN','VP','VPN','VPG','VPGN','OP','OPN','OPG','OPGN','OPVP','OPVPN','OPVPG','OPVPGN'};
-    model_names = {'CF','CFN','CFG','CFGN','CV','CVN','CVG','CVGN','OF','OFN','OFG','OFGN','OV','OVN','OVG','OVGN'};
+    models = {'CP','CPG','CPN','CPGN','VP','VPG','VPN','VPGN','OP','OPG','OPN','OPGN','OPVP','OPVPG','OPVPN','OPVPGN'};
+    model_names = {'CF','CFG','CFN','CFGN','CV','CVG','CVN','CVGN','OF','OFG','OFN','OFGN','OV','OVG','OVN','OVGN'};
 elseif strcmp(type,'dn')
     models = {'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'};
     model_names = {'CFN','CFGN','CVN','CVGN','OFN','OFGN','OVN','OVGN'};
@@ -59,8 +59,8 @@ else
     ylim([-20,yLim(2)])
 end
 
-xlabel('Models')
-ylabel('aic')
+xlabel('Model')
+ylabel('AIC')
 
 fig.cleanup
 fig.save(['~/Dropbox/VR/+varprecision/figures/exp_' num2str(exp.exp_id) '_aic_' type])

@@ -33,11 +33,11 @@ classdef EviFactorAdd < dj.Relvar & dj.AutoPopulate
     methods(Access=protected)
         
 		function makeTuples(self, key)
-            [cp_aic, cp_bic, cp_aicc, cp_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "CP"','aic','bic','aicc','llmax');
-            [cpg_aic, cpg_bic, cpg_aicc, cpg_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "CPG"','aic','bic','aicc','llmax');
-            [cpgn_aic, cpgn_bic, cpgn_aicc, cpgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "CPGN"','aic','bic','aicc','llmax');
-            [opgn_aic, opgn_bic, opgn_aicc, opgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPGN"','aic','bic','aicc','llmax');
-            [opvpgn_aic, opvpgn_bic, opvpgn_aicc, opvpgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPVPGN"','aic','bic','aicc','llmax');
+            [cp_aic, cp_bic, cp_aicc, cp_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "CP"','aic','bic','aicc','llmax');
+            [cpg_aic, cpg_bic, cpg_aicc, cpg_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "CPG"','aic','bic','aicc','llmax');
+            [cpgn_aic, cpgn_bic, cpgn_aicc, cpgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "CPGN"','aic','bic','aicc','llmax');
+            [opgn_aic, opgn_bic, opgn_aicc, opgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPGN"','aic','bic','aicc','llmax');
+            [opvpgn_aic, opvpgn_bic, opvpgn_aicc, opvpgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPVPGN"','aic','bic','aicc','llmax');
             
             
             key.guess_aic = cp_aic - cpg_aic;

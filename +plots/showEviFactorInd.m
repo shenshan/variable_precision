@@ -3,6 +3,9 @@ function showEviFactorInd(exp,type)
 %   function showEviFactor(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
 
+if ~exist('type','var')
+    type = 'aic';
+end
 exps = fetch(varprecision.Experiment & exp);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
@@ -33,7 +36,7 @@ for iexp = exps'
     bar(mean_evi,'FaceColor','w');
     errorbar(mean_evi,sem_evi,'k','LineStyle','None')
     set(gca, 'xTick',[1,2,3,4,5],'xTickLabel',{'-Guess','-DN','-Ori','-Var','-Ori-Var'})
-    xlabel('factor')
+    xlabel('Factor')
     ylabel('AIC difference')
     
     yLim = get(gca,'YLim');

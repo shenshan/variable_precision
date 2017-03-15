@@ -34,12 +34,12 @@ classdef EviFactor2 < dj.Relvar & dj.AutoPopulate
         
 		function makeTuples(self, key)
             
-            [vpgn_aic, vpgn_bic, vpgn_aicc, vpgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "VPGN"','aic','bic','aicc','llmax');
-            [opgn_aic, opgn_bic, opgn_aicc, opgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPGN"','aic','bic','aicc','llmax');
-            [opvpn_aic, opvpn_bic, opvpn_aicc, opvpn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPVPN"','aic','bic','aicc','llmax');
-            [opvpg_aic, opvpg_bic, opvpg_aicc, opvpg_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPVPG"','aic','bic','aicc','llmax');
-            [cpgn_aic, cpgn_bic, cpgn_aicc, cpgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "CPGN"','aic','bic','aicc','llmax');
-            [opvpgn_aic, opvpgn_bic, opvpgn_aicc, opvpgn_llmax] = fetch1(varprecision.FitParsEviBpsBest & key & 'model_name = "OPVPGN"','aic','bic','aicc','llmax');
+            [vpgn_aic, vpgn_bic, vpgn_aicc, vpgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "VPGN"','aic','bic','aicc','llmax');
+            [opgn_aic, opgn_bic, opgn_aicc, opgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPGN"','aic','bic','aicc','llmax');
+            [opvpn_aic, opvpn_bic, opvpn_aicc, opvpn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPVPN"','aic','bic','aicc','llmax');
+            [opvpg_aic, opvpg_bic, opvpg_aicc, opvpg_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPVPG"','aic','bic','aicc','llmax');
+            [cpgn_aic, cpgn_bic, cpgn_aicc, cpgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "CPGN"','aic','bic','aicc','llmax');
+            [opvpgn_aic, opvpgn_bic, opvpgn_aicc, opvpgn_llmax] = fetch1(varprecision.FitParsEviBpsBestAvg & key & 'model_name = "OPVPGN"','aic','bic','aicc','llmax');
             
             key.guess_aic = opvpn_aic - opvpgn_aic;
             key.guess_bic = opvpn_bic - opvpgn_bic;
