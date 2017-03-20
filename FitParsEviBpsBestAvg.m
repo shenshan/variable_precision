@@ -36,61 +36,68 @@ classdef FitParsEviBpsBestAvg < dj.Relvar & dj.AutoPopulate
             tuples = fetch(varprecision.FitParsEviBpsRun & tuple);
             [key.int_pnt_ids,key.run_ids] = fetchn(varprecision.FitParsEviBpsRun & tuple,'int_point_id','run_idx');
             
-            llmaxMat = fetchn(varprecision.FitParsEviBpsRun & tuples, 'llmax');
-            [key.llmax,idx] = max(llmaxMat);
+            keys_run = fetch(varprecision.FitParsEviBpsRun & tuples, '*');
             
-            [key.best_int_pnt_idx,key.best_run_idx,...
-             key.p_right_hat,key.lambda_hat,key.theta_hat,key.beta_hat,key.guess_hat,key.sigma_dn_hat,...
-             key.llmax_original] = fetch1(varprecision.FitParsEviBpsRun & tuples(idx),... 
-             'int_point_id','run_idx','p_right_hat','lambda_hat','theta_hat','beta_hat','guess_hat','sigma_dn_hat','llmax');
-         
-            key.n_repeats = 10;
+            key.n_repeats = 5;
             key.n_trials = 2000;
             
             tuple.trial_num_sim = key.n_trials;
             
-            switch tuple.model_name
-                case 'CP'
-                    params = [key.p_right_hat,key.lambda_hat];
-                case 'CPN'
-                    params = [key.p_right_hat,key.lambda_hat,key.sigma_dn_hat];
-                case 'CPG'
-                    params = [key.p_right_hat,key.lambda_hat,key.guess_hat];
-                case 'CPGN'
-                    params = [key.p_right_hat,key.lambda_hat,key.guess_hat,key.sigma_dn_hat];
-                case 'VP'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat];
-                case 'VPN'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat, key.sigma_dn_hat];
-                case 'VPG'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.guess_hat];
-                case 'VPGN'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.guess_hat,key.sigma_dn_hat];
-                case 'OP'
-                    params = [key.p_right_hat,key.lambda_hat,key.beta_hat];
-                case 'OPN'
-                    params = [key.p_right_hat,key.lambda_hat,key.beta_hat,key.sigma_dn_hat];
-                case 'OPG'
-                    params = [key.p_right_hat,key.lambda_hat,key.beta_hat,key.guess_hat];
-                case 'OPGN'
-                    params = [key.p_right_hat,key.lambda_hat,key.beta_hat,key.guess_hat,key.sigma_dn_hat];
-                case 'OPVP'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.beta_hat];
-                case 'OPVPN'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.beta_hat,key.sigma_dn_hat];
-                case 'OPVPG'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.beta_hat,key.guess_hat];
-                case 'OPVPGN'
-                    params = [key.p_right_hat,key.lambda_hat,key.theta_hat,key.beta_hat,key.guess_hat,key.sigma_dn_hat];
+            llmaxMat = zeros(length(keys_run),key.n_repeats);
+            for ii = 1:length(keys_run)
+                switch tuple.model_name
+                    case 'CP'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat];
+                    case 'CPN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).sigma_dn_hat];
+                    case 'CPG'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).guess_hat];
+                    case 'CPGN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).guess_hat,keys_run(ii).sigma_dn_hat];
+                    case 'VP'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat];
+                    case 'VPN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat, keys_run(ii).sigma_dn_hat];
+                    case 'VPG'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).guess_hat];
+                    case 'VPGN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).guess_hat,keys_run(ii).sigma_dn_hat];
+                    case 'OP'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).beta_hat];
+                    case 'OPN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).beta_hat,keys_run(ii).sigma_dn_hat];
+                    case 'OPG'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).beta_hat,keys_run(ii).guess_hat];
+                    case 'OPGN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).beta_hat,keys_run(ii).guess_hat,keys_run(ii).sigma_dn_hat];
+                    case 'OPVP'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).beta_hat];
+                    case 'OPVPN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).beta_hat,keys_run(ii).sigma_dn_hat];
+                    case 'OPVPG'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).beta_hat,keys_run(ii).guess_hat];
+                    case 'OPVPGN'
+                        params = [keys_run(ii).p_right_hat,keys_run(ii).lambda_hat,keys_run(ii).theta_hat,keys_run(ii).beta_hat,keys_run(ii).guess_hat,keys_run(ii).sigma_dn_hat];
+                end
+                for jj = 1:key.n_repeats
+                    llmaxMat(ii,jj) = varprecision.decisionrule_bps.loglikelihood(params,tuple);
+                end
             end
-                 
             
-            llmaxMat = zeros(1,key.n_repeats);
-            for ii = 1:key.n_repeats
-                llmaxMat(ii) = varprecision.decisionrule_bps.loglikelihood(params,tuple);
-            end
+            llmaxMat = mean(llmaxMat,2);
+            [llmax,idx] = max(llmaxMat);
+            key.llmax = llmax;
             
-            llmax = mean(llmaxMat);
+            key.best_int_pnt_idx = keys_run(idx).int_point_id;
+            key.best_run_idx = keys_run(idx).run_idx;
+            key.llmax_original = keys_run(idx).llmax;
+            key.p_right_hat = keys_run(idx).p_right_hat;
+            key.lambda_hat = keys_run(idx).lambda_hat;
+            key.theta_hat = keys_run(idx).theta_hat;
+            key.beta_hat = keys_run(idx).beta_hat;
+            key.guess_hat = keys_run(idx).guess_hat;
+            key.sigma_dn_hat = keys_run(idx).sigma_dn_hat;
+         
             nTrials = fetch1(varprecision.Data & key, 'ntrials');
             npars = fetch1(varprecision.Model & key, 'npars');
             sub = 0;
