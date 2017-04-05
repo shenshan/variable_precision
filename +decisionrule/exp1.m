@@ -26,14 +26,14 @@ function [prediction, response] = exp1(x,pars)
     term1 = 1+erf(x_c);
     term2 = 1-erf(x_c);
     
-    obs_response = bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj));
+    obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
     
     if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
         obs_response = normrnd(obs_response,pars.sigma_dn);
     end
     
-    prediction = (sum(obs_response>1,2) + .5*sum(obs_response==1,2))/nTrials;
+    prediction = (sum(obs_response>0,2) + .5*sum(obs_response==0,2))/nTrials;
     prediction = squeeze(prediction);
     response = obs_response;
-    response(obs_response>=1) = 1;
-    response(obs_response<1) = -1;
+    response(obs_response>=0) = 1;
+    response(obs_response<0) = -1;
