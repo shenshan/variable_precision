@@ -1,11 +1,11 @@
 
 nIntPoints = 5;
 exps = fetch(varprecision.Experiment);
-subjs = fetch(varprecision.Subject & 'subj_type = "real"');
+subjs = fetch(varprecision.Subject & 'subj_type = "real"' & 'subj_initial="YZ"');
 
 
 for exp = exps'
-    models = fetch(varprecision.Model & exp & 'model_name in ("OP","OPN","OPG","OPGN")');
+    models = fetch(varprecision.Model & exp & 'model_name in ("VP","VPG","VPN","VPGN")');
     
     for imodel = models'
         [plb,pub] = fetch1(varprecision.ParamsRange & exp & imodel,'plb','pub');

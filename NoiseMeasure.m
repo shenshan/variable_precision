@@ -24,24 +24,40 @@ classdef NoiseMeasure < dj.Relvar & dj.AutoPopulate
 		function makeTuples(self, key)
             tic
             [~,key.run_host] = system('hostname');
-			[p_right,lambda,theta,beta,guess] = fetch1(varprecision.FitParsEviBpsBest & key,'p_right_hat','lambda_hat','theta_hat','beta_hat','guess_hat');
+			[p_right,lambda,theta,beta,guess,sigma_dn] = fetch1(varprecision.FitParsEviBpsBest & key,'p_right_hat','lambda_hat','theta_hat','beta_hat','guess_hat','sigma_dn_hat');
             switch key.model_name
                 case 'CP'
                     params = [p_right,lambda];
+                case 'CPN'
+                    params = [p_right,lambda,sigma_dn];
                 case 'CPG'
                     params = [p_right,lambda,guess];
+                case 'CPGN'
+                    params = [p_right,lambda,guess,sigma_dn];
                 case 'VP'
                     params = [p_right,lambda,theta];
+                case 'VPN'
+                    params = [p_right,lambda,theta,sigma_dn];
                 case 'VPG'
                     params = [p_right,lambda,theta,guess];
-                case 'XP'
+                case 'VPGN'
+                    params = [p_right,lambda,theta,guess,sigma_dn];
+                case 'OP'
                     params = [p_right,lambda,beta];
-                case 'XPG'
+                case 'OPN'
+                    params = [p_right,lambda,beta,sigma_dn];
+                case 'OPG'
                     params = [p_right,lambda,beta,guess];
-                case 'XPVP'
+                case 'OPGN'
+                    params = [p_right,lambda,beta,guess,sigma_dn];
+                case 'OPVP'
                     params = [p_right,lambda,theta,beta];
-                case 'XPVPG'
+                case 'OPVPN'
+                    params = [p_right,lambda,theta,beta,sigma_dn];
+                case 'OPVPG'
                     params = [p_right,lambda,theta,beta,guess];
+                case 'OPVPGN'
+                    params = [p_right,lambda,theta,beta,guess,sigma_dn];
             end
             [key.nrun,key.trial_num_sim] = fetch1(varprecision.NoiseMeasureRun & key, 'nruns','run_trial_num_sim');
             

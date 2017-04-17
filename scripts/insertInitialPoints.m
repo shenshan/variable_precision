@@ -1,15 +1,15 @@
 % initial_point_vec = [0.5,0.03,0.02,1,0.01,0.1];
 
-initial_point_vec = [0.5,0.04,0.03,0.02,0.01,0.02,1,0.01,0.1];
+initial_point_vec = [0.5,0.006,0.002,0.002,0.0007,0.0004,1,0.001,0.16];
 
 subj_type = 'real';
 % subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"'] & 'model_gene="OPVPG"');
 
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']); 
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'model_name in ("CPN","CPGN","VPN","VPGN","OPN","OPGN","OPVPN","OPVPGN")' & 'exp_id in (3,5,7,10)');
+keys = fetch((varprecision.Recording & subjs & 'subj_initial="TA"') * varprecision.ParamsRange & 'model_name in ("VPGN")' & 'exp_id in (7)');
 
 for iKey = keys'
-    iKey.int_point_id=1;
+    iKey.int_point_id=15;
     if ~ismember(iKey.exp_id,[3,5,7,10,11]) || strcmp(subj_type,'real_sub')
         switch iKey.model_name
             case 'CP'
