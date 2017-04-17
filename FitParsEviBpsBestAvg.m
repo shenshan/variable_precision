@@ -38,7 +38,7 @@ classdef FitParsEviBpsBestAvg < dj.Relvar & dj.AutoPopulate
             
             keys_run = fetch(varprecision.FitParsEviBpsRun & tuples, '*');
             
-            key.n_repeats = 20;
+            key.n_repeats = 10;
             key.n_trials = 2000;
             
             tuple.trial_num_sim = key.n_trials;
@@ -85,7 +85,7 @@ classdef FitParsEviBpsBestAvg < dj.Relvar & dj.AutoPopulate
             end
             
             llmaxMat = mean(llmaxMat,2);
-            [llmax,idx] = max(llmaxMat);
+            [llmax,idx] = min(llmaxMat);
             key.llmax = llmax;
             
             key.best_int_pnt_idx = keys_run(idx).int_point_id;
