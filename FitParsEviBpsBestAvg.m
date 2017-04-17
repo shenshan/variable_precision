@@ -38,7 +38,7 @@ classdef FitParsEviBpsBestAvg < dj.Relvar & dj.AutoPopulate
             
             keys_run = fetch(varprecision.FitParsEviBpsRun & tuples, '*');
             
-            key.n_repeats = 5;
+            key.n_repeats = 20;
             key.n_trials = 2000;
             
             tuple.trial_num_sim = key.n_trials;
