@@ -16,7 +16,7 @@ classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
 
 		function makeTuples(self, key)
             
-            fit_pars = fetch(varprecision.FitParsEviBpsBest & key,'*');
+            fit_pars = fetch(varprecision.FitParsEviBpsBestAvg & key,'*');
             
             switch fit_pars.model_name
                 case 'CP'
