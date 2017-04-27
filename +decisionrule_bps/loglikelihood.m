@@ -160,20 +160,27 @@ if length(setsizes)==1
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
         stimulus = stimuli(ii,:);
-        if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})
-            sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
+        if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})            
             if vm
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             else
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus*pi/180)));
                 pars.lambdaMat = 1./sigma.^2;
                 pars.lambdaMat = repmat(pars.lambdaMat,trial_num_sim,1)';
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
             end
         elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN'})
-            sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));           
+            
+            if vm
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus))); 
+            else
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus*pi/180))); 
+            end
+                
             pars.lambdaMat = 1./sigma.^2;
             pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
             pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
@@ -186,16 +193,23 @@ if length(setsizes)==1
             end
         end
         x = repmat(stimulus',[1,trial_num_sim]) + noiseMat;
-        if ismember(key.model_name,{'XP','XPG'})
-            sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+        if ismember(key.model_name,{'XP','XPG'})           
             if vm
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
             else
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x*pi/180)));
                 pars.lambdaMat = 1./sigma.^2;
             end
         elseif ismember(key.model_name,{'XPVP','XPVPG'})
-            sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+            
+            if vm
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+            else
+                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x*pi/180)));
+            end
+            
             pars.lambdaMat = 1./sigma.^2;
             pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
             if vm
@@ -242,19 +256,25 @@ else
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
             if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})
-                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
+                
                 if vm
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                     pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
                     pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
                 else
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus*pi/180)));
                     pars.lambdaMat = 1./sigma.^2;
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                 end
             elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN'})
-                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
+                if vm
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
+                else
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus*pi/180)));
+                end
                 pars.lambdaMat = 1./sigma.^2;
                 pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                 pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
@@ -268,15 +288,21 @@ else
             end
             x = repmat(stimulus', [1,trial_num_sim]) + noiseMat;
             if ismember(key.model_name,{'XP','XPG'})
-                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+                
                 if vm
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
                     pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
                     pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 else
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x*pi/180)));
                     pars.lambdaMat = 1./sigma.^2;
                 end
             elseif ismember(key.model_name,{'XPVP','XPVPG'})
-                sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+                if vm
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x)));
+                else
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*x*pi/180)));
+                end
                 pars.lambdaMat = 1./sigma.^2;
                 pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
                 if vm
