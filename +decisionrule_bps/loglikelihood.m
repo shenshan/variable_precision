@@ -20,7 +20,7 @@ if ismember(key.exp_id,[3,5,7])
 end
 
 subj_type = fetch1(varprecision.Subject & ['subj_initial="' key.subj_initial '"'],'subj_type');
-if ismember(key.exp_id,[3,5,7,10,11]) && ismember(subj_type,{'real','fake'})
+if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake'})
     
     pars.p_right = params(1);
     pars.lambdaVec = params(2:5);
@@ -223,7 +223,7 @@ if length(setsizes)==1
 else
     for jj = 1:length(setsizes)
         setsize = setsizes(jj);
-        if ismember(key.exp_id,[7,10,11])
+        if ismember(key.exp_id,[7,10,11,12])
             stimuli_sub = stimuli(set_size==setsize,:);
         else
             stimuli_sub = stimuli(set_size==setsize);
@@ -325,7 +325,7 @@ end
 
 prediction = predMat;
 
-if ~ismember(key.exp_id,[10,11])
+if ~ismember(key.exp_id,[10,11,12])
     predMat(response==-1) = 1-predMat(response==-1);
 else
     predMat(response==0) = 1-predMat(response==0);

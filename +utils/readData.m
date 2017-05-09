@@ -62,7 +62,7 @@ function [stimuli,response,set_size] = readData(key,type)
             stimuli = [stimuli; data.orts];
             response = [response; data.C_hat];
             set_size = [set_size; data.N];
-        elseif exp_id == 11
+        elseif ismember(exp_id, [11,12])
             if strcmp(type,'fake')
                 stimuli = datamatrix(:,1:8);
                 response = datamatrix(:,9);

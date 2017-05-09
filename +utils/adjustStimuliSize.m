@@ -25,7 +25,7 @@ if strcmp(tag,'single')
         stimulusMat = stimuli(:,1:setsize)*pi/180;
     elseif exp_id == 6
         stimulusMat = stimuli*pi/180;
-    elseif exp_id == 10
+    elseif ismember(exp_id,[10,12])
         stimulusMat = stimuli(:,1:setsize);
     end
 else
