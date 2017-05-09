@@ -32,7 +32,7 @@ function [prediction, response] = exp12(x,pars)
     sigmaMat = 1./sqrt(pars.lambdaMat);
     sigma_c = sqrt(sigma0^2+sigmaMat.^2);
     
-    term = squeeze(sum(1/nItems*sum(sigma_c./sigmaMat.*exp(-0.5*x.^2.*(1./sigmaMat.^2-1./sigma_c.^2))),1));
+    term = squeeze(1/nItems*sum(sigma_c./sigmaMat.*exp(-0.5*x.^2.*(1./sigmaMat.^2-1./sigma_c.^2)),1));
    
     obs_response = log(bsxfun(@times,repmat(term,[1,1,length(pars.p_right)]),p_right_adj./(1-p_right_adj)));
     
