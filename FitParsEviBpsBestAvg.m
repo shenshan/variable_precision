@@ -7,7 +7,7 @@ best_int_pnt_idx            : int                           # index of the best 
 best_run_idx                : int                           # run idx of the best initial point
 int_pnt_ids                 : blob                          # initial point ids covered by this tuple
 run_ids                     : blob                          # run ids covered by this tuple
-p_right_hat                 : double                        # estimated p_right
+p_right_hat=null            : double                        # estimated p_right
 lambda_hat                  : blob                          # estimated lambda
 theta_hat=null              : double                        # estimated theta, NaN if not exist
 guess_hat=null              : double                        # estimated guess, NaN if not exist

@@ -48,17 +48,17 @@ function [prediction, response] = exp9(x,pars)
         x_c = x.*pars.lambdaMat./sqrt(2*(pars.lambdaMat+lambda_s));
         term1 = squeeze(sum((1+erf(x_c)).*f));
         term2 = squeeze(sum((1-erf(x_c)).*f));
-    elseif strcmp(pars.model_name,'OPVPGSum')
+    elseif ismember(pars.model_name,{'GSum','OPVPGSum'})
         obs_response = sum(x);
-    elseif strcmp(pars.model_name,'OPVPGMax')
+    elseif ismember(pars.model_name,{'GMax','OPVPGMax'})
         [~,idx] = max(abs(x));
         idx = sub2ind(size(x), idx, 1:nTrials);
         obs_response = x(idx);
-    elseif strcmp(pars.model_name,'OPVPGMin')
+    elseif ismember(pars.model_name,{'GMin','OPVPGMin'})
         [~,idx] = min(abs(x));
         idx = sub2ind(size(x), idx, 1:nTrials);
         obs_response = x(idx);
-    elseif strcmp(pars.model_name,'OPVPGVar')
+    elseif ismember(pars.model_name,{'GVar','OPVPGVar'})
         corr_x = zeros(size(x));
         idx_temp = 1:nItems;
         for jj = 1:nItems
@@ -68,7 +68,7 @@ function [prediction, response] = exp9(x,pars)
         [~,idx] = min(corr_x);
         idx = sub2ind(size(x), idx, 1:nTrials);	
         obs_response = x(idx);
-    elseif strcmp(pars.model_name,'OPVPGSign')
+    elseif ismember(pars.model_name,{'GSign','OPVPGSign'})
         temp = sign(x);
         sum_x = sum(temp);
         obs_response = zeros(1,length(x));
@@ -81,7 +81,7 @@ function [prediction, response] = exp9(x,pars)
         obs_response(sum_x==-2) = 1; 
     end
     
-    if ~ismember(pars.model_name,{'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+    if ~ismember(pars.model_name,{'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign','GSum','GMax','GMin','GVar','GSign'})
         p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
         obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
     end

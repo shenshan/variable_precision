@@ -76,10 +76,15 @@ if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake'})
     end
 else
     if strcmp(model_type,'sub')
-        pars.lambda = params(1);
-        pars.theta = params(2);
-        pars.beta = params(3);
-        pars.guess = params(4);
+        if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+            pars.lambda = params(1);
+            pars.guess = params(2);
+        else
+            pars.lambda = params(1);
+            pars.theta = params(2);
+            pars.beta = params(3);
+            pars.guess = params(4);
+        end
     else
         pars.p_right = params(1);
         pars.lambda = params(2);
@@ -144,7 +149,7 @@ trial_num_sim = key.trial_num_sim;
 predMat = zeros(size(response));
 
 if length(setsizes)==1
-    if ismember(key.model_name,{'CP','CPG','CPN','CPGN'})
+    if ismember(key.model_name,{'CP','CPG','CPN','CPGN','GSum','GMax','GMin','GVar','GSign'})
         if vm == 0
             noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
         else
@@ -237,7 +242,7 @@ else
             stimuli_sub = stimuli(set_size==setsize);
         end
         response_sub = response(set_size==setsize);
-        if ismember(key.model_name,{'CP','CPG','CPN','CPGN'})
+        if ismember(key.model_name,{'CP','CPG','CPN','CPGN','GSum','GMax','GMin','GVar','GSign'})
             pars.lambda = pars.lambdaVec(jj);
             if vm == 0            
                 noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
@@ -327,7 +332,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG','CPGN','VPGN','OPGN','OPVPGN','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG','CPGN','VPGN','OPGN','OPVPGN','GSum','GMax','GMin','GVar','GSign','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 

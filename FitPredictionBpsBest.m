@@ -9,7 +9,7 @@ prediction_plot : longblob      # prediction p_right, ready for plot
 classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = varprecision.FitParsEviBpsBest
+        popRel = varprecision.FitParsEviBpsBestAvg
     end
     
 	methods(Access=protected)
@@ -51,13 +51,17 @@ classdef FitPredictionBpsBest < dj.Relvar & dj.AutoPopulate
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.sigma_dn_hat];
                 case {'XPVPGN','OPVPGN'}
                     params = [fit_pars.p_right_hat, fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.guess_hat, fit_pars.sigma_dn_hat];
+                case {'GSum','GMax','GMin','GVar','GSign'}
+                    params = [fit_pars.lambda_hat, fit_pars.guess_hat];
+                case {'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'}
+                    params = [fit_pars.lambda_hat, fit_pars.theta_hat, fit_pars.beta_hat, fit_pars.guess_hat];
             end
             
             fit_pars.trial_num_sim = 5000;
             
             [~,~,key.prediction] = varprecision.decisionrule_bps.loglikelihood(params, fit_pars);
                 
-            if ~ismember(key.exp_id,[10,11])
+            if ~ismember(key.exp_id,[10,11,12])
                 
                 prediction = key.prediction;
                 stims = fetch1(varprecision.DataStats & key, 'stims');

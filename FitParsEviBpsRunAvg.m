@@ -63,7 +63,11 @@ classdef FitParsEviBpsRunAvg < dj.Relvar & dj.AutoPopulate
                         params = [p_right,lambda,theta,beta,guess,sigma_dn];
                 end
             else
-                params = [lambda,theta,beta,guess];
+                if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+                    params = [lambda, guess];
+                else
+                    params = [lambda,theta,beta,guess];
+                end
             end
             
             key.trial_num_sim = 2000;

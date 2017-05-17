@@ -103,10 +103,15 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                             key.sigma_dn_hat = pars(6);
                     end
                 else
-                    key.lambda_hat = pars(1);
-                    key.theta_hat = pars(2);
-                    key.beta_hat = pars(3);
-                    key.guess_hat = pars(4);
+                    if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+                        key.lambda_hat = pars(1);
+                        key.guess_hat = pars(2);
+                    else
+                        key.lambda_hat = pars(1);
+                        key.theta_hat = pars(2);
+                        key.beta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                    end
                 end
             else
                 key.p_right_hat = pars(1);
