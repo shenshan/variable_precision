@@ -2,7 +2,7 @@
 varprecision.FitParsEviBpsRun (computed) # compute fit parameters and maximum log likelihood with bps algorithm
 -> varprecision.RunBps
 ---
-p_right_hat                 : double                        # estimated p_right
+p_right_hat=null            : double                        # estimated p_right
 lambda_hat                  : blob                          # estimated lambda
 theta_hat=null              : double                        # estimated theta, NaN if not exist
 guess_hat=null              : double                        # estimated guess, NaN if not exist
@@ -26,6 +26,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             tuple = key;
             [lb,ub,plb,pub] = fetch1(varprecision.ParamsRange & key,'lower_bound','upper_bound','plb','pub');
+            model_type = fetch1(varprecision.Model & key, 'model_type');
             sub = 0;
             if ~isempty(strfind(key.subj_initial,'_ss_'))
                 sub = 1;
@@ -47,57 +48,65 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             setsizes = unique(fetch1(varprecision.Data & key, 'set_size'));
             
             if length(setsizes)==1
-                key.p_right_hat = pars(1);
-                key.lambda_hat = pars(2);
+                
+                if strcmp(model_type,'opt')
+                    key.p_right_hat = pars(1);
+                    key.lambda_hat = pars(2);
 
-                switch key.model_name
-                    case 'CPG'
-                        key.guess_hat = pars(3);
-                    case 'VP'
-                        key.theta_hat = pars(3);
-                    case 'VPG'
-                        key.theta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                    case {'OP','XP'}
-                        key.beta_hat = pars(3);
-                    case {'OPG','XPG'}
-                        key.beta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                    case {'OPVP','XPVP'}
-                        key.theta_hat = pars(3);
-                        key.beta_hat = pars(4);
-                    case {'OPVPG','XPVPG'}
-                        key.theta_hat = pars(3);
-                        key.beta_hat = pars(4);
-                        key.guess_hat = pars(5);
-                    case 'CPN'
-                        key.sigma_dn_hat = pars(3);
-                    case 'CPGN'
-                        key.guess_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    case 'VPN'
-                        key.theta_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    case 'VPGN'
-                        key.theta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                        key.sigma_dn_hat = pars(5);
-                    case 'OPN'
-                        key.beta_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    case 'OPGN'
-                        key.beta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                        key.sigma_dn_hat = pars(5);
-                    case 'OPVPN'
-                        key.theta_hat = pars(3);
-                        key.beta_hat = pars(4);
-                        key.sigma_dn_hat = pars(5);
-                    case 'OPVPGN'
-                        key.theta_hat = pars(3);
-                        key.beta_hat = pars(4);
-                        key.guess_hat = pars(5);
-                        key.sigma_dn_hat = pars(6);
+                    switch key.model_name
+                        case 'CPG'
+                            key.guess_hat = pars(3);
+                        case 'VP'
+                            key.theta_hat = pars(3);
+                        case 'VPG'
+                            key.theta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                        case {'OP','XP'}
+                            key.beta_hat = pars(3);
+                        case {'OPG','XPG'}
+                            key.beta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                        case {'OPVP','XPVP'}
+                            key.theta_hat = pars(3);
+                            key.beta_hat = pars(4);
+                        case {'OPVPG','XPVPG'}
+                            key.theta_hat = pars(3);
+                            key.beta_hat = pars(4);
+                            key.guess_hat = pars(5);
+                        case 'CPN'
+                            key.sigma_dn_hat = pars(3);
+                        case 'CPGN'
+                            key.guess_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'VPN'
+                            key.theta_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'VPGN'
+                            key.theta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                            key.sigma_dn_hat = pars(5);
+                        case 'OPN'
+                            key.beta_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'OPGN'
+                            key.beta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                            key.sigma_dn_hat = pars(5);
+                        case 'OPVPN'
+                            key.theta_hat = pars(3);
+                            key.beta_hat = pars(4);
+                            key.sigma_dn_hat = pars(5);
+                        case 'OPVPGN'
+                            key.theta_hat = pars(3);
+                            key.beta_hat = pars(4);
+                            key.guess_hat = pars(5);
+                            key.sigma_dn_hat = pars(6);
+                    end
+                else
+                    key.lambda_hat = pars(1);
+                    key.theta_hat = pars(2);
+                    key.beta_hat = pars(3);
+                    key.guess_hat = pars(4);
                 end
             else
                 key.p_right_hat = pars(1);
