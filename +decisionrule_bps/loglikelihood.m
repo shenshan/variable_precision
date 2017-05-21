@@ -3,8 +3,18 @@ function [LL,predMat,prediction] = loglikelihood(params,key)
 %   LL is the negative log likelihood, predMat is the likelihood of a model
 %   for each trial given subject's response, prediction is the model
 %   prediction of reporting "right" or "present" for each trial.
-
-[stimuli, response, set_size] = fetch1(varprecision.Data & key ,'stimuli','response','set_size');
+if isfield(key,'trade_off')
+    [stimuli, response, set_size] = fetch1(varprecision.TradeOffTestSet & key, 'stimuli','response','set_size');
+    if key.exp_id == 3
+        pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
+        key.exp_id = key.exp_id - 1;
+    end
+    subj_type = 'trade_off';
+else
+    [stimuli, response, set_size] = fetch1(varprecision.Data & key ,'stimuli','response','set_size');
+    pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
+    subj_type = fetch1(varprecision.Subject & ['subj_initial="' key.subj_initial '"'],'subj_type');
+end
 setsizes = unique(set_size);
 exp_id = key.exp_id;
 model_type = fetch1(varprecision.Model & key, 'model_type');
@@ -20,8 +30,8 @@ if ismember(key.exp_id,[3,5,7])
     exp_id = exp_id - 1;
 end
 
-subj_type = fetch1(varprecision.Subject & ['subj_initial="' key.subj_initial '"'],'subj_type');
-if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake'})
+
+if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake','trade_off'})
     
     pars.p_right = params(1);
     pars.lambdaVec = params(2:5);
@@ -143,7 +153,6 @@ end
 f = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
 pars.model_name = key.model_name;
 pars.pre = 0;
-pars.sigma_s = fetch1(varprecision.Experiment & key, 'sigma_s');
 trial_num_sim = key.trial_num_sim;
 
 predMat = zeros(size(response));
