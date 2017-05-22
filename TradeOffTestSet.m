@@ -1,10 +1,10 @@
 %{
-varprecision.TradeOffTestSet (computed) # generate fake data sub table to compute LL of each parameter combination, to keep it simple, only simulate of single data set
+varprecision.TradeOffTestSet (computed) # generate fake data sub table to compute LL of each parameter combination
 -> varprecision.TradeOffTest
------
-stimuli    : blob           # fake stimuli
-response   : blob           # fake response
-set_size   : blob            # set size for each trial
+---
+stimuli                     : blob                          # fake stimuli
+response                    : blob                          # fake response
+set_size                    : blob                          # set size for each trial
 %}
 
 classdef TradeOffTestSet < dj.Relvar & dj.AutoPopulate

@@ -18,7 +18,7 @@ classdef TradeOffTestLikelihoodPars < dj.Relvar & dj.AutoPopulate
             
             tuple.exp_id = key.exp_id;
             tuple.model_name = key.test_model;
-            tuple.trial_num_sim = 2000;
+            tuple.trial_num_sim = 500;
             tuple.trade_off = 1;
             
             key.ll = varprecision.decisionrule_bps.loglikelihood(params,tuple);
