@@ -1,8 +1,8 @@
 %{
 varprecision.TradeOffTestLikelihoodPars (computed) # compute log likelihood of a certain combination of parameters
 -> varprecision.TradeOffTestPars
------
-ll : double     # log likelihood table for this combination of paramters
+---
+ll                          : double                        # log likelihood table for this combination of paramters
 %}
 
 classdef TradeOffTestLikelihoodPars < dj.Relvar & dj.AutoPopulate
@@ -17,6 +17,7 @@ classdef TradeOffTestLikelihoodPars < dj.Relvar & dj.AutoPopulate
             params = [0.5,pars_vec];
             
             tuple.exp_id = key.exp_id;
+            tuple.test_id = key.test_id;
             tuple.model_name = key.test_model;
             tuple.trial_num_sim = 500;
             tuple.trade_off = 1;

@@ -2,7 +2,7 @@
 varprecision.TradeOffTestSet (computed) # generate fake data sub table to compute LL of each parameter combination
 -> varprecision.TradeOffTest
 ---
-stimuli                     : blob                          # fake stimuli
+stimuli                     : longblob                      # fake stimuli
 response                    : blob                          # fake response
 set_size                    : blob                          # set size for each trial
 %}
@@ -55,14 +55,15 @@ classdef TradeOffTestSet < dj.Relvar & dj.AutoPopulate
                 setsize = 4;
                 pars.setsizes = 4;
                 set_size = ones(size(stimuli))*setsize;
-                stimuli = varprecision.utils.adjustStimuliSize(key.exp_id,stimuli,setsize);             
+                             
             end
-            
+            stimuli = varprecision.utils.adjustStimuliSize(key.exp_id,stimuli,pars.setsizes);
             if ismember(model,{'VP','VPG'})
                 pars.lambdaMat = gamrnd(pars.lambda/pars.theta, pars.theta,[pars.setsizes,nTrials]);
                 if ismember(key.exp_id, exps_gauss)
                     xMat = stimuli' + normrnd(0,1./sqrt(pars.lambdaMat));
                 else
+                    pars.lambdaMat = pars.lambdaMat *180^2/pi^2/4;
                     pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                     xMat = stimuli' + circ_vmrnd(0,pars.lambdaMat)/2;
                 end
@@ -88,12 +89,12 @@ classdef TradeOffTestSet < dj.Relvar & dj.AutoPopulate
             elseif ismember(model,{'OPVP','OPVPG'})
                 sigma_baseline = 1/sqrt(pars.lambda);  
                 if ismember(key.exp_id, exps_gauss)
-                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus*pi/180)));           
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimuli*pi/180)));           
                     pars.lambdaMat = 1./sigma.^2;
                     pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
                     xMat = stimuli' + normrnd(0,pars.lambdaMat);
                 else
-                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));           
+                    sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimuli)));           
                     pars.lambdaMat = 1./sigma.^2;
                     pars.lambdaMat = gamrnd(pars.lambdaMat/pars.theta,pars.theta);
                     pars.lambdaMat = pars.lambdaMat*180^2/pi^2/4;
