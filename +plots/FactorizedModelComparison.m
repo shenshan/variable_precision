@@ -1,9 +1,13 @@
-function FactorizedModelComparison(exp,cmp_type,model_type)
+function FactorizedModelComparison(exp,cmp_type,model_type,avg)
 %FACTORIZEDMODELCOMPARISON shows the model comparison results, for final
 %paper
 
 exp = fetch(varprecision.Experiment & exp);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
+
+if ~exist('avg','var')
+    avg = 'best';
+end
 
 if strcmp(model_type,'all')
     models = {'CP','CPG','CPN','CPGN','OP','OPG','OPN','OPGN','VP','VPG','VPN','VPGN','OPVP','OPVPG','OPVPN','OPVPGN'};
@@ -21,14 +25,28 @@ mean_evi = zeros(1,length(models));
 sem_evi = zeros(1,length(models));
 
 if ismember(model_type,{'all','dn'})
-    eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPGN"',cmp_type);
+    
+    if strcmp(avg, 'avg')
+        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPGN"',cmp_type);
+    else
+        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPGN"',cmp_type);
+    end
+    
 else
-    eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPG"',cmp_type);
+    if strcmp(avg, 'avg')
+        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPG"',cmp_type);
+    else
+        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPG"',cmp_type);
+    end
 end
 
 for ii = 1:length(models)
-
-    eviMat = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & ['model_name="' models{ii} '"'],cmp_type);
+    
+    if strcmp(avg,'avg')
+        eviMat = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & ['model_name="' models{ii} '"'],cmp_type);
+    else
+        eviMat = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & ['model_name="' models{ii} '"'],cmp_type);
+    end
     eviMat = eviMat - eviRef;
     
     mean_evi(ii) = mean(eviMat);

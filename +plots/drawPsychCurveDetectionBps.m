@@ -73,8 +73,10 @@ function drawPsychCurveDetectionBps(varargin)
             model_pres_ss_patch = getPatch(model_pres_ssMat); 
             model_abs_ss_patch = getPatch(model_abs_ssMat); 
 
-            fig1 = Figure(101,'size',[35,25]); hold on
-
+            fig = Figure(101,'size',[180,23]);
+            
+            subplot(1,5,1)
+            hold on
             patch([setsizes, wrev(setsizes)], model_pres_ss_patch,[0.65,0.65,1],'LineStyle','None');
             patch([setsizes, wrev(setsizes)], model_abs_ss_patch, [1,0.65,0.65],'LineStyle','None');
             errorbar(setsizes, data_pres_ss_mean, data_pres_ss_sem,'b.','LineStyle','None');
@@ -82,9 +84,7 @@ function drawPsychCurveDetectionBps(varargin)
             ylim([0,1]); xlim([0,max(setsizes)+2])
             set(gca, 'xTick',setsizes)
             %   legend('target present','target absent','Location','SouthEast')
-            xlabel('setsize'); ylabel('p present')
-
-            fig1.cleanup
+%             xlabel('setsize'); ylabel('p present')
 
             % plot p_present vs bins
             [data_pres_bin_mean,data_pres_bin_sem] = getMeanStdfromCell(data_pres_binMat); 
@@ -93,19 +93,18 @@ function drawPsychCurveDetectionBps(varargin)
             model_pres_bin_patch = getPatch(model_pres_binMat); 
             model_abs_bin_patch = getPatch(model_abs_binMat); 
 
-
-            fig2 = Figure(103,'size',[180,30]); 
             for ii = 1:length(setsizes)
                 if ii==1
-                    subplot(1,4,ii)
+                    subplot(1,5,ii+1)
                     hold on
                     patch([bins, wrev(bins)],model_abs_bin_patch(ii,:),[1,0.65,0.65],'LineStyle','None')
                     errorbar(bins, data_abs_bin_mean(ii,:), data_abs_bin_sem(ii,:),'r','LineStyle','None')
                     ylim([0,1]); xlim([0,max(bins)+2])
 
-                    xlabel('distractor orienation'); ylabel('p present')
+%                     xlabel('distractor orienation'); 
+%                     ylabel('p present')
                 else 
-                    subplot(1,4,ii)
+                    subplot(1,5,ii+1)
                     hold on
                     patch([bins, wrev(bins)],model_pres_bin_patch(ii,:),[0.65,0.65,1],'LineStyle','None')
                     patch([bins, wrev(bins)],model_abs_bin_patch(ii,:),[1,0.65,0.65],'LineStyle','None')
@@ -113,15 +112,16 @@ function drawPsychCurveDetectionBps(varargin)
                     errorbar(bins, data_abs_bin_mean(ii,:), data_abs_bin_sem(ii,:),'r','LineStyle','None')
                     ylim([0,1]); xlim([0,max(bins)+2])
                     if ii == 4
+%                         disp check!
     %                     legend('target present','target absent','Location','NorthEast')
                     end
-                    xlabel('distractor orienation'); ylabel('p present')
+%                     xlabel('distractor orienation'); 
+%                     ylabel('p present')
                 end
             end
         end
-        fig2.cleanup
-        fig1.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_ss.eps'])
-        fig2.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy_bin.eps'])
+        fig.cleanup
+        fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy.eps'])
     end
 end
 

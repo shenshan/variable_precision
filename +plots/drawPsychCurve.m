@@ -33,14 +33,12 @@ for ii = 1:length(exps)
         p_right_mean = mean(p_right,dim);
         p_right_sem = std(p_right,[],dim)./sqrt(len);
     end
-    if length(models)==4
-        fig = Figure(102,'size',[100,60]);
-    elseif length(models)==6
+    if length(models)==6
         fig = Figure(102,'size',[140,60]);
     elseif length(models)==8
         fig = Figure(102,'size',[160,60]);
     else
-        fig = Figure(102,'size',[50*length(models)+10,30]);
+        fig = Figure(102,'size',[48*length(models)+3,27]);
     end
         
         
@@ -61,7 +59,7 @@ for ii = 1:length(exps)
         ylim([0,1])
     else
         if length(models)==1
-            model_name = fetch1(varprecision.Model & keys);
+            model_name = varprecision.utils.mapModelName(fetch1(varprecision.Model & keys));
             if length(subjs)==1
                 if strcmp(type, 'both')
                     fit_pred = fetch1(varprecision.FitPrediction & exp & keys,'prediction_plot');
@@ -96,14 +94,14 @@ for ii = 1:length(exps)
             ylim([0,1])
         else
             for jj = 1:length(models)
-                if ismember(length(models), [4,6,8])
+                if ismember(length(models), [6,8])
                     subplot(2,length(models)/2,jj)
                 else
                     subplot(1,length(models),jj)
                 end
                 hold on
                 model = models(jj);
-                model_name = fetch1(varprecision.Model & model & keys, 'model_name');
+                model_name = varprecision.utils.mapModelName(fetch1(varprecision.Model & model & keys, 'model_name'));
                 if length(subjs)==1;
                     if strcmp(type, 'both')
                         fit_pred = fetch1(varprecision.FitPrediction & exp & keys & model,'prediction_plot');

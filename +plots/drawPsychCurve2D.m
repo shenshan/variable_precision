@@ -43,7 +43,7 @@ else
     if length(models) == 1
         fig = Figure(102,'size',[80,50]);
     elseif length(models)==4
-        fig = Figure(102,'size',[100,60]);
+        fig = Figure(102,'size',[48*length(models)+3,27]);
     elseif length(models)==6
         fig = Figure(102,'size',[140,60]);
     elseif length(models)==8
@@ -73,7 +73,7 @@ else
     else
         for jj = 1:length(models)
             
-            if ismember(length(models), [4,6,8])
+            if ismember(length(models), [6,8])
                 subplot(2,length(models)/2,jj)
             else
                 subplot(1,length(models),jj)

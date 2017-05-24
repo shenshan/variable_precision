@@ -17,16 +17,16 @@ for iexp = exps'
     
     switch type
         case 'aic'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorRemove & records, 'guess_aic','dn_aic','ori_aic','var_aic','total_var_aic');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactor2 & records, 'guess_aic','dn_aic','ori_aic','var_aic','total_var_aic');
             eviMat = eviMat*2;
         case 'bic'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorRemove & records, 'guess_bic','dn_bic','ori_bic','var_bic','total_var_bic');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactor2 & records, 'guess_bic','dn_bic','ori_bic','var_bic','total_var_bic');
             eviMat = eviMat*2;
         case 'aicc'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorRemove & records, 'guess_aicc','dn_aicc','ori_aicc','var_aicc','total_var_aicc');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactor2 & records, 'guess_aicc','dn_aicc','ori_aicc','var_aicc','total_var_aicc');
             eviMat = eviMat*2;
         case 'llmax'
-            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactorRemove & records, 'guess_llmax','dn_llmax','ori_llmax','var_llmax','total_var_llmax');
+            [eviMat(:,1),eviMat(:,2),eviMat(:,3),eviMat(:,4),eviMat(:,5)] = fetchn(varprecision.EviFactor2 & records, 'guess_llmax','dn_llmax','ori_llmax','var_llmax','total_var_llmax');
     end
     
     mean_evi = mean(eviMat);
@@ -35,7 +35,7 @@ for iexp = exps'
     fig = Figure(101,'size',[55,30]); hold on
     bar(mean_evi,'FaceColor','w');
     errorbar(mean_evi,sem_evi,'k','LineStyle','None')
-    set(gca, 'xTick',[1,2,3,4,5],'xTickLabel',{'-G','-N','-O','-V','-O-V'})
+    set(gca, 'xTick',[1,2,3,4,5],'xTickLabel',{'-G','-D','-O','-V','-O-V'})
     xlabel('Factor')
     ylabel('AIC difference')
     

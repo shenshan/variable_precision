@@ -32,7 +32,12 @@ switch exp_id
             plot([stimuli(ii),stimuli(ii)],[0,1/19], 'k');
         end
         xlim([max(min(stimuli)*1.2,-90), min(max(stimuli)*1.2,90)])
-        set(gca,'XTick',min(stimuli):5:max(stimuli))
+        
+        if exp_id == 4
+            set(gca,'XTick',min(stimuli):2.5:max(stimuli))
+        else
+            set(gca,'XTick',min(stimuli):5:max(stimuli))
+        end
         
         xlabel('Target orientation ()')
         ylabel('Probability')
@@ -48,6 +53,7 @@ switch exp_id
         subplot 121
         plot([-90,90],[1/180,1/180],'k')
         xlim([-90,90])
+        ylim([0,0.1])
         set(gca,'XTick', -90:30:90)
         ylabel('Probability density')
         xlabel('Reference orientation ()')
@@ -57,7 +63,7 @@ switch exp_id
         plot(stimuli,prob_target,'k'); hold on
         xlim([-50,50])
         set(gca,'XTick',-45:15:45)
-        ylabel('Prbability density')
+        ylabel('Probability density')
         xlabel('Target - reference')
     case 7
         kappa0 = 10;
@@ -65,7 +71,7 @@ switch exp_id
         plot(stimuli,prob,'k')
         xlim([-50,50])
         set(gca,'Xtick',-45:15:45)
-        ylabel('Prbability density')
+        ylabel('Probability density')
         xlabel('Target or distractor orientation ()')
     case 8
         kappa0 = 32.8;
@@ -73,7 +79,7 @@ switch exp_id
         plot(stimuli,prob,'k--')
         set(gca,'Xtick',-45:15:45)
         xlim([-50,50])
-        ylabel('Prbability density')
+        ylabel('Probability density')
         xlabel('Orientation ()')
         plot([0,0],[0,0.1],'k')
     case {9,10}
@@ -81,16 +87,16 @@ switch exp_id
         prob = exp(kappa0*cos(stimuli*pi/90))/2/pi/besseli0_fast(kappa0)*pi/90;
         plot(stimuli,prob,'k')
         set(gca,'Xtick',-90:30:90)
-        ylabel('Prbability density')
+        ylabel('Probability density')
         xlabel('Orientation ()')
         plot([-90,90],[1/180,1/180],'k--')
         xlim([-90,90])
     case 11
         plot([-90,90],[1/180,1/180],'k--')
-        plot([0,0],[0,0.06],'k')
+        plot([0,0],[0,0.1],'k')
         set(gca,'XTick',-90:30:90)
         xlim([-90,90])
-        ylabel('Prbability density')
+        ylabel('Probability density')
         xlabel('Orientation ()')
 end
 

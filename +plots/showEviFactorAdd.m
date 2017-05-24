@@ -28,10 +28,12 @@ fig = Figure(101,'size',[150,40]);
 eviMat = cellfun(@(x)-2*x, eviMat,'Un',0);
 groupbar(eviMat)
 
-xlabel('Experiment number')
-ylabel(['Evidence of factors, ' type])
+ylim([-120,20])
 
-legend('+Guess','+DN','+Ori','+Var','+Ori+Var','location','northeast')
+xlabel('Experiment number')
+ylabel([upper(type) ' difference'])
+
+% legend('+G','+D','+O','+V','+O+V','location','northeast')
 
 fig.cleanup
 
