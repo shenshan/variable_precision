@@ -9,6 +9,7 @@ gene_pars                   : blob                          # parameters to gene
 test_pars_ub                : blob                          # upper bound of test model parameters
 test_pars_lb                : blob                          # lower bound of test model parameters
 nsteps                      : blob                          # number of steps for each paramter
+ntrials                     : smallint                      # number of simulation trials
 %}
 
 classdef TradeOffTest < dj.Relvar
