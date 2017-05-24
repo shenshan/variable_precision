@@ -17,7 +17,7 @@ min_diff              : longblob    # minimal difference between target and dist
 classdef DataStatsDetectionBpsBest < dj.Relvar & dj.AutoPopulate
 	
     properties
-        popRel = varprecision.FitPredictionBpsBest & 'exp_id in (10,11)'
+        popRel = varprecision.FitPredictionBpsBest & 'exp_id in (10,11,12)'
     end
     methods(Access=protected)
 
@@ -26,8 +26,10 @@ classdef DataStatsDetectionBpsBest < dj.Relvar & dj.AutoPopulate
             % bins roughly matched the figures in Helga 2013 paper.
             if key.exp_id==10
                 bins = linspace(0,12,6);                
-            else
+            elseif key.exp_id == 11
                 bins = linspace(0,24,7);
+            else
+                bins = linspace(0,5.5,6);
             end
             bins = mean([bins(1:length(bins)-1);bins(2:length(bins))]);
             
