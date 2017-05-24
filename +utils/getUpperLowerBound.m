@@ -7,8 +7,8 @@ function [patch,out_mean,out_sem,out_up,out_low] = getUpperLowerBound(inputMat,d
 if ~exist('dim2','var')
     dim2 = 1;
 end
-out_mean = squeeze(mean(inputMat,dim));
-out_sem = squeeze(std(inputMat,[],dim)/sqrt(size(inputMat,dim)));
+out_mean = squeeze(nanmean(inputMat,dim));
+out_sem = squeeze(nanstd(inputMat,[],dim)/sqrt(size(inputMat,dim)));
 
 out_up = out_mean + out_sem;
 out_low = out_mean - out_sem;

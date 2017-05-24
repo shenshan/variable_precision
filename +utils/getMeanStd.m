@@ -13,11 +13,11 @@ if ~exist('dim', 'var')
 end
 assert(ismember(type, {'sem', 'std'}),'Invalid type input, please enter sem or std.')
 
-out_mean = mean(inputMat,dim);
+out_mean = nanmean(inputMat,dim);
 
 switch type
     case 'sem'
-        out_s = std(inputMat,[],dim)/sqrt(size(inputMat,dim));
+        out_s = nanstd(inputMat,[],dim)/sqrt(size(inputMat,dim));
     case 'std'
-        out_s = std(inputMat,[],dim);
+        out_s = nanstd(inputMat,[],dim);
 end
