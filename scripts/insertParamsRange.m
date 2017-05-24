@@ -1,9 +1,12 @@
 
-exp_id = 10;
-model_names = {'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'};
+exp_id = 9;
+% model_names = {'CP','CPN','CPG','CPGN','VP','VPN','VPG','VPGN','OP','OPN','OPG','OPGN','OPVP','OPVPN','OPVPG','OPVPGN'};
 % model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
 % model_names = {'XPVPG'};
+% model_names = {'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'};
+model_names = {'GSum','GMax','GMin','GVar','GSign'};
+
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,0.5,10];
@@ -14,7 +17,7 @@ key2.pub = [0.6,0.3,0.2,5,0.2,0.5];
 for ii = 1:length(model_names)
     model_name = model_names{ii};
     
-    if ismember(exp_id,[3,5,7,10,11])
+    if ismember(exp_id,[3,5,7,10,11,12])
         switch model_name
             case 'CP'
                 idx = [1,2,2,2,2];
@@ -84,6 +87,10 @@ for ii = 1:length(model_names)
                 idx = [1,2,3,4,6];
             case 'OPVPGN'
                 idx = [1,2,3,4,5,6];
+            case {'GSum','GMax','GMin','GVar','GSign'}
+                idx = [2,5];
+            case {'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'}
+                idx = [2,3,4,5];
         end
     end
     key = getValues(key2,idx);
