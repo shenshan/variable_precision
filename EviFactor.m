@@ -36,7 +36,7 @@ classdef EviFactor < dj.Relvar & dj.AutoPopulate
 		function makeTuples(self, key)
             [ori_aicMat, ori_bicMat, ori_aiccMat, ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("OP","OPN","OPG","OPGN","OPVP","OPVPN","OPVPG","OPVPGN")','aic','bic','aicc','llmax');
             [non_ori_aicMat, non_ori_bicMat, non_ori_aiccMat, non_ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPN","CPG","CPGN","VP","VPN","VPG","VPGN")','aic','bic','aicc','llmax');
-            [var_aicMat, var_bicMat, var_aiccMat, var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("VP","VPG","OPVP","OPVPG")','aic','bic','aicc','llmax');
+            [var_aicMat, var_bicMat, var_aiccMat, var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("VP","VPN","VPG","VPGN","OPVP","OPVPN","OPVPG","OPVPGN")','aic','bic','aicc','llmax');
             [non_var_aicMat, non_var_bicMat, non_var_aiccMat, non_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPN","CPG","CPGN","OP","OPN","OPG","OPGN")','aic','bic','aicc','llmax');
             [guess_aicMat, guess_bicMat, guess_aiccMat, guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CPG","CPGN","VPG","VPGN","OPG","OPGN","OPVPG","OPVPGN")','aic','bic','aicc','llmax');
             [non_guess_aicMat, non_guess_bicMat, non_guess_aiccMat, non_guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPN","VP","VPN","OP","OPN","OPVP","OPVPN")','aic','bic','aicc','llmax');
