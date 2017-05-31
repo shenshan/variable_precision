@@ -15,7 +15,7 @@ classdef FitPredictionBpsBest2DAvg < dj.Relvar & dj.AutoPopulate
 		function makeTuples(self, key)
             
             [stims,dist,idx1,idx2] = fetch1(varprecision.DataStats2D & key, 'stims','dist','idx_target','idx_dist');
-            prediction = fetch1(varprecision.FitPredictionBpsBest & key, 'prediction');
+            prediction = fetch1(varprecision.FitPredictionBpsBestAvg & key, 'prediction');
             
             prediction_plot_2d = zeros(length(stims),length(dist));
             

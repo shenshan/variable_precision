@@ -1,6 +1,6 @@
 %{
 varprecision.PerformanceModel (computed) # compute performance of each model for each trial
--> varprecision.FitPredictionBpsBest
+-> varprecision.FitPredictionBpsBestAvg
 -----
 performance  : longblob       # performance for each trial, with the same length as the stimuli
 %}
@@ -15,7 +15,7 @@ classdef PerformanceModel < dj.Relvar & dj.AutoPopulate
 
 		function makeTuples(self, key)
             
-            prediction = fetch1(varprecision.FitPredictionBpsBest & key, 'prediction');
+            prediction = fetch1(varprecision.FitPredictionBpsBestAvg & key, 'prediction');
 			
             [performance_data, response] = fetch1(varprecision.Performance & key, 'performance','response');
             
