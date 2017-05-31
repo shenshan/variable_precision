@@ -1,12 +1,34 @@
-initial_point_vec = [0.5,0.01,0.005,1,0.1,0.1];
+initial_point_vec = [0.5,0.2,0.01,2,0.3,0.3];
 
 % initial_point_vec = [0.5,0.006,0.002,0.002,0.0007,0.0004,1,0.001,0.16];
 
 subj_type = 'real';
 % subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"'] & 'model_gene="OPVPG"');
 
+% 
+% factors = {'','N','GN','O','NO','GO','GNO','VP','GVP','NVP','GNVP','OVP','NOVP','GNOVP'};
+% rules = {'Sum','Min','Max','Var'};
+
+% factors = {'','O','GO','VP','GVP','OVP'};
+% rules = {'Sign'};
+% 
+% str = [];
+% for ii = 1:length(factors)
+%     for jj = 1:length(rules)
+%         model_name= [factors{ii} rules{jj}];
+%         
+%         if ii==1 && jj==1
+%             str = [str '"' model_name '"'];
+%         else
+%             str = [str ',"' model_name '"'];
+%         end   
+%     end
+% end
+
+models = fetch(varprecision.Model & 'model_type="sub"');
+
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']); 
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id in (9)' & 'model_name in ("GSum","GMax","GMin","GVar","GSign")');
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id in (9)' & models);
 
 for iKey = keys'
     iKey.int_point_id=3;
@@ -43,11 +65,39 @@ for iKey = keys'
             case 'OPVPN'
                 iKey.initial_point = initial_point_vec([1:4,6]);
             case 'OPVPGN'
-                iKey.initial_point = initial_point_vec;
+                iKey.initial_point = initial_point_vec;      
+            case {'Sum','Max','Min','Var','Sign'}
+                iKey.initial_point = initial_point_vec(2);
             case {'GSum','GMax','GMin','GVar','GSign'}
                 iKey.initial_point = initial_point_vec([2,5]);
-            case {'OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'}
+            case {'NSum','NMax','NMin','NVar','NSign'}
+                iKey.initial_point = initial_point_vec([2,6]);
+            case {'GNSum','GNMax','GNMin','GNVar','GNSign'}
+                iKey.initial_point = initial_point_vec([2,5,6]);
+            case {'OSum','OMax','OMin','OVar','OSign'}
+                iKey.initial_point = initial_point_vec([2,4]);
+            case {'GOum','GOMax','GOMin','GOVar','GOSign'}
+                iKey.initial_point = initial_point_vec([2,4,5]);
+            case {'NOSum','NOMax','NOMin','NOVar','NOSign'}
+                iKey.initial_point = initial_point_vec([2,4,6]);
+            case {'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'}
+                iKey.initial_point = initial_point_vec([2,4,5,6]);
+            case {'VPSum','VPMax','VPMin','VPVar','VPSign'}
+                iKey.initial_point = initial_point_vec([2,3]);
+            case {'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'}
+                iKey.initial_point = initial_point_vec([2,3,5]);
+            case {'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'}
+                iKey.initial_point = initial_point_vec([2,3,6]);
+            case {'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'}
+                iKey.initial_point = initial_point_vec([2,3,5,6]);
+            case {'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'}
+                iKey.initial_point = initial_point_vec([2,3,4]);
+            case {'GOVPSum','GOVPMax','GOVPMin','GOVPVar','GOVPSign'}
                 iKey.initial_point = initial_point_vec(2:5);
+            case {'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'}
+                iKey.initial_point = initial_point_vec([2,3,4,6]);
+            case {'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'}
+                iKey.initial_point = initial_point_vec(2:6);
         end
     else
         switch iKey.model_name
