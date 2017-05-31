@@ -9,7 +9,7 @@ function name_out = mapModelName(name_in)
 
 names_db = {'CP','CPG','CPN','CPGN','OP','OPG','OPN','OPGN','VP','VPG','VPN','VPGN','OPVP','OPVPG','OPVPN','OPVPGN'};
 
-names_final = {'Base','G','D','GD','O','G','GO','GDO','V','GV','DV','GDV','OV','GOV','DOV','GDOV'};
+names_final = {'Base','G','D','GD','O','GO','DO','GDO','V','GV','DV','GDV','OV','GOV','DOV','GDOV'};
 
 if ischar(name_in)
     name_out = names_final(strcmp(names_db,name_in));
