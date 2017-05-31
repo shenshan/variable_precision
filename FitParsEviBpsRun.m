@@ -43,7 +43,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             x0 = fetch1(varprecision.InitialPoint & key, 'initial_point');           
             tuple.trial_num_sim = fetch1(varprecision.RunBps & key, 'trial_num_sim');
             
-            [pars,llmax] = bps(@(params)varprecision.decisionrule_bps.loglikelihood(params,tuple),x0,lb,ub,plb,pub);
+            [pars,llmax] = bps(@(pars)varprecision.decisionrule_bps.loglikelihood(pars,tuple),x0,lb,ub,plb,pub);
             
             setsizes = unique(fetch1(varprecision.Data & key, 'set_size'));
             
@@ -103,14 +103,54 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                             key.sigma_dn_hat = pars(6);
                     end
                 else
+                    key.lambda_hat = pars(1);
                     if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
-                        key.lambda_hat = pars(1);
                         key.guess_hat = pars(2);
-                    else
-                        key.lambda_hat = pars(1);
-                        key.theta_hat = pars(2);
+                    elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
+                        key.sigma_dn_hat = pars(2);
+                    elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
+                        key.guess_hat = pars(2);
+                        key.sigma_dn_hat = pars(3);
+                    elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
+                        key.beta_hat = pars(2);
+                    elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
+                        key.beta_hat = pars(2);
+                        key.guess_hat = pars(3);
+                    elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
+                        key.beta_hat = pars(2);
+                        key.sigma_dn_hat = pars(3);
+                    elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
+                        key.beta_hat = pars(2);
+                        key.guess_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
+                        key.theta = pars(2);
+                    elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
+                        key.theta = pars(2);
+                        key.guess_hat = pars(3);
+                    elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
+                        key.theta = pars(2);
+                        key.guess_hat = pars(3);
+                    elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
+                        key.theta = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
+                    elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
+                        key.theta = pars(2);
+                        key.beta_hat = pars(3);   
+                    elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
+                        key.theta = pars(2);
+                        key.beta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                    elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
+                        key.theta = pars(2);
+                        key.beta_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
+                        key.theta = pars(2);
+                        key.beta_hat = pars(3);
+                        key.guess_hat = pars(4);
+                        key.sigma_dn_hat = pars(5);
                     end
                 end
             else

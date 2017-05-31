@@ -86,14 +86,54 @@ if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake','t
     end
 else
     if strcmp(model_type,'sub')
+        pars.lambda = params(1);
         if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
-            pars.lambda = params(1);
             pars.guess = params(2);
-        else
-            pars.lambda = params(1);
+        elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
+            pars.sigma_dn = params(2);
+        elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
+            pars.guess = params(2);
+            pars.sigma_dn = params(3);
+        elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
+            pars.beta = params(2);
+        elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
+            pars.beta = params(2);
+            pars.guess = params(3);
+        elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
+            pars.beta = params(2);
+            pars.sigma_dn = params(3);
+        elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
+            pars.beta = params(2);
+            pars.guess = params(3);
+            pars.sigma_dn = params(4);
+        elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
+            pars.theta = params(2);
+        elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
+            pars.theta = params(2);
+            pars.guess = params(3);
+        elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
+            pars.theta = params(2);
+            pars.guess = params(3);
+        elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
             pars.theta = params(2);
             pars.beta = params(3);
             pars.guess = params(4);
+        elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
+            pars.theta = params(2);
+            pars.beta = params(3);   
+        elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
+            pars.theta = params(2);
+            pars.beta = params(3);
+            pars.guess = params(4);
+        elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
+            pars.theta = params(2);
+            pars.beta = params(3);
+            pars.sigma_dn = params(4);
+        elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
+            pars.theta = params(2);
+            pars.beta = params(3);
+            pars.guess = params(4);
+            pars.sigma_dn = params(5);
         end
     else
         pars.p_right = params(1);
@@ -152,13 +192,14 @@ end
 
 f = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
 pars.model_name = key.model_name;
+pars.model_type = model_type;
 pars.pre = 0;
 trial_num_sim = key.trial_num_sim;
 
 predMat = zeros(size(response));
 
 if length(setsizes)==1
-    if ismember(key.model_name,{'CP','CPG','CPN','CPGN','GSum','GMax','GMin','GVar','GSign'})
+    if isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
         if vm == 0
             noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
         else
@@ -167,7 +208,7 @@ if length(setsizes)==1
             pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
             noiseMat = circ_vmrnd(zeros(setsizes,trial_num_sim),pars.lambda)/2;
         end
-    elseif ismember(key.model_name, {'VP','VPG','VPN','VPGN'})
+    elseif isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
         pars.lambdaMat = gamrnd(pars.lambda/pars.theta,pars.theta,[setsizes,trial_num_sim]);
         if vm == 0
             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -176,13 +217,13 @@ if length(setsizes)==1
             pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
         end
-    elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','OPN','OPGN','OPVPN','OPVPGN','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+    elseif ~isempty(strfind(key.model_name,'O'))
         sigma_baseline = 1/sqrt(pars.lambda);
     end
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
         stimulus = stimuli(ii,:);
-        if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})            
+        if ~isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))           
             if vm
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -195,7 +236,7 @@ if length(setsizes)==1
                 pars.lambdaMat = repmat(pars.lambdaMat,trial_num_sim,1)';
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
             end
-        elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+        elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
             
             if vm
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus))); 
@@ -251,7 +292,7 @@ else
             stimuli_sub = stimuli(set_size==setsize);
         end
         response_sub = response(set_size==setsize);
-        if ismember(key.model_name,{'CP','CPG','CPN','CPGN','GSum','GMax','GMin','GVar','GSign'})
+        if isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
             pars.lambda = pars.lambdaVec(jj);
             if vm == 0            
                 noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
@@ -260,7 +301,7 @@ else
                 pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
                 noiseMat = circ_vmrnd(zeros(setsize,trial_num_sim),pars.lambda)/2;
             end  
-        elseif ismember(key.model_name,{'VP','VPG','VPN','VPGN'})
+        elseif isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
             pars.lambdaMat = gamrnd(pars.lambdaVec(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
             if vm == 0
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -269,7 +310,7 @@ else
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             end
-        elseif ismember(key.model_name, {'OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','OPN','OPGN','OPVPN','OPVPGN','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+        elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
@@ -277,7 +318,7 @@ else
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
-            if ismember(key.model_name, {'OP','OPG','XP','XPG','OPN','OPGN'})
+            if ~isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
                 
                 if vm
                     sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
@@ -291,7 +332,7 @@ else
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                 end
-            elseif ismember(key.model_name, {'OPVP','OPVPG','XPVP','XPVPG','OPVPN','OPVPGN','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+            elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
                 if vm
                     sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 else
@@ -341,7 +382,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ismember(key.model_name,{'CPG','VPG','OPG','OPVPG','XPG','XPVPG','CPGN','VPGN','OPGN','OPVPGN','GSum','GMax','GMin','GVar','GSign','OPVPGSum','OPVPGMax','OPVPGMin','OPVPGVar','OPVPGSign'})
+if ~isempty(strfind(key.model_name,'G'))
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 
