@@ -11,13 +11,13 @@ function drawPsychCurveDetectionBps(varargin)
     for iexp = 1:length(exps)
         exp = exps(iexp);
         setsizes = fetch1(varprecision.Experiment & exp,'setsize');
-        keys_temp = fetch(varprecision.DataStatsDetectionBpsBest & exp & varargin);
-        bins = fetch1(varprecision.DataStatsDetectionBpsBest & keys_temp(1),'bins');
+        keys_temp = fetch(varprecision.DataStatsDetectionBpsBestAvg & exp & varargin);
+        bins = fetch1(varprecision.DataStatsDetectionBpsBestAvg & keys_temp(1),'bins');
         
         if length(subjs)==1
             % fetch data
             [data_pres_ss,data_abs_ss,model_pres_ss,model_abs_ss,data_pres_bin,data_abs_bin,model_pres_bin,model_abs_bin]...
-                = fetch1(varprecision.DataStatsDetectionBpsBest & keys_temp, 'data_pres_setsize','data_abs_setsize','model_pres_setsize','model_abs_setsize','data_pres_bin','data_abs_bin','model_pres_bin','model_abs_bin');
+                = fetch1(varprecision.DataStatsDetectionBpsBestAvg & keys_temp, 'data_pres_setsize','data_abs_setsize','model_pres_setsize','model_abs_setsize','data_pres_bin','data_abs_bin','model_pres_bin','model_abs_bin');
 
             % plot p_present vs set size
 
@@ -64,7 +64,7 @@ function drawPsychCurveDetectionBps(varargin)
         else
             % fetch data
             [data_pres_ssMat,data_abs_ssMat,model_pres_ssMat,model_abs_ssMat,data_pres_binMat,data_abs_binMat,model_pres_binMat,model_abs_binMat]...
-                = fetchn(varprecision.DataStatsDetectionBpsBest & keys_temp, 'data_pres_setsize','data_abs_setsize','model_pres_setsize','model_abs_setsize','data_pres_bin','data_abs_bin','model_pres_bin','model_abs_bin');
+                = fetchn(varprecision.DataStatsDetectionBpsBestAvg & keys_temp, 'data_pres_setsize','data_abs_setsize','model_pres_setsize','model_abs_setsize','data_pres_bin','data_abs_bin','model_pres_bin','model_abs_bin');
 
             % plot p_present vs set size
             [data_pres_ss_mean,data_pres_ss_sem] = getMeanStdfromCell(data_pres_ssMat);

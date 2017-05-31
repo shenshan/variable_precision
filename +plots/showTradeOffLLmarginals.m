@@ -27,4 +27,4 @@ elseif exp_id==6
 end
 
 fig.cleanup
-
+fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp_id) '_trade_off_1d'])

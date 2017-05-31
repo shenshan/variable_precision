@@ -54,12 +54,12 @@ else
     
     if length(models) == 1
         if length(keys) == 1 
-            fit_pred = fetch1(varprecision.FitPredictionBpsBest2D & varargin,'prediction_plot_2d');
+            fit_pred = fetch1(varprecision.FitPredictionBpsBest2DAvg & varargin,'prediction_plot_2d');
             plot(stims, p_right_mean,'o'); hold on
             plot(stims, fit_pred);
         else
             
-            fit_pred = fetchn(varprecision.FitPredictionBpsBest2D & varargin,'prediction_plot_2d');
+            fit_pred = fetchn(varprecision.FitPredictionBpsBest2DAvg & varargin,'prediction_plot_2d');
             [fit_pred, dim] = varprecision.utils.decell(fit_pred);
             fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim,2);
             colorvec = get(gca, 'ColorOrder');
@@ -83,13 +83,13 @@ else
             model_name = fetch1(varprecision.Model & res_exp & model, 'model_name');
             if length(keys)==1;
 
-                fit_pred = fetch1(varprecision.FitPredictionBpsBest2D & keys & model,'prediction_plot_2d');
+                fit_pred = fetch1(varprecision.FitPredictionBpsBest2DAvg & keys & model,'prediction_plot_2d');
                 
                 plot(stims,p_right_mean,'o')
                 plot(stims,fit_pred)
 
             else
-                fit_pred = fetchn(varprecision.FitPredictionBpsBest2D & keys & model,'prediction_plot_2d');
+                fit_pred = fetchn(varprecision.FitPredictionBpsBest2DAvg & keys & model,'prediction_plot_2d');
                 [fit_pred, dim] = varprecision.utils.decell(fit_pred);
                 fit_patch = varprecision.utils.getUpperLowerBound(fit_pred,dim,2);
                 colorvec = get(gca, 'ColorOrder');
