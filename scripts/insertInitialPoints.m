@@ -1,4 +1,4 @@
-initial_point_vec = [0.5,0.2,0.01,2,0.3,0.3];
+initial_point_vec = [0.5,0.05,0.01,0,0.1,0.05];
 
 % initial_point_vec = [0.5,0.006,0.002,0.002,0.0007,0.0004,1,0.001,0.16];
 
@@ -24,14 +24,14 @@ subj_type = 'real';
 %         end   
 %     end
 % end
-
-models = fetch(varprecision.Model & 'model_type="sub"');
+% 
+% models = fetch(varprecision.Model & 'model_type="sub"');
 
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']); 
-keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id in (9)' & models);
+keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id in (9)' & 'model_name="GNOVar"');
 
 for iKey = keys'
-    iKey.int_point_id=3;
+    iKey.int_point_id=1;
     if ~ismember(iKey.exp_id,[3,5,7,10,11,12]) || strcmp(subj_type,'real_sub')
         switch iKey.model_name
             case 'CP'
@@ -80,7 +80,7 @@ for iKey = keys'
                 iKey.initial_point = initial_point_vec([2,4,5]);
             case {'NOSum','NOMax','NOMin','NOVar','NOSign'}
                 iKey.initial_point = initial_point_vec([2,4,6]);
-            case {'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'}
+            case {'GNOSum','GNOMax','GNOMin','GNOVar','GNOSign'}
                 iKey.initial_point = initial_point_vec([2,4,5,6]);
             case {'VPSum','VPMax','VPMin','VPVar','VPSign'}
                 iKey.initial_point = initial_point_vec([2,3]);

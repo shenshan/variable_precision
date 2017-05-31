@@ -102,7 +102,7 @@ else
         elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
             pars.beta = params(2);
             pars.sigma_dn = params(3);
-        elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
+        elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOVar','GNOSign'})
             pars.beta = params(2);
             pars.guess = params(3);
             pars.sigma_dn = params(4);

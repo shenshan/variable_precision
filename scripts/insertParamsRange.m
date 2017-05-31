@@ -23,7 +23,7 @@ exp_id = 9;
 % 
 % model_names = reshape(model_names,[1,length(factors)*length(rules)]);
 
-model_names = fetchn(varprecision.Model & 'model_type="sub"','model_name');
+model_names = fetchn(varprecision.Model & 'model_name="GNOVar"','model_name');
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,1,20];
@@ -118,7 +118,7 @@ for ii = 1:length(model_names)
                 idx = [2,4,5];
             case {'NOSum','NOMax','NOMin','NOVar','NOSign'}
                 idx = [2,4,6];
-            case {'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'}
+            case {'GNOSum','GNOMax','GNOMin','GNOVar','GNOSign'}
                 idx = [2,4,5,6];
             case {'VPSum','VPMax','VPMin','VPVar','VPSign'}
                 idx = [2,3];

@@ -124,30 +124,30 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                         key.guess_hat = pars(3);
                         key.sigma_dn_hat = pars(4);
                     elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                     elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.guess_hat = pars(3);
                     elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.guess_hat = pars(3);
                     elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
                     elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.beta_hat = pars(3);   
                     elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
                     elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.sigma_dn_hat = pars(4);
                     elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
-                        key.theta = pars(2);
+                        key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
                         key.sigma_dn_hat = pars(5);
