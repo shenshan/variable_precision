@@ -26,7 +26,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             tuple = key;
             [lb,ub,plb,pub] = fetch1(varprecision.ParamsRange & key,'lower_bound','upper_bound','plb','pub');
-            model_type = fetch1(varprecision.Model & key, 'model_type');
+            [model_type,factor_code] = fetch1(varprecision.Model & key, 'model_type','factor_code');
             sub = 0;
             if ~isempty(strfind(key.subj_initial,'_ss_'))
                 sub = 1;
@@ -104,49 +104,49 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                     end
                 else
                     key.lambda_hat = pars(1);
-                    if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+                    if strcmp(factor_code,'G')
                         key.guess_hat = pars(2);
-                    elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
+                    elseif strcmp(factor_code,'D')
                         key.sigma_dn_hat = pars(2);
-                    elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
+                    elseif strcmp(factor_code,'GD')
                         key.guess_hat = pars(2);
                         key.sigma_dn_hat = pars(3);
-                    elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
+                    elseif strcmp(factor_code,'O')
                         key.beta_hat = pars(2);
-                    elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
+                    elseif strcmp(factor_code,'GO')
                         key.beta_hat = pars(2);
                         key.guess_hat = pars(3);
-                    elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
+                    elseif strcmp(factor_code,'DO')
                         key.beta_hat = pars(2);
                         key.sigma_dn_hat = pars(3);
-                    elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
+                    elseif strcmp(factor_code,'GDO')
                         key.beta_hat = pars(2);
                         key.guess_hat = pars(3);
                         key.sigma_dn_hat = pars(4);
-                    elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
+                    elseif strcmp(factor_code,'V')
                         key.theta_hat = pars(2);
-                    elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
-                        key.theta_hat = pars(2);
-                        key.guess_hat = pars(3);
-                    elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
+                    elseif strcmp(factor_code,'GV')
                         key.theta_hat = pars(2);
                         key.guess_hat = pars(3);
-                    elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
+                    elseif strcmp(factor_code,'DV')
                         key.theta_hat = pars(2);
-                        key.beta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                    elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
+                        key.sigma_dn_hat = pars(3);
+                    elseif strcmp(factor_code,'GDV')
+                        key.theta_hat = pars(2);
+                        key.guess_hat = pars(3);
+                        key.sigma_dn_hat = pars(4);
+                    elseif strcmp(factor_code,'OV')
                         key.theta_hat = pars(2);
                         key.beta_hat = pars(3);   
-                    elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
+                    elseif strcmp(factor_code,'GOV')
                         key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);
-                    elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
+                    elseif strcmp(factor_code,'DOV')
                         key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.sigma_dn_hat = pars(4);
-                    elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
+                    elseif strcmp(factor_code,'GDOV')
                         key.theta_hat = pars(2);
                         key.beta_hat = pars(3);
                         key.guess_hat = pars(4);

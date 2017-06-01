@@ -17,7 +17,7 @@ else
 end
 setsizes = unique(set_size);
 exp_id = key.exp_id;
-model_type = fetch1(varprecision.Model & key, 'model_type');
+[model_type,factor_code,rule] = fetch1(varprecision.Model & key, 'model_type','factor_code','rule');
 
 if ismember(key.exp_id,[6,7,11])
     vm = 1;
@@ -87,49 +87,49 @@ if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake','t
 else
     if strcmp(model_type,'sub')
         pars.lambda = params(1);
-        if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+        if strcmp(factor_code,'G')
             pars.guess = params(2);
-        elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
+        elseif strcmp(factor_code,'D')
             pars.sigma_dn = params(2);
-        elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
+        elseif strcmp(factor_code,'GD')
             pars.guess = params(2);
             pars.sigma_dn = params(3);
-        elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
+        elseif strcmp(factor_code,'O')
             pars.beta = params(2);
-        elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
+        elseif strcmp(factor_code,'GO')
             pars.beta = params(2);
             pars.guess = params(3);
-        elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
+        elseif strcmp(factor_code,'DO')
             pars.beta = params(2);
             pars.sigma_dn = params(3);
-        elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOVar','GNOSign'})
+        elseif strcmp(factor_code,'GDO')
             pars.beta = params(2);
             pars.guess = params(3);
             pars.sigma_dn = params(4);
-        elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
+        elseif strcmp(factor_code,'V')
             pars.theta = params(2);
-        elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
-            pars.theta = params(2);
-            pars.guess = params(3);
-        elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
+        elseif strcmp(factor_code,'GV')
             pars.theta = params(2);
             pars.guess = params(3);
-        elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
+        elseif strcmp(factor_code,'DV')
             pars.theta = params(2);
-            pars.beta = params(3);
-            pars.guess = params(4);
-        elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
+            pars.sigma_dn = params(3);
+        elseif strcmp(factor_code,'GDV')
+            pars.theta = params(2);
+            pars.guess = params(3);
+            pars.sigma_dn = params(4);
+        elseif strcmp(factor_code,'OV')
             pars.theta = params(2);
             pars.beta = params(3);   
-        elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
+        elseif strcmp(factor_code,'GOV')
             pars.theta = params(2);
             pars.beta = params(3);
             pars.guess = params(4);
-        elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
+        elseif strcmp(factor_code,'DOV')
             pars.theta = params(2);
             pars.beta = params(3);
             pars.sigma_dn = params(4);
-        elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
+        elseif strcmp(factor_code,'GDOV')
             pars.theta = params(2);
             pars.beta = params(3);
             pars.guess = params(4);
@@ -192,8 +192,10 @@ end
 
 f = eval(['@varprecision.decisionrule.exp' num2str(exp_id)]);
 pars.model_name = key.model_name;
-pars.model_type = model_type;
 pars.pre = 0;
+pars.model_type = model_type;
+pars.rule = rule;
+pars.factor_code = factor_code;
 trial_num_sim = key.trial_num_sim;
 
 predMat = zeros(size(response));

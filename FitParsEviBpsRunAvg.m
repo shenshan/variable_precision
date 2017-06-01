@@ -63,10 +63,38 @@ classdef FitParsEviBpsRunAvg < dj.Relvar & dj.AutoPopulate
                         params = [p_right,lambda,theta,beta,guess,sigma_dn];
                 end
             else
-                if ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
+                if ismember(key.model_name,{'Sum','Max','Min','Var','Sign'})
+                    params = lambda;
+                elseif ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
                     params = [lambda, guess];
-                else
-                    params = [lambda,theta,beta,guess];
+                elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
+                    params = [lambda, sigma_dn];
+                elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
+                    params = [lambda, guess, sigma_dn];
+                elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
+                    params = [lambda, beta];
+                elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
+                    params = [lambda, beta, guess];
+                elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
+                    params = [lambda, beta, sigma_dn];
+                elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
+                    params = [lambda, beta, guess, sigma_dn];
+                elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
+                    params = [lambda, theta];
+                elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
+                    params = [lambda, theta, guess];
+                elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
+                    params = [lambda, theta, sigma_dn];
+                elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
+                    params = [lambda, theta, guess, sigma_dn];
+                elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
+                    params = [lambda, theta, beta];  
+                elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
+                    params = [lambda, theta, beta, guess];  
+                elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
+                    params = [lambda, theta, beta, sigma_dn];  
+                elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
+                    params = [lambda, theta, beta, guess, sigma_dn];  
                 end
             end
             
