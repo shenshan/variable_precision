@@ -312,7 +312,7 @@ else
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             end
-        elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
+        elseif ~isempty(strfind(key.model_name,'O'))
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
