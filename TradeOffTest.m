@@ -1,7 +1,7 @@
 %{
 varprecision.TradeOffTest (manual) # test trade off between factors/parameters
 -> varprecision.Experiment
-gene_model      : enum('CP','VP','OP')   # model to generate fake data set
+gene_model      : enum('CP','VP','OP','CPG','OPVP')  # model to compute likelihood
 test_model      : enum('CPG','VP','OP','OPVP')  # model to compute likelihood
 test_id         : smallint               # test id
 ---

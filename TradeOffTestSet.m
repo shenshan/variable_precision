@@ -35,10 +35,15 @@ classdef TradeOffTestSet < dj.Relvar & dj.AutoPopulate
             pars.p_right = 0.5;
             pars.lambda = gene_pars(1);
             switch model
+                case 'CPG'
+                    pars.guess = gene_pars(2);
                 case 'OP'
                     pars.beta = gene_pars(2);
                 case 'VP'
                     pars.theta = gene_pars(2);
+                case 'OPVP'
+                    pars.theta = gene_pars(2);
+                    pars.beta = gene_pars(3);
             end
 
 

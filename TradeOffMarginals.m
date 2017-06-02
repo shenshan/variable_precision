@@ -1,10 +1,10 @@
 %{
 varprecision.TradeOffMarginals (computed) # compute marginal likelihood of parameters for trade off analysis
 -> varprecision.TradeOffTest
-margin_dim   : tinyint      # dimension of the parameters
------
-ll_sum : longblob    # log marginals sum
-ll_max : longblob    # log marginals max
+margin_dim      : tinyint                # dimension of the parameters
+---
+ll_sum                      : longblob                      # log marginals sum
+ll_max                      : longblob                      # log marginals max
 %}
 
 classdef TradeOffMarginals < dj.Relvar & dj.AutoPopulate
