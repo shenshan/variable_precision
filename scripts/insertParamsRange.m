@@ -23,7 +23,7 @@ exp_id = 9;
 % 
 % model_names = reshape(model_names,[1,length(factors)*length(rules)]);
 
-models = fetch(varprecision.Model & 'model_type="sub"','*');
+models = fetch(varprecision.Model & 'model_type="sub"' & 'model_name="GOSum"','*');
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,1,20];

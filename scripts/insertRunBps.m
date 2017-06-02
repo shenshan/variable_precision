@@ -1,6 +1,6 @@
 subjs = fetch(varprecision.Subject & 'subj_type= "real"');
 
-models = fetch(varprecision.Model & 'model_type="sub"');
+models = fetch(varprecision.Model & 'model_type="sub"' & 'model_name="GOSum"');
 keys = fetch(varprecision.InitialPoint & subjs & 'exp_id in (9)' & models);
 
 for iKey = keys'

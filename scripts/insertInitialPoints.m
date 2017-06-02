@@ -1,4 +1,4 @@
-initial_point_vec = [0.5,0.1,0.02,0,0.1,0];
+initial_point_vec = [0.5,0.05,0.01,1.5,0.02,0];
 
 % initial_point_vec = [0.5,0.006,0.002,0.002,0.0007,0.0004,1,0.001,0.16];
 
@@ -29,11 +29,11 @@ subj_type = 'real';
 
 subjs = fetch(varprecision.Subject & ['subj_type="' subj_type '"']);
 
-models = fetch(varprecision.Model & 'model_type="sub"');
+models = fetch(varprecision.Model & 'model_type="sub"' & 'model_name="GOSum"');
 keys = fetch((varprecision.Recording & subjs) * varprecision.ParamsRange & 'exp_id in (9)' & models);
 
 for iKey = keys'
-    iKey.int_point_id=3;
+    iKey.int_point_id=1;
     if ~isempty(fetch(varprecision.InitialPoint & iKey))
         continue
     end

@@ -25,7 +25,7 @@ classdef FitParsEviBpsRunAvg < dj.Relvar & dj.AutoPopulate
             [~,key.run_host] = system('hostname');
 			[p_right,lambda,theta,beta,guess,sigma_dn] = fetch1(varprecision.FitParsEviBpsRun & key,'p_right_hat','lambda_hat','theta_hat','beta_hat','guess_hat','sigma_dn_hat');
             
-            model_type = fetch1(varprecision.Model & key, 'model_type');
+            [model_type,factor_code] = fetch1(varprecision.Model & key, 'model_type','factor_code');
             
             if strcmp(model_type,'opt')                
                 switch key.model_name
@@ -63,38 +63,39 @@ classdef FitParsEviBpsRunAvg < dj.Relvar & dj.AutoPopulate
                         params = [p_right,lambda,theta,beta,guess,sigma_dn];
                 end
             else
-                if ismember(key.model_name,{'Sum','Max','Min','Var','Sign'})
-                    params = lambda;
-                elseif ismember(key.model_name,{'GSum','GMax','GMin','GVar','GSign'})
-                    params = [lambda, guess];
-                elseif ismember(key.model_name,{'NSum','NMax','NMin','NVar','NSign'})
-                    params = [lambda, sigma_dn];
-                elseif ismember(key.model_name,{'GNSum','GNMax','GNMin','GNVar','GNSign'})
-                    params = [lambda, guess, sigma_dn];
-                elseif ismember(key.model_name,{'OSum','OMax','OMin','OVar','OSign'})
-                    params = [lambda, beta];
-                elseif ismember(key.model_name,{'GOum','GOMax','GOMin','GOVar','GOSign'})
-                    params = [lambda, beta, guess];
-                elseif ismember(key.model_name,{'NOSum','NOMax','NOMin','NOVar','NOSign'})
-                    params = [lambda, beta, sigma_dn];
-                elseif ismember(key.model_name,{'GNOSum','GNOMax','GNOMin','GNOPVar','GNOSign'})
-                    params = [lambda, beta, guess, sigma_dn];
-                elseif ismember(key.model_name,{'VPSum','VPMax','VPMin','VPVar','VPSign'})
-                    params = [lambda, theta];
-                elseif ismember(key.model_name,{'GVPSum','GVPMax','GVPMin','GVPVar','GVPSign'})
-                    params = [lambda, theta, guess];
-                elseif ismember(key.model_name,{'NVPSum','NVPMax','NVPMin','NVPVar','NVPSign'})
-                    params = [lambda, theta, sigma_dn];
-                elseif ismember(key.model_name,{'GNVPSum','GNVPMax','GNVPMin','GNVPVar','GNVPSign'})
-                    params = [lambda, theta, guess, sigma_dn];
-                elseif ismember(key.model_name,{'OVPSum','OVPMax','OVPMin','OVPVar','OVPSign'})
-                    params = [lambda, theta, beta];  
-                elseif ismember(key.model_name,{'GOVPSum','GOVPMax','GOVPMin','GOVPPVar','GOVPSign'})
-                    params = [lambda, theta, beta, guess];  
-                elseif ismember(key.model_name,{'NOVPSum','NOVPMax','NOVPMin','NOVPVar','NOVPSign'})
-                    params = [lambda, theta, beta, sigma_dn];  
-                elseif ismember(key.model_name,{'GNOVPSum','GNOVPMax','GNOVPMin','GNOVPVar','GNOVPSign'})
-                    params = [lambda, theta, beta, guess, sigma_dn];  
+                switch factor_code
+                    case 'Base'
+                        params = lambda;
+                    case 'G'
+                        params = [lambda, guess];
+                    case 'D'
+                        params = [lambda, sigma_dn];
+                    case 'GD'
+                        params = [lambda, guess, sigma_dn];
+                    case 'O'
+                        params = [lambda, beta];
+                    case 'GO'
+                        params = [lambda, beta, guess];
+                    case 'DO'
+                        params = [lambda, beta, sigma_dn];
+                    case 'GDO'
+                        params = [lambda, beta, guess, sigma_dn];
+                    case 'V'
+                        params = [lambda, theta];
+                    case 'GV'
+                        params = [lambda, theta, guess];
+                    case 'DV'
+                        params = [lambda, theta, sigma_dn];
+                    case 'GDV'
+                        params = [lambda, theta, guess, sigma_dn];
+                    case 'OV'
+                        params = [lambda, theta, beta];  
+                    case 'GOV'
+                        params = [lambda, theta, beta, guess];  
+                    case 'DOV'
+                        params = [lambda, theta, beta, sigma_dn];  
+                    case 'GDOV'
+                        params = [lambda, theta, beta, guess, sigma_dn];  
                 end
             end
             
