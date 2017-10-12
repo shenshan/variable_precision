@@ -165,7 +165,7 @@ else
                 pars.sigma_dn = params(4);
             case 'VPN'
                 pars.theta = params(3);
-                pars.sigma_dn = params(3);
+                pars.sigma_dn = params(4);
             case 'VPGN'
                 pars.theta = params(3);
                 pars.guess = params(4);
