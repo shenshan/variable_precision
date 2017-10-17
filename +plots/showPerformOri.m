@@ -64,10 +64,11 @@ else
         subplot(nRows,nCols,ii); hold on
         patch([bins,wrev(bins)],perform_patch,[0.8,0.8,0.8],'LineStyle','None')
         errorbar(bins,mean_perf,sem_perf,'k','LineStyle','None')
-        text(30,0.9,model_name)
+%         text(30,0.9,model_name)
         ylim([0.5,1])
         xlim([-90,90])
-        set(gca,'XTick',-90:45:90,'YTick',0.5:0.25:1)
+        
+        set(gca,'XTick',-90:45:90,'YTick',0.5:0.1:1)
     end
     fig.cleanup
     fig.save('~/Dropbox/VR/+varprecision/figures/exp8_model_fits_performance.eps')

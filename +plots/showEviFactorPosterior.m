@@ -1,4 +1,4 @@
-function showEviFactorLikelihood(type)
+function showEviFactorPosterior(type)
 %SHOWEVIFACTOR shows the factor evidence for all experiments
 %   function showEviFactor(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
@@ -12,9 +12,9 @@ for ii = 1:length(exp_ids)
     
     switch type
         case 'aic'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactor & exp, 'guess_aic','dn_aic','ori_aic','var_aic','total_var_aic');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactor & exp, 'guess_aic','ori_aic','dn_aic','var_aic','total_var_aic');
         case 'bic'
-            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactor & exp, 'guess_bic','dn_bic','ori_bic','var_bic','total_var_bic');
+            [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactor & exp, 'guess_bic','ori_bic','dn_bic','var_bic','total_var_bic');
         case 'aicc'
             [eviMat{ii,1},eviMat{ii,2},eviMat{ii,3},eviMat{ii,4},eviMat{ii,5}] = fetchn(varprecision.EviFactor & exp, 'guess_aicc','dn_aicc','ori_aicc','var_aicc','total_var_aicc');
         case 'llmax'
@@ -31,6 +31,7 @@ plot([xLim(1),xLim(2)],[0.269,0.269],'k--')
 plot([xLim(1),xLim(2)],[0.5,0.5],'k-.')
 
 ylim([0,1])
+set(gca, 'YTick', 0:0.2:1)
 
 xlabel('Experiment number')
 ylabel('Posterior probability')
@@ -40,4 +41,4 @@ ylabel('Posterior probability')
 
 fig.cleanup
 
-fig.save('~/Dropbox/VR/+varprecision/figures/evi_factor_likelihood')
+fig.save('~/Dropbox/VR/+varprecision/figures/fpp')

@@ -5,7 +5,8 @@ subjs = fetch(varprecision.Subject & 'subj_type="real"');
 J_bar = fetchn(varprecision.FitParsEviBpsBestAvg & exp & model & subjs & varargin, 'lambda_hat');
 
 exp = fetch(varprecision.Experiment & exp);
-model = fetch(varprecision.Model & model);
+model = fetch(varprecision.Model & model & exp);
+factor_code = fetch1(varprecision.Model & model,'factor_code');
 
 setsize = fetch1(varprecision.Experiment & exp, 'setsize');
 
@@ -13,8 +14,9 @@ J_bar = squeeze(varprecision.utils.decell(J_bar));
 
 [mean_Jbar, sem_Jbar] = varprecision.utils.getMeanStd(J_bar,'sem',2);
 
-fig = Figure(101,'size',[60,40]);
+fig = Figure(101,'size',[60,40]); hold on
 
+plot(setsize,mean_Jbar,'k.')
 errorbar(setsize, mean_Jbar,sem_Jbar,'k')
 
 ylim([0,0.6]);
@@ -22,7 +24,7 @@ xlim([0,10]);
 set(gca,'XTick',[1,2,3,4,8], 'YTick', 0:0.2:0.6)
 xlabel('Set size')
 
-if ismember(exp.exp_id, [3,5])
+if isempty(strfind(factor_code, 'V'))
     ylabel('Precision')
 else
     ylabel('Mean precision')

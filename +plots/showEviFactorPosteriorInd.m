@@ -1,4 +1,4 @@
-function showEviFactorLikelihoodInd(exp,type)
+function showEviFactorPosteriorInd(exp,type)
 %SHOWEVIFACTOR shows the factor evidence for all experiments
 %   function showEviFactor(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
