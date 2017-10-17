@@ -21,256 +21,145 @@ function [prediction, response] = exp9(x,pars)
         
     lambda_s = 1/pars.sigma_s^2;
     
-    if strcmp(pars.model_type,'sub')
-        sigma = 1/sqrt(pars.lambda);
-        std_s = pars.sigma_s;
-        lambda = pars.lambda;
-    end
+    std_s = pars.sigma_s;
+    lambda = pars.lambda;
     
-    if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
-        
+    factor_code_CP = {'Base','G','D','GD'};
+    
+    idx_temp = 1:nItems;
+    term2 = zeros(size(x));
+    term3 = zeros(size(x));
+    
+    if ismember(pars.factor_code, factor_code_CP)
         sigma = 1/sqrt(pars.lambda);
-        term = zeros(size(x));
-        for jj = 1:nItems
-            term(jj,:) = ((sum(x)-x(jj,:)).*pars.lambda).^2/((nItems-1)*pars.lambda + lambda_s)/2 - (sum(x.^2) - x(jj,:).^2)*pars.lambda/2;
+        for ii = 1:nItems
+            temp = x(idx_temp~=ii,:);            
+            term2(ii,:) = mean(temp).^2/(sigma^2/(nItems-1) + std_s^2);
+            term3(ii,:) = var(temp,1)*(nItems-1)*lambda;
         end
-        f = exp(-x.^2/(sigma^2+pars.sigma_s^2)/2).*exp(term);
+        term1 = x.^2/(sigma^2 + std_s^2);
         x_c = x*pars.lambda/sqrt(2*(pars.lambda+lambda_s));
-        term1 = squeeze(sum((1+erf(x_c)).*f));
-        term2 = squeeze(sum((1-erf(x_c)).*f));
-            
-    elseif ismember(pars.model_name,{'OP','OPG','OPN','OPGN','OPVP','OPVPG','OPVPN','OPVPGN','VP','VPN','VPG','VPGN','XP','XPG','XPVP','XPVPG'})
-        sigmaMat = sqrt(1./pars.lambdaMat);
-        
-        term = zeros(size(x));
+        prefactor = 1;
+    else
+        sigmaMat = 1./sqrt(pars.lambdaMat);
         prefactor = zeros(size(x));
-        temp1 = x.*pars.lambdaMat;
-        temp2 = x.^2.*pars.lambdaMat;
-        for jj = 1:nItems
-            prefactor(jj,:) = sqrt(1./(sum(pars.lambdaMat) - pars.lambdaMat(jj,:) + lambda_s));
-            term(jj,:) = (sum(temp1)-temp1(jj,:)).^2./(sum(pars.lambdaMat) - pars.lambdaMat(jj,:) + lambda_s)/2 - (sum(temp2) - temp2(jj,:))/2;
+        for ii = 1:nItems
+            x_temp = x(idx_temp~=ii,:);
+            lambda_temp = pars.lambdaMat(idx_temp~=ii,:);
+            prefactor(ii,:) = sqrt(1./(sum(lambda_temp) + lambda_s));
+            x_avg = sum(x_temp.*lambda_temp)./sum(lambda_temp);
+            x2_avg = sum(x_temp.^2.*lambda_temp)./sum(lambda_temp);
+            term2(ii,:) = (x_avg).^2./(1./sum(lambda_temp)+std_s^2);
+            term3(ii,:) = sum(bsxfun(@times,lambda_temp,(x2_avg - x_avg.^2)));
         end
-        f = exp(-x.^2./(sigmaMat.^2+pars.sigma_s^2)/2).*exp(term).*prefactor.*sqrt(1./(pars.lambdaMat + lambda_s));
+        term1 = x.^2./(sigmaMat.^2 + std_s^2);
+        prefactor = prefactor.*sqrt(1./pars.lambdaMat + lambda_s);
         x_c = x.*pars.lambdaMat./sqrt(2*(pars.lambdaMat+lambda_s));
-        term1 = squeeze(sum((1+erf(x_c)).*f));
-        term2 = squeeze(sum((1-erf(x_c)).*f));
-    elseif strcmp(pars.rule,'Sum')
-        obs_response = sum(x);
-    elseif strcmp(pars.rule,'Max')
-        [~,idx] = max(abs(x));
-        idx = sub2ind(size(x), idx, 1:nTrials);
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Min')
-        [~,idx] = min(abs(x));
-        idx = sub2ind(size(x), idx, 1:nTrials);
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Var')
-        corr_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            corr_x(jj,:) = std(temp);        
-        end
-        [~,idx] = min(corr_x);
-        idx = sub2ind(size(x), idx, 1:nTrials);	
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Sign')
-        temp = sign(x);
-        sum_x = sum(temp);
-        obs_response = zeros(1,length(x));
-        % all the measurements have the same sign
-        obs_response(sum_x==nItems) = 1;
-        obs_response(sum_x==-nItems) = -1;
-        % reports the orientation that has the least number of
-        % items, this only works for 4 items.
-        obs_response(sum_x==2) = -1;
-        obs_response(sum_x==-2) = 1;
-    elseif strcmp(pars.rule,'Max2')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp);
-        end
-        [~,idx] = min(abs(term_x));
-        idx = sub2ind(size(x),idx,1:nTrials);
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Max12')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2);
-        end
-        [~,idx] = min(term_x);
-        idx = sub2ind(size(x), idx, 1:nTrials);	
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Max13')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + ...
-                var(temp2,1)*(nItems-1)*lambda;
-        end
-        [~,idx] = min(term_x);
-        idx = sub2ind(size(x), idx, 1:nTrials);	
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Max23')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp).^2/(sigma^2/(nItems-1) + std_s^2) + var(temp,1)*(nItems-1)*lambda;
-        end
-        [~,idx] = min(term_x);
-        idx = sub2ind(size(x), idx, 1:nTrials);	
-        obs_response = x(idx);
-    elseif strcmp(pars.rule,'Max123')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2) + var(temp2,1)*(nItems-1)*lambda;
-        end
-        [~,idx] = min(term_x);
-        idx = sub2ind(size(x), idx, 1:nTrials);	
-        obs_response = x(idx); 
-    elseif strcmp(pars.rule,'SumErf')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        obs_response = sum(1-2*normcdf(0,x_c, std_c));
-    elseif strcmp(pars.rule,'SumErf1')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2);
-        end
-        obs_response = sum(exp(-term_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumErf2')
-         x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2);
-        end
-        obs_response = sum(exp(-term_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumErf3')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        corr_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            corr_x(jj,:) = var(temp,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(exp(-corr_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumErf12')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2);
-        end
-        obs_response = sum(exp(-term_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumErf13')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + ...
-                var(temp2,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(exp(-term_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumErf23')
-        x_c = x*lambda/(lambda + lambda_s);
-        std_c = 1/sqrt(lambda + lambda_s);
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp).^2/(sigma^2/(nItems-1) + std_s^2) + var(temp,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(exp(-term_x/2).*(1-2*normcdf(0,x_c,std_c)));
-    elseif strcmp(pars.rule,'SumX1')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2);
-        end
-        obs_response = sum(x.*exp(-term_x/2));
-    elseif strcmp(pars.rule,'SumX2')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2);
-        end
-        obs_response = sum(x.*exp(-term_x/2));
-    elseif strcmp(pars.rule,'SumX3')
-        corr_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            corr_x(jj,:) = var(temp,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(x.*exp(-corr_x/2));
-    elseif strcmp(pars.rule,'SumX12')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2);
-        end
-        obs_response = sum(x.*exp(-term_x/2));
-    elseif strcmp(pars.rule,'SumX13')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term_x(jj,:) = temp1.^2/(sigma^2 + std_s^2) + ...
-                var(temp2,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(x.*exp(-term_x/2));
-    elseif strcmp(pars.rule,'SumX23')
-        term_x = zeros(size(x));
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp = x(idx_temp~=jj,:);
-            term_x(jj,:) = mean(temp).^2/(sigma^2/(nItems-1) + std_s^2) + var(temp,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(x.*exp(-term_x/2));
-    elseif strcmp(pars.rule,'SumX123')
-        term = zeros(size(x)); % compute weight
-        idx_temp = 1:nItems;
-        for jj = 1:nItems
-            temp1 = x(idx_temp==jj,:);
-            temp2 = x(idx_temp~=jj,:);
-            term(jj,:) = temp1.^2/(sigma^2 + std_s^2) + mean(temp2).^2/(sigma^2/(nItems-1) + std_s^2) + var(temp2,1)*(nItems-1)*lambda;
-        end
-        obs_response = sum(x.*exp(-term/2));
     end
     
-    if strcmp(pars.model_type,'opt')
+    switch pars.rule
+        case 'Opt'
+            f = prefactor.*exp(-(term1+term2+term3)/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'Sum'
+            obs_response = sum(x);
+        case 'Max'
+            [~,idx] = max(abs(x));
+            idx = sub2ind(size(x), idx, 1:nTrials);
+            obs_response = x(idx);
+        case 'Min'
+            [~,idx] = min(abs(x));
+            idx = sub2ind(size(x), idx, 1:nTrials);
+            obs_response = x(idx);
+        case 'Var'
+            corr_x = zeros(size(x));
+            idx_temp = 1:nItems;
+            for jj = 1:nItems
+                temp = x(idx_temp~=jj,:);
+                corr_x(jj,:) = std(temp);        
+            end
+            [~,idx] = min(corr_x);
+            idx = sub2ind(size(x), idx, 1:nTrials);	
+            obs_response = x(idx);
+        case 'Sign'
+            temp = sign(x);
+            sum_x = sum(temp);
+            obs_response = zeros(1,length(x));
+            % all the measurements have the same sign
+            obs_response(sum_x==nItems) = 1;
+            obs_response(sum_x==-nItems) = -1;
+            % reports the orientation that has the least number of
+            % items, this only works for 4 items.
+            obs_response(sum_x==2) = -1;
+            obs_response(sum_x==-2) = 1;
+        case 'Max2'
+            [~,idx] = min(abs(term2));
+            idx = sub2ind(size(x),idx,1:nTrials);
+            obs_response = x(idx);
+        case 'Max12'      
+            [~,idx] = min(term1+term2);
+            idx = sub2ind(size(x), idx, 1:nTrials);	
+            obs_response = x(idx);
+        case 'Max13'
+            [~,idx] = min(term1+term3);
+            idx = sub2ind(size(x), idx, 1:nTrials);	
+            obs_response = x(idx);
+        case 'Max23'
+            [~,idx] = min(term2+term3);
+            idx = sub2ind(size(x), idx, 1:nTrials);	
+            obs_response = x(idx);
+        case 'Max123'
+            [~,idx] = min(term1+term2+term3);
+            idx = sub2ind(size(x), idx, 1:nTrials);	
+            obs_response = x(idx);
+        case 'SumErf'
+            term_r = squeeze(sum(1+erf(x_c).*prefactor));
+            term_l = squeeze(sum(1-erf(x_c).*prefactor));
+        case 'SumErf1'
+            f = prefactor.*exp(-term1/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumErf2'
+            f = prefactor.*exp(-term2/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumErf3'
+            f = prefactor.*exp(-term3/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumErf12'
+            f = prefactor.*exp(-(term1+term2)/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumErf13'
+            f = prefactor.*exp(-(term1+term3)/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumErf23'
+            f = prefactor.*exp(-(term2+term3)/2);
+            term_r = squeeze(sum((1+erf(x_c)).*f));
+            term_l = squeeze(sum((1-erf(x_c)).*f));
+        case 'SumX1'
+            obs_response = sum(x.*exp(-term1/2));
+        case 'SumX2'
+            obs_response = sum(x.*exp(-term2/2));
+        case 'SumX3'
+            obs_response = sum(x.*exp(-term3/2));
+        case 'SumX12'
+            obs_response = sum(x.*exp(-(term1+term2)/2));
+        case 'SumX13'
+            obs_response = sum(x.*exp(-(term1+term3)/2));
+        case 'SumX23'
+            obs_response = sum(x.*exp(-(term2+term3)/2));
+        case 'SumX123'
+            obs_response = sum(x.*exp(-(term1+term2+term3)/2));
+            
+    end
+   
+    if ismember(pars.model_type,{'opt','SumErf'})
         p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
-        obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
+        obs_response = log(bsxfun(@times,repmat(term_r,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term_l,[1,1,length(pars.p_right)]),(1-p_right_adj)));
     end
     
     if ~isempty(strfind(pars.factor_code,'D'))

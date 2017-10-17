@@ -85,7 +85,7 @@ if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake','t
             pars.sigma_dn = params(9);
     end
 else
-    if strcmp(model_type,'sub')
+    if ismember(model_type,{'Simple','Max','SumX'})
         pars.lambda = params(1);
         if strcmp(factor_code,'G')
             pars.guess = params(2);
@@ -138,50 +138,50 @@ else
     else
         pars.p_right = params(1);
         pars.lambda = params(2);
-        switch key.model_name
-            case 'CPG'
+        switch factor_code
+            case 'G'
                 pars.guess = params(3);
-            case 'VP'
+            case 'V'
                 pars.theta = params(3);
-            case 'VPG'
+            case 'GV'
                 pars.theta = params(3);
                 pars.guess = params(4);
-            case {'OP','XP'}
+            case 'O'
                 pars.beta = params(3);
-            case {'OPG','XPG'}
+            case 'GO'
                 pars.beta = params(3);
                 pars.guess = params(4);
-            case {'OPVP','XPVP'}
+            case 'OV'
                 pars.theta = params(3);
                 pars.beta = params(4);
-            case {'OPVPG','XPVPG'}
+            case 'GOV'
                 pars.theta = params(3);
                 pars.beta = params(4);
                 pars.guess = params(5);
-            case 'CPN'
+            case 'D'
                 pars.sigma_dn = params(3);
-            case 'CPGN'
+            case 'GD'
                 pars.guess = params(3);
                 pars.sigma_dn = params(4);
-            case 'VPN'
+            case 'DV'
                 pars.theta = params(3);
                 pars.sigma_dn = params(4);
-            case 'VPGN'
+            case 'GDV'
                 pars.theta = params(3);
                 pars.guess = params(4);
                 pars.sigma_dn = params(5);
-            case 'OPN'
+            case 'DO'
                 pars.beta = params(3);
                 pars.sigma_dn = params(4);
-            case 'OPGN'
+            case 'GDO'
                 pars.beta = params(3);
                 pars.guess = params(4);
                 pars.sigma_dn = params(5);
-            case 'OPVPN'
+            case 'DOV'
                 pars.theta = params(3);
                 pars.beta = params(4);
                 pars.sigma_dn = params(5);
-            case 'OPVPGN'
+            case 'GDOV'
                 pars.theta = params(3);
                 pars.beta = params(4);
                 pars.guess = params(5);
@@ -201,7 +201,7 @@ trial_num_sim = key.trial_num_sim;
 predMat = zeros(size(response));
 
 if length(setsizes)==1
-    if isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
+    if isempty(strfind(factor_code,'O')) && isempty(strfind(factor_code,'V'))
         if vm == 0
             noiseMat = normrnd(0,1/sqrt(pars.lambda),[setsizes,trial_num_sim]);
         else
@@ -210,7 +210,7 @@ if length(setsizes)==1
             pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
             noiseMat = circ_vmrnd(zeros(setsizes,trial_num_sim),pars.lambda)/2;
         end
-    elseif isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
+    elseif isempty(strfind(factor_code,'O')) && ~isempty(strfind(factor_code,'V'))
         pars.lambdaMat = gamrnd(pars.lambda/pars.theta,pars.theta,[setsizes,trial_num_sim]);
         if vm == 0
             noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -219,13 +219,13 @@ if length(setsizes)==1
             pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
             noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
         end
-    elseif ~isempty(strfind(key.model_name,'O'))
+    elseif ~isempty(strfind(factor_code,'O'))
         sigma_baseline = 1/sqrt(pars.lambda);
     end
     stimuli = varprecision.utils.adjustStimuliSize(exp_id,stimuli,setsizes);
     for ii = 1:length(stimuli)    
         stimulus = stimuli(ii,:);
-        if ~isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))           
+        if ~isempty(strfind(factor_code,'O')) && isempty(strfind(factor_code,'V'))           
             if vm
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 pars.lambdaMat = 1./sigma.^2*180^2/pi^2/4;
@@ -238,7 +238,7 @@ if length(setsizes)==1
                 pars.lambdaMat = repmat(pars.lambdaMat,trial_num_sim,1)';
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
             end
-        elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
+        elseif ~isempty(strfind(factor_code,'O')) && ~isempty(strfind(factor_code,'V'))
             
             if vm
                 sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus))); 
@@ -294,7 +294,7 @@ else
             stimuli_sub = stimuli(set_size==setsize);
         end
         response_sub = response(set_size==setsize);
-        if isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
+        if isempty(strfind(factor_code,'O')) && isempty(strfind(factor_code,'V'))
             pars.lambda = pars.lambdaVec(jj);
             if vm == 0            
                 noiseMat = normrnd(0,1/sqrt(pars.lambdaVec(jj)),[setsize,trial_num_sim]);
@@ -303,7 +303,7 @@ else
                 pars.lambda = varprecision.utils.mapJK(pars.lambda,jmap,kmap);
                 noiseMat = circ_vmrnd(zeros(setsize,trial_num_sim),pars.lambda)/2;
             end  
-        elseif isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
+        elseif isempty(strfind(factor_code,'O')) && ~isempty(strfind(factor_code,'V'))
             pars.lambdaMat = gamrnd(pars.lambdaVec(jj)/pars.theta,pars.theta,[setsize,trial_num_sim]);
             if vm == 0
                 noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
@@ -312,7 +312,7 @@ else
                 pars.lambdaMat = varprecision.utils.mapJK(pars.lambdaMat,jmap,kmap);
                 noiseMat = circ_vmrnd(0,pars.lambdaMat)/2;
             end
-        elseif ~isempty(strfind(key.model_name,'O'))
+        elseif ~isempty(strfind(factor_code,'O'))
             sigma_baseline = 1/sqrt(pars.lambdaVec(jj));
         end
         
@@ -320,7 +320,7 @@ else
         predMat_sub = zeros(size(response_sub));
         for ii = 1:length(stimuli_sub)
             stimulus = stimuliMat(ii,:);
-            if ~isempty(strfind(key.model_name,'O')) && isempty(strfind(key.model_name,'VP'))
+            if ~isempty(strfind(factor_code,'O')) && isempty(strfind(factor_code,'V'))
                 
                 if vm
                     sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
@@ -334,7 +334,7 @@ else
                     pars.lambdaMat = repmat(pars.lambdaMat, trial_num_sim,1)';
                     noiseMat = normrnd(0,1./sqrt(pars.lambdaMat));
                 end
-            elseif ~isempty(strfind(key.model_name,'O')) && ~isempty(strfind(key.model_name,'VP'))
+            elseif ~isempty(strfind(factor_code,'O')) && ~isempty(strfind(factor_code,'V'))
                 if vm
                     sigma = sigma_baseline*(1 + pars.beta*abs(sin(2*stimulus)));
                 else
@@ -384,7 +384,7 @@ end
 predMat(predMat==0) = 1/trial_num_sim;
 predMat(predMat==1) = 1 - 1/trial_num_sim;
 
-if ~isempty(strfind(key.model_name,'G'))
+if ~isempty(strfind(factor_code,'G'))
     predMat = predMat*(1-pars.guess) + .5*pars.guess;
 end
 

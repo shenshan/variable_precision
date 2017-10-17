@@ -49,54 +49,54 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
             
             if length(setsizes)==1
                 
-                if strcmp(model_type,'opt')
+                if ismember(model_type,{'opt','SumErf'})
                     key.p_right_hat = pars(1);
                     key.lambda_hat = pars(2);
 
-                    switch key.model_name
-                        case 'CPG'
+                    switch factor_code
+                        case 'G'
                             key.guess_hat = pars(3);
-                        case 'VP'
+                        case 'V'
                             key.theta_hat = pars(3);
-                        case 'VPG'
+                        case 'GV'
                             key.theta_hat = pars(3);
                             key.guess_hat = pars(4);
-                        case {'OP','XP'}
+                        case 'O'
                             key.beta_hat = pars(3);
-                        case {'OPG','XPG'}
+                        case 'GO'
                             key.beta_hat = pars(3);
                             key.guess_hat = pars(4);
-                        case {'OPVP','XPVP'}
+                        case 'OV'
                             key.theta_hat = pars(3);
                             key.beta_hat = pars(4);
-                        case {'OPVPG','XPVPG'}
+                        case 'GOV'
                             key.theta_hat = pars(3);
                             key.beta_hat = pars(4);
                             key.guess_hat = pars(5);
-                        case 'CPN'
+                        case 'D'
                             key.sigma_dn_hat = pars(3);
-                        case 'CPGN'
+                        case 'GD'
                             key.guess_hat = pars(3);
                             key.sigma_dn_hat = pars(4);
-                        case 'VPN'
+                        case 'DV'
                             key.theta_hat = pars(3);
                             key.sigma_dn_hat = pars(4);
-                        case 'VPGN'
+                        case 'GDV'
                             key.theta_hat = pars(3);
                             key.guess_hat = pars(4);
                             key.sigma_dn_hat = pars(5);
-                        case 'OPN'
+                        case 'DO'
                             key.beta_hat = pars(3);
                             key.sigma_dn_hat = pars(4);
-                        case 'OPGN'
+                        case 'GDO'
                             key.beta_hat = pars(3);
                             key.guess_hat = pars(4);
                             key.sigma_dn_hat = pars(5);
-                        case 'OPVPN'
+                        case 'DOV'
                             key.theta_hat = pars(3);
                             key.beta_hat = pars(4);
                             key.sigma_dn_hat = pars(5);
-                        case 'OPVPGN'
+                        case 'GDOV'
                             key.theta_hat = pars(3);
                             key.beta_hat = pars(4);
                             key.guess_hat = pars(5);
@@ -104,53 +104,54 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                     end
                 else
                     key.lambda_hat = pars(1);
-                    if strcmp(factor_code,'G')
-                        key.guess_hat = pars(2);
-                    elseif strcmp(factor_code,'D')
-                        key.sigma_dn_hat = pars(2);
-                    elseif strcmp(factor_code,'GD')
-                        key.guess_hat = pars(2);
-                        key.sigma_dn_hat = pars(3);
-                    elseif strcmp(factor_code,'O')
-                        key.beta_hat = pars(2);
-                    elseif strcmp(factor_code,'GO')
-                        key.beta_hat = pars(2);
-                        key.guess_hat = pars(3);
-                    elseif strcmp(factor_code,'DO')
-                        key.beta_hat = pars(2);
-                        key.sigma_dn_hat = pars(3);
-                    elseif strcmp(factor_code,'GDO')
-                        key.beta_hat = pars(2);
-                        key.guess_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    elseif strcmp(factor_code,'V')
-                        key.theta_hat = pars(2);
-                    elseif strcmp(factor_code,'GV')
-                        key.theta_hat = pars(2);
-                        key.guess_hat = pars(3);
-                    elseif strcmp(factor_code,'DV')
-                        key.theta_hat = pars(2);
-                        key.sigma_dn_hat = pars(3);
-                    elseif strcmp(factor_code,'GDV')
-                        key.theta_hat = pars(2);
-                        key.guess_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    elseif strcmp(factor_code,'OV')
-                        key.theta_hat = pars(2);
-                        key.beta_hat = pars(3);   
-                    elseif strcmp(factor_code,'GOV')
-                        key.theta_hat = pars(2);
-                        key.beta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                    elseif strcmp(factor_code,'DOV')
-                        key.theta_hat = pars(2);
-                        key.beta_hat = pars(3);
-                        key.sigma_dn_hat = pars(4);
-                    elseif strcmp(factor_code,'GDOV')
-                        key.theta_hat = pars(2);
-                        key.beta_hat = pars(3);
-                        key.guess_hat = pars(4);
-                        key.sigma_dn_hat = pars(5);
+                    switch factor_code
+                        case 'G'
+                            key.guess_hat = pars(2);
+                        case 'D'
+                            key.sigma_dn_hat = pars(2);
+                        case 'GD'
+                            key.guess_hat = pars(2);
+                            key.sigma_dn_hat = pars(3);
+                        case 'O'
+                            key.beta_hat = pars(2);
+                        case 'GO'
+                            key.beta_hat = pars(2);
+                            key.guess_hat = pars(3);
+                        case 'DO'
+                            key.beta_hat = pars(2);
+                            key.sigma_dn_hat = pars(3);
+                        case 'GDO'
+                            key.beta_hat = pars(2);
+                            key.guess_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'V'
+                            key.theta_hat = pars(2);
+                        case 'GV'
+                            key.theta_hat = pars(2);
+                            key.guess_hat = pars(3);
+                        case 'DV'
+                            key.theta_hat = pars(2);
+                            key.sigma_dn_hat = pars(3);
+                        case 'GDV'
+                            key.theta_hat = pars(2);
+                            key.guess_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'OV'
+                            key.theta_hat = pars(2);
+                            key.beta_hat = pars(3);   
+                        case 'GOV'
+                            key.theta_hat = pars(2);
+                            key.beta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                        case 'DOV'
+                            key.theta_hat = pars(2);
+                            key.beta_hat = pars(3);
+                            key.sigma_dn_hat = pars(4);
+                        case 'GDOV'
+                            key.theta_hat = pars(2);
+                            key.beta_hat = pars(3);
+                            key.guess_hat = pars(4);
+                            key.sigma_dn_hat = pars(5);
                     end
                 end
             else

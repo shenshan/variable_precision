@@ -23,7 +23,7 @@ exp_id = 9;
 % 
 % model_names = reshape(model_names,[1,length(factors)*length(rules)]);
 
-models = fetch(varprecision.Model & 'model_type="sub"' & 'model_name="GOSum"','*');
+models = fetch(varprecision.Model & 'model_type in ("Simple","Max","SumX")','*');
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,1,20];
@@ -77,39 +77,39 @@ for ii = 1:length(models)
                 
         end
     else
-        if strcmp(model_type,'opt')
-            switch model_name
-                case 'CP'
+        if ismember(model_type,{'opt','SumErf'})
+            switch factor_code
+                case 'Base'
                     idx = 1:2;
-                case 'CPG'
+                case 'G'
                     idx = [1,2,5];
-                case 'VP'
+                case 'V'
                     idx = 1:3;
-                case 'VPG'
+                case 'GV'
                     idx = [1:3,5];
-                case {'OP','XP'}
+                case 'O'
                     idx = [1,2,4];
-                case {'OPG','XPG'}
+                case 'GO'
                     idx = [1,2,4,5];
-                case {'OPVP','XPVP'}
+                case 'OV'
                     idx = 1:4;
-                case {'OPVPG','XPVPG'}
+                case 'GOV'
                     idx = 1:5;
-                case 'CPN'
+                case 'D'
                     idx = [1,2,6];
-                case 'CPGN'
+                case 'GD'
                     idx = [1,2,5,6];
-                case 'VPN'
+                case 'DV'
                     idx = [1,2,3,6];
-                case 'VPGN'
+                case 'GDV'
                     idx = [1,2,3,5,6];
-                case 'OPN'
+                case 'DO'
                     idx = [1,2,4,6];
-                case 'OPGN'
+                case 'GDO'
                     idx = [1,2,4,5,6];
-                case 'OPVPN'
+                case 'DOV'
                     idx = [1,2,3,4,6];
-                case 'OPVPGN'
+                case 'GDOV'
                     idx = [1,2,3,4,5,6];
             end
         else
