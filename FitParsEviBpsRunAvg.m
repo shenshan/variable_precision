@@ -27,39 +27,39 @@ classdef FitParsEviBpsRunAvg < dj.Relvar & dj.AutoPopulate
             
             [model_type,factor_code] = fetch1(varprecision.Model & key, 'model_type','factor_code');
             
-            if strcmp(model_type,'opt')                
-                switch key.model_name
-                    case 'CP'
+            if ismember(model_type,{'opt','SumErf'})                
+                switch factor_code
+                    case 'Base'
                         params = [p_right,lambda];
-                    case 'CPN'
+                    case 'D'
                         params = [p_right,lambda,sigma_dn];
-                    case 'CPG'
+                    case 'G'
                         params = [p_right,lambda,guess];
-                    case 'CPGN'
+                    case 'GD'
                         params = [p_right,lambda,guess,sigma_dn];
-                    case 'VP'
+                    case 'V'
                         params = [p_right,lambda,theta];
-                    case 'VPN'
+                    case 'DV'
                         params = [p_right,lambda,theta,sigma_dn];
-                    case 'VPG'
+                    case 'GV'
                         params = [p_right,lambda,theta,guess];
-                    case 'VPGN'
+                    case 'GDV'
                         params = [p_right,lambda,theta,guess,sigma_dn];
-                    case 'OP'
+                    case 'O'
                         params = [p_right,lambda,beta];
-                    case 'OPN'
+                    case 'DO'
                         params = [p_right,lambda,beta,sigma_dn];
-                    case 'OPG'
+                    case 'GO'
                         params = [p_right,lambda,beta,guess];
-                    case 'OPGN'
+                    case 'GDO'
                         params = [p_right,lambda,beta,guess,sigma_dn];
-                    case 'OPVP'
+                    case 'OV'
                         params = [p_right,lambda,theta,beta];
-                    case 'OPVPN'
+                    case 'DOV'
                         params = [p_right,lambda,theta,beta,sigma_dn];
-                    case 'OPVPG'
+                    case 'GOV'
                         params = [p_right,lambda,theta,beta,guess];
-                    case 'OPVPGN'
+                    case 'GDOV'
                         params = [p_right,lambda,theta,beta,guess,sigma_dn];
                 end
             else
