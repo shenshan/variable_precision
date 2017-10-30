@@ -32,60 +32,112 @@ end
 
 
 if ismember(key.exp_id,[3,5,7,10,11,12]) && ismember(subj_type,{'real','fake','trade_off'})
-    
-    pars.p_right = params(1);
-    pars.lambdaVec = params(2:5);
-    switch key.model_name
-        case 'CPG'
-            pars.guess = params(6);
-        case 'VP'
-            pars.theta = params(6);
-        case 'VPG'
-            pars.theta = params(6);
-            pars.guess = params(7);
-        case {'OP','XP'}
-            pars.beta = params(6);
-        case {'OPG','XPG'}
-            pars.beta = params(6);
-            pars.guess = params(7);
-        case {'OPVP','XPVP'}
-            pars.theta = params(6);
-            pars.beta = params(7);
-        case {'OPVPG','XPVPG'}
-            pars.theta = params(6);
-            pars.beta = params(7);
-            pars.guess = params(8);
-        case 'CPN'
-            pars.sigma_dn = params(6);
-        case 'CPGN'
-            pars.guess = params(6);
-            pars.sigma_dn = params(7);
-        case 'VPN'
-            pars.theta = params(6);
-            pars.sigma_dn = params(7);
-        case 'VPGN'
-            pars.theta = params(6);
-            pars.guess = params(7);
-            pars.sigma_dn = params(8);
-        case 'OPN'
-            pars.beta = params(6);
-            pars.sigma_dn = params(7);
-        case 'OPGN'
-            pars.beta = params(6);
-            pars.guess = params(7);
-            pars.sigma_dn = params(8);
-        case 'OPVPN'
-            pars.theta = params(6);
-            pars.beta = params(7);
-            pars.sigma_dn = params(8);
-        case 'OPVPGN'
-            pars.theta = params(6);
-            pars.beta = params(7);
-            pars.guess = params(8);
-            pars.sigma_dn = params(9);
+    if strcmp(model_type,'opt')
+        pars.p_right = params(1);
+        pars.lambdaVec = params(2:5);
+        switch factor_code
+            case 'G'
+                pars.guess = params(6);
+            case 'V'
+                pars.theta = params(6);
+            case 'GV'
+                pars.theta = params(6);
+                pars.guess = params(7);
+            case 'O'
+                pars.beta = params(6);
+            case 'GO'
+                pars.beta = params(6);
+                pars.guess = params(7);
+            case 'OV'
+                pars.theta = params(6);
+                pars.beta = params(7);
+            case 'GOV'
+                pars.theta = params(6);
+                pars.beta = params(7);
+                pars.guess = params(8);
+            case 'D'
+                pars.sigma_dn = params(6);
+            case 'GD'
+                pars.guess = params(6);
+                pars.sigma_dn = params(7);
+            case 'DV'
+                pars.theta = params(6);
+                pars.sigma_dn = params(7);
+            case 'GDV'
+                pars.theta = params(6);
+                pars.guess = params(7);
+                pars.sigma_dn = params(8);
+            case 'DO'
+                pars.beta = params(6);
+                pars.sigma_dn = params(7);
+            case 'GDO'
+                pars.beta = params(6);
+                pars.guess = params(7);
+                pars.sigma_dn = params(8);
+            case 'DOV'
+                pars.theta = params(6);
+                pars.beta = params(7);
+                pars.sigma_dn = params(8);
+            case 'GDOV'
+                pars.theta = params(6);
+                pars.beta = params(7);
+                pars.guess = params(8);
+                pars.sigma_dn = params(9);
+        end
+    else
+        pars.lambdaVec = params(1:4);
+        switch factor_code
+            case 'G'
+                pars.guess = params(5);
+            case 'V'
+                pars.theta = params(5);
+            case 'GV'
+                pars.theta = params(5);
+                pars.guess = params(6);
+            case 'O'
+                pars.beta = params(5);
+            case 'GO'
+                pars.beta = params(5);
+                pars.guess = params(6);
+            case 'OV'
+                pars.theta = params(5);
+                pars.beta = params(6);
+            case 'GOV'
+                pars.theta = params(5);
+                pars.beta = params(6);
+                pars.guess = params(7);
+            case 'D'
+                pars.sigma_dn = params(5);
+            case 'GD'
+                pars.guess = params(5);
+                pars.sigma_dn = params(6);
+            case 'DV'
+                pars.theta = params(5);
+                pars.sigma_dn = params(6);
+            case 'GDV'
+                pars.theta = params(5);
+                pars.guess = params(6);
+                pars.sigma_dn = params(7);
+            case 'DO'
+                pars.beta = params(5);
+                pars.sigma_dn = params(6);
+            case 'GDO'
+                pars.beta = params(5);
+                pars.guess = params(6);
+                pars.sigma_dn = params(7);
+            case 'DOV'
+                pars.theta = params(5);
+                pars.beta = params(6);
+                pars.sigma_dn = params(7);
+            case 'GDOV'
+                pars.theta = params(5);
+                pars.beta = params(6);
+                pars.guess = params(7);
+                pars.sigma_dn = params(8);
+        end
     end
 else
-    if ismember(model_type,{'Simple','Max','SumX'})
+    if ismember(model_type,{'Simple','Max','SumX','sub'})
         pars.lambda = params(1);
         if strcmp(factor_code,'G')
             pars.guess = params(2);

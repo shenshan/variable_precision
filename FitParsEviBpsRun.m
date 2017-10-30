@@ -155,58 +155,112 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                     end
                 end
             else
-                key.p_right_hat = pars(1);
-                key.lambda_hat = pars(2:5);
+                if ismember(model_type,{'opt','SumErf'})
+                    key.p_right_hat = pars(1);
+                    key.lambda_hat = pars(2:5);
 
-                switch key.model_name
-                    case 'CPG'
-                        key.guess_hat = pars(6);
-                    case 'VP'
-                        key.theta_hat = pars(6);
-                    case 'VPG'
-                        key.theta_hat = pars(6);
-                        key.guess_hat = pars(7);
-                    case {'OP','XP'}
-                        key.beta_hat = pars(6);
-                    case {'OPG','XPG'}
-                        key.beta_hat = pars(6);
-                        key.guess_hat = pars(7);
-                    case {'OPVP','XPVP'}
-                        key.theta_hat = pars(6);
-                        key.beta_hat = pars(7);
-                    case {'OPVPG','XPVPG'}
-                        key.theta_hat = pars(6);
-                        key.beta_hat = pars(7);
-                        key.guess_hat = pars(8);
-                    case 'CPN'
-                        key.sigma_dn_hat = pars(6);
-                    case 'CPGN'
-                        key.guess_hat = pars(6);
-                        key.sigma_dn_hat = pars(7);
-                    case 'VPN'
-                        key.theta_hat = pars(6);
-                        key.sigma_dn_hat = pars(7);
-                    case 'VPGN'
-                        key.theta_hat = pars(6);
-                        key.guess_hat = pars(7);
-                        key.sigma_dn_hat = pars(8);
-                    case 'OPN'
-                        key.beta_hat = pars(6);
-                        key.sigma_dn_hat = pars(7);
-                    case 'OPGN'
-                        key.beta_hat = pars(6);
-                        key.guess_hat = pars(7);
-                        key.sigma_dn_hat = pars(8);
-                    case 'OPVPN'
-                        key.theta_hat = pars(6);
-                        key.beta_hat = pars(7);
-                        key.sigma_dn_hat = pars(8);
-                    case 'OPVPGN'
-                        key.theta_hat = pars(6);
-                        key.beta_hat = pars(7);
-                        key.guess_hat = pars(8);
-                        key.sigma_dn_hat = pars(9);
+                    switch factor_code
+                        case 'G'
+                            key.guess_hat = pars(6);
+                        case 'V'
+                            key.theta_hat = pars(6);
+                        case 'GV'
+                            key.theta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                        case 'O'
+                            key.beta_hat = pars(6);
+                        case 'GO'
+                            key.beta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                        case 'OV'
+                            key.theta_hat = pars(6);
+                            key.beta_hat = pars(7);
+                        case 'GOV'
+                            key.theta_hat = pars(6);
+                            key.beta_hat = pars(7);
+                            key.guess_hat = pars(8);
+                        case 'D'
+                            key.sigma_dn_hat = pars(6);
+                        case 'GD'
+                            key.guess_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'DV'
+                            key.theta_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'GDV'
+                            key.theta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                            key.sigma_dn_hat = pars(8);
+                        case 'DO'
+                            key.beta_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'GOD'
+                            key.beta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                            key.sigma_dn_hat = pars(8);
+                        case 'DOV'
+                            key.theta_hat = pars(6);
+                            key.beta_hat = pars(7);
+                            key.sigma_dn_hat = pars(8);
+                        case 'GDOV'
+                            key.theta_hat = pars(6);
+                            key.beta_hat = pars(7);
+                            key.guess_hat = pars(8);
+                            key.sigma_dn_hat = pars(9);
+                    end
+                else
+                    key.lambda_hat = pars(1:4);
+                    switch factor_code
+                        case 'G'
+                            key.guess_hat = pars(5);
+                        case 'V'
+                            key.theta_hat = pars(5);
+                        case 'GV'
+                            key.theta_hat = pars(5);
+                            key.guess_hat = pars(6);
+                        case 'O'
+                            key.beta_hat = pars(5);
+                        case 'GO'
+                            key.beta_hat = pars(5);
+                            key.guess_hat = pars(6);
+                        case 'OV'
+                            key.theta_hat = pars(5);
+                            key.beta_hat = pars(6);
+                        case 'GOV'
+                            key.theta_hat = pars(5);
+                            key.beta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                        case 'D'
+                            key.sigma_dn_hat = pars(5);
+                        case 'GD'
+                            key.guess_hat = pars(5);
+                            key.sigma_dn_hat = pars(6);
+                        case 'DV'
+                            key.theta_hat = pars(5);
+                            key.sigma_dn_hat = pars(6);
+                        case 'GDV'
+                            key.theta_hat = pars(5);
+                            key.guess_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'DO'
+                            key.beta_hat = pars(5);
+                            key.sigma_dn_hat = pars(6);
+                        case 'GOD'
+                            key.beta_hat = pars(5);
+                            key.guess_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'DOV'
+                            key.theta_hat = pars(5);
+                            key.beta_hat = pars(6);
+                            key.sigma_dn_hat = pars(7);
+                        case 'GDOV'
+                            key.theta_hat = pars(5);
+                            key.beta_hat = pars(6);
+                            key.guess_hat = pars(7);
+                            key.sigma_dn_hat = pars(8);
+                    end
                 end
+                
             end
             
             nTrials = fetch1(varprecision.Data & key, 'ntrials');

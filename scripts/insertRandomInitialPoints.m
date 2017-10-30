@@ -1,11 +1,11 @@
 
 nIntPoints = 3;
-exps = fetch(varprecision.Experiment & 'exp_id=9');
+exps = fetch(varprecision.Experiment & 'exp_id=7');
 subjs = fetch(varprecision.Subject & 'subj_type = "real"');
 
 
 for exp = exps'
-    models = fetch(varprecision.Model & exp & 'model_type!="opt"' & 'model_name!="GSumErf3"');
+    models = fetch(varprecision.Model & exp & 'model_type="sub"');
     
     for imodel = models'
         [plb,pub] = fetch1(varprecision.ParamsRange & exp & imodel,'plb','pub');

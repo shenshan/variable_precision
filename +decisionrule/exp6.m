@@ -20,37 +20,25 @@ function [prediction, response] = exp6(x,pars)
     end
     nItems = size(x,1);
     tKappa = 10; 
-    p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
     if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
-        
-%         entire_int = sum(pi*besseli0_fast(sqrt(pars.lambda^2 + tKappa^2 + 2*tKappa*pars.lambda*cos(2*x))),1);
         term1 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, 0, pi/2, nItems,30),1);
-        term2 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, -pi/2, 0, nItems,30),1);
-%         term2 = entire_int - temp1;
-            
+        term2 = sum(vmproductcdf_trapz_CP(pars.lambda, tKappa, x, -pi/2, 0, nItems,30),1);            
     elseif ismember(pars.model_name,{'VP','VPG','OP','OPG','OPVP','OPVPG','XP','XPG','XPVP','XPVPG','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
-        
-%         kappa_c = sqrt(pars.lambdaMat.^2 + tKappa^2 + 2*tKappa*pars.lambdaMat.*cos(2*x));
-%         entire_int = pi*besseli0_fast(kappa_c,1);
-% %         disp(['besseli time: ' num2str(toc) ' sec'])
-% %         tic
-%         temp1 = vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30, kappa_c);
-% %         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30),1);
-% %         disp(['vmcdf time: ' num2str(toc) ' sec'])
-%         temp2 = entire_int - temp1;
-%         term1 = sum(temp1./besseli0_fast(pars.lambdaMat,1).*exp(kappa_c - pars.lambdaMat),1);
-%         term2 = sum(temp2./besseli0_fast(pars.lambdaMat,1).*exp(kappa_c - pars.lambdaMat),1);
-
         term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
+    elseif strcmp(pars.model_type,'sub')
+        [~,idx] = min(abs(x));
+        idx = sub2ind(size(x), idx, 1:nTrials);
+        obs_response = x(idx);
     end
    
-    
-    obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
-    
+    if strcmp(pars.rule,'opt')
+        p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
+        obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
+    end
 
-    if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
+    if ~isempty(strfind(pars.factor_code,'D'))
         obs_response = normrnd(obs_response,pars.sigma_dn);
     end
     
