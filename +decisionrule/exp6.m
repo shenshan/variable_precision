@@ -28,9 +28,13 @@ function [prediction, response] = exp6(x,pars)
         term1 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  0, pi/2, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
         term2 = sum(vmproductcdf_trapz(pars.lambdaMat, tKappa, x,  -pi/2, 0, 30,pars.lambdaMat)./besseli0_fast(pars.lambdaMat,1),1);
     elseif strcmp(pars.model_type,'sub')
-        [~,idx] = min(abs(x));
-        idx = sub2ind(size(x), idx, 1:nTrials);
-        obs_response = x(idx);
+        if nItems == 1
+            obs_response = x;
+        else
+            [~,idx] = min(abs(x));
+            idx = sub2ind(size(x), idx, 1:nTrials);
+            obs_response = x(idx);
+        end
     end
    
     if strcmp(pars.rule,'opt')
