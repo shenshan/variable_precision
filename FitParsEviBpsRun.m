@@ -245,7 +245,7 @@ classdef FitParsEviBpsRun < dj.Relvar & dj.AutoPopulate
                         case 'DO'
                             key.beta_hat = pars(5);
                             key.sigma_dn_hat = pars(6);
-                        case 'GOD'
+                        case 'GDO'
                             key.beta_hat = pars(5);
                             key.guess_hat = pars(6);
                             key.sigma_dn_hat = pars(7);
