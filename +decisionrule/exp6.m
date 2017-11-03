@@ -1,4 +1,4 @@
-function [prediction, response] = exp6(x,pars)
+function [prediction, response, obs_response] = exp6(x,pars)
 %EXP6 computes prediction of reporting right given noisy
 %measurements and model parameters, this one does not work for pre table
 
