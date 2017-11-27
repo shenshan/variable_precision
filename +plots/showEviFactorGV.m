@@ -23,20 +23,20 @@ for ii = 1:length(exp_ids)
     
 end
 
-fig = Figure(101,'size',[150,40]);
+fig = Figure(101,'size',[150,27]);
 
 eviMat = cellfun(@(x) 2*x, eviMat, 'Un', 0);
 groupbar(eviMat);
 
 ylim([-20,80])
 
-xlabel('Experiment number')
+% xlabel('Experiment number')
 ylabel([upper(type) ' difference\newlinerelative to GV'])
 
 
-legend('-G','-V','location','northeast')
+% legend('-G','-V','location','northeast')
 
 fig.cleanup
 
-fig.save('~/Dropbox/VR/+varprecision/figures/evi_factor_remove_GV')
+fig.save(['~/Dropbox/VR/+varprecision/figures/evi_factor_remove_GV_' type])
 

@@ -1,5 +1,5 @@
 
-exp_id = 7;
+exp_id = 4;
 % model_names = {'CP','CPN','CPG','CPGN','VP','VPN','VPG','VPGN','OP','OPN','OPG','OPGN','OPVP','OPVPN','OPVPG','OPVPGN'};
 % model_names = {'XP','XPG','XPVP','XPVPG'};
 % model_names = {'XPVP','XPVPG'};
@@ -23,7 +23,7 @@ exp_id = 7;
 % 
 % model_names = reshape(model_names,[1,length(factors)*length(rules)]);
 
-models = fetch(varprecision.Model & ['exp_id=' num2str(exp_id)] & 'model_type in ("sub")','*');
+models = fetch(varprecision.Model & ['exp_id=' num2str(exp_id)] & 'prior_type in ("Flat")','*');
 
 key2.lower_bound = [0.2,0.0001,0.000001,0,0,0];
 key2.upper_bound = [0.8,1,1,10,1,20];

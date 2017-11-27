@@ -73,7 +73,7 @@ function drawPsychCurveDetectionBps(varargin)
             model_pres_ss_patch = getPatch(model_pres_ssMat); 
             model_abs_ss_patch = getPatch(model_abs_ssMat); 
 
-            fig = Figure(101,'size',[180,23]);
+            fig = Figure(101,'size',[150,15]);
             
             subplot(1,5,1)
             hold on
@@ -82,7 +82,8 @@ function drawPsychCurveDetectionBps(varargin)
             errorbar(setsizes, data_pres_ss_mean, data_pres_ss_sem,'b.','LineStyle','None');
             errorbar(setsizes, data_abs_ss_mean, data_abs_ss_sem,'r.','LineStyle','None');
             ylim([0,1]); xlim([0,max(setsizes)+2])
-            set(gca, 'xTick',setsizes)
+            set(gca, 'xTick',setsizes,'xTickLabel',[], 'yTick',0:0.2:1,'YTickLabel',{'0','','0.4','','0.8',''})
+            
             %   legend('target present','target absent','Location','SouthEast')
 %             xlabel('setsize'); ylabel('p present')
 
@@ -103,6 +104,7 @@ function drawPsychCurveDetectionBps(varargin)
 
 %                     xlabel('distractor orienation'); 
 %                     ylabel('p present')
+                    
                 else 
                     subplot(1,5,ii+1)
                     hold on
@@ -111,6 +113,7 @@ function drawPsychCurveDetectionBps(varargin)
                     errorbar(bins, data_pres_bin_mean(ii,:), data_pres_bin_sem(ii,:),'b','LineStyle','None')
                     errorbar(bins, data_abs_bin_mean(ii,:), data_abs_bin_sem(ii,:),'r','LineStyle','None')
                     ylim([0,1]); xlim([0,max(bins)+2])
+                    set(gca,'XTickLabel',[], 'YTick',[])
                     if ii == 4
 %                         disp check!
     %                     legend('target present','target absent','Location','NorthEast')
@@ -118,7 +121,9 @@ function drawPsychCurveDetectionBps(varargin)
 %                     xlabel('distractor orienation'); 
 %                     ylabel('p present')
                 end
+                set(gca,'YTick',0:0.2:1,'YTickLabel',[],'XTick',0:5:20,'XTickLabel',[]);
             end
+            
         end
         fig.cleanup
         fig.save(['~/Dropbox/VR/+varprecision/figures/exp' num2str(exp.exp_id) '_' keys_temp(1).model_name '_psy.eps'])

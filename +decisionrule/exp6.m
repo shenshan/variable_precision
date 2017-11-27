@@ -37,7 +37,7 @@ function [prediction, response, obs_response] = exp6(x,pars)
         end
     end
    
-    if strcmp(pars.rule,'opt')
+    if strcmp(pars.rule,'Opt')
         p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
         obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
     end

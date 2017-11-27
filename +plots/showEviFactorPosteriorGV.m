@@ -23,18 +23,21 @@ for ii = 1:length(exp_ids)
     
 end
 
-fig = Figure(101,'size',[150,40]);
+fig = Figure(101,'size',[150,27]);
 
 groupbar(eviMat); hold on
 xLim = get(gca, 'xLim');
-plot([xLim(1),xLim(2)],[0.269,0.269],'k--')
+
+if strcmp(type,'aic')
+    plot([xLim(1),xLim(2)],[0.269,0.269],'k--')
+end
 plot([xLim(1),xLim(2)],[0.5,0.5],'k-.')
 
 ylim([0,1])
 
 set(gca, 'YTick', 0:0.2:1)
 
-xlabel('Experiment number')
+% xlabel('Experiment number')
 ylabel('Posterior probability')
 
 
@@ -42,4 +45,4 @@ ylabel('Posterior probability')
 
 fig.cleanup
 
-fig.save('~/Dropbox/VR/+varprecision/figures/fpp_GV')
+fig.save(['~/Dropbox/VR/+varprecision/figures/fpp_GV_' type])

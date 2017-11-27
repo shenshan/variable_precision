@@ -4,7 +4,7 @@ function showEviFactorGOV(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
 
 exp_ids = [1,8,2:5,9,10,6,7,11];
-eviMat = cell(length(exp_ids),3);
+eviMat = cell(length(exp_ids),4);
 
 for ii = 1:length(exp_ids)
     exp_id = exp_ids(ii);
@@ -23,20 +23,20 @@ for ii = 1:length(exp_ids)
     
 end
 
-fig = Figure(101,'size',[150,40]);
+fig = Figure(101,'size',[150,27]);
 
 eviMat = cellfun(@(x) 2*x, eviMat, 'Un', 0);
 groupbar(eviMat);
 
 ylim([-20,80])
 
-xlabel('Experiment number')
+% xlabel('Experiment number')
 ylabel([upper(type) ' difference\newlinerelative to GOV'])
 
 
-legend('-G','-O','-V','-O-V','location','northeast')
+% legend('-G','-O','-V','-O-V','location','northeast')
 
 fig.cleanup
 
-fig.save('~/Dropbox/VR/+varprecision/figures/evi_factor_remove_GOV')
+fig.save(['~/Dropbox/VR/+varprecision/figures/evi_factor_remove_GOV_' type])
 

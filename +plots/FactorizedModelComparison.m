@@ -10,8 +10,8 @@ if ~exist('avg','var')
 end
 
 if strcmp(model_type,'all')
-    models = {'CP','CPG','CPN','CPGN','OP','OPG','OPN','OPGN','VP','VPG','VPN','VPGN','OPVP','OPVPG','OPVPN','OPVPGN'};
-    model_names = {'Base','G','D','GD','O','GO','DO','GDO','V','GV','DV','GDV','OV','GOV','DOV','GDOV'};
+    models = {'CP','VP','CPG','VPG','OP','OPVP','OPG','OPVPG','CPN','VPN','CPGN','VPGN','OPN','OPVPN','OPGN','OPVPGN'};
+    model_names = {'Base','V','G','GV','O','OV','GO','GOV','D','DV','GD','GDV','OD','ODV','GOD','GODV'};
 elseif strcmp(model_type,'dn')
     models = {'CPN','CPGN','OPN','OPGN','VPN','VPGN','OPVPN','OPVPGN'};
     model_names = {'D','GD','DO','GDO','DV','GDV','DOV','GDOV'};
@@ -77,9 +77,9 @@ yLim = get(gca,'yLim');
 
 if ismember(cmp_type,{'aic','bic','aicc'})
     if yLim(2)<100
-        ylim([-20,100])
+        ylim([-50,100])
     else
-        ylim([-20,yLim(2)])
+        ylim([-50,yLim(2)])
     end
 else
     if yLim(1)>-50
@@ -90,7 +90,7 @@ else
 end
 
 xlabel('Model')
-ylabel(upper(cmp_type))
+ylabel([upper(cmp_type) ' difference\newlinerelative to GODV'])
 
 fig.cleanup
 fig.save(['~/Dropbox/VR/+varprecision/figures/exp_' num2str(exp.exp_id) '_' cmp_type '_' model_type])

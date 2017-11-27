@@ -19,9 +19,9 @@ switch exp_id
 end
 
 if exp_id == 2
-    fig = Figure(102,'size',[100,30]); hold on
+    fig = Figure(102,'size',[110,30]); hold on
 else
-    fig = Figure(102,'size',[70,35]); hold on
+    fig = Figure(102,'size',[60,30]); hold on
 end
 
 switch exp_id
@@ -48,13 +48,14 @@ switch exp_id
             legend('Target','Distractor','Location', 'Northwest')
             xlabel('Orientation ()')
         end
+        ylim([0,1])
         
     case 2
         subplot 121
         plot([-90,90],[1/180,1/180],'k')
         xlim([-90,90])
         ylim([0,0.1])
-        set(gca,'XTick', -90:30:90)
+        set(gca,'XTick', -90:30:90,'YTick',0:0.02:0.1)
         ylabel('Probability density')
         xlabel('Reference orientation ()')
         subplot 122
@@ -100,7 +101,14 @@ switch exp_id
         xlabel('Orientation ()')
 end
 
-ylim([0,0.1])
+if ismember(exp_id, [1,3,4,5,6])
+    ylim([0,1])
+    set(gca,'YTick',0:0.2:1)
+    
+else
+    ylim([0,0.1])
+    set(gca,'YTick',0:0.02:0.1)
+end
 
 fig.cleanup
 

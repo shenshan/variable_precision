@@ -20,32 +20,55 @@ function [prediction, response] = exp4(x,pars)
         
         p_right_adj = repmat(permute(pars.p_right,[3,1,2]),[nStimuli,nTrials,1]);
     
-    if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
-        sigma = sqrt(1/pars.lambda);
-        f = exp(x.^2*pars.sigma_s^2/2/sigma^2/(sigma^2+pars.sigma_s^2));
-        x_c = pars.lambda*x/sqrt(2*(pars.lambda + 1/pars.sigma_s^2));
+    if strcmp(pars.prior_type,'Gaussian')
+        if ismember(pars.model_name,{'CP','CPG','CPN','CPGN'})
+            sigma = sqrt(1/pars.lambda);
+            f = exp(x.^2*pars.sigma_s^2/2/sigma^2/(sigma^2+pars.sigma_s^2));
+            x_c = pars.lambda*x/sqrt(2*(pars.lambda + 1/pars.sigma_s^2));
 
-        term1 = squeeze(sum (f.*(1 + erf(x_c)),1));
-        term2 = squeeze(sum (f.*(1 - erf(x_c)),1));
+            term1 = squeeze(sum (f.*(1 + erf(x_c)),1));
+            term2 = squeeze(sum (f.*(1 - erf(x_c)),1));
 
-            
-    else
-        sigmaMat = sqrt(1./pars.lambdaMat);
-        logf = x.^2*pars.sigma_s^2/2./sigmaMat.^2./(sigmaMat.^2 + pars.sigma_s^2);
-        % subtract constant to avoid numerical problems
-        logf_max = max(logf);
-        logf = bsxfun(@minus, logf, logf_max);
-        f = exp(logf);
-        x_c = pars.lambdaMat.*x./sqrt(2*(pars.lambdaMat + 1/pars.sigma_s^2));
 
-        term1 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 + erf(x_c)),1));
-        term2 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 - erf(x_c)),1));
-            
+        else
+            sigmaMat = sqrt(1./pars.lambdaMat);
+            logf = x.^2*pars.sigma_s^2/2./sigmaMat.^2./(sigmaMat.^2 + pars.sigma_s^2);
+            % subtract constant to avoid numerical problems
+            logf_max = max(logf);
+            logf = bsxfun(@minus, logf, logf_max);
+            f = exp(logf);
+            x_c = pars.lambdaMat.*x./sqrt(2*(pars.lambdaMat + 1/pars.sigma_s^2));
+
+            term1 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 + erf(x_c)),1));
+            term2 = squeeze(sum(sigmaMat./sqrt(sigmaMat.^2 + pars.sigma_s^2).*f.* (1 - erf(x_c)),1));
+
+        end
+    elseif strcmp(pars.prior_type,'Flat')
+         if ismember(pars.factor_code,{'Base','G','D','GD'})
+            sigma = sqrt(1/pars.lambda);
+            f = exp(x.^2/sigma^2);
+
+            term1 = squeeze(sum (f.*(normcdf(x/sigma)-1+normcdf(20/sigma)),1));
+            term2 = squeeze(sum (f.*(normcdf(-x/sigma)-1+normcdf(20/sigma)),1));
+
+
+        else
+            sigmaMat = sqrt(1./pars.lambdaMat);
+            logf = x.^2./sigmaMat.^2;
+            % subtract constant to avoid numerical problems
+            logf_max = max(logf);
+            logf = bsxfun(@minus, logf, logf_max);
+            f = exp(logf);
+
+            term1 = squeeze(sum(f.* (normcdf(x./sigmaMat)-1+normcdf(20./sigmaMat)),1));
+            term2 = squeeze(sum(f.* (normcdf(-x./sigmaMat)-1+normcdf(20./sigmaMat)),1));
+
+        end
     end
     
     obs_response = log(bsxfun(@times,repmat(term1,[1,1,length(pars.p_right)]),p_right_adj)./ bsxfun(@times,repmat(term2,[1,1,length(pars.p_right)]),(1-p_right_adj)));
     
-    if ismember(pars.model_name,{'CPN','CPGN','VPN','VPGN','OPN','OPGN','OPVPN','OPVPGN'})
+    if strfind(pars.factor_code,'D')
         obs_response = normrnd(obs_response,pars.sigma_dn);
     end
     

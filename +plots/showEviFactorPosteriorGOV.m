@@ -4,7 +4,7 @@ function showEviFactorPosteriorGOV(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
 
 exp_ids = [1,8,2:5,9,10,6,7,11];
-eviMat = cell(length(exp_ids),3);
+eviMat = cell(length(exp_ids),4);
 
 for ii = 1:length(exp_ids)
     exp_id = exp_ids(ii);
@@ -23,17 +23,19 @@ for ii = 1:length(exp_ids)
     
 end
 
-fig = Figure(101,'size',[150,40]);
+fig = Figure(101,'size',[150,27]);
 
 groupbar(eviMat); hold on
 xLim = get(gca, 'xLim');
-plot([xLim(1),xLim(2)],[0.269,0.269],'k--')
+if strcmp(type,'aic')
+    plot([xLim(1),xLim(2)],[0.269,0.269],'k--')
+end
 plot([xLim(1),xLim(2)],[0.5,0.5],'k-.')
 
 ylim([0,1])
 set(gca, 'YTick', 0:0.2:1)
 
-xlabel('Experiment number')
+% xlabel('Experiment number')
 ylabel('Posterior probability')
 
 
@@ -41,4 +43,4 @@ ylabel('Posterior probability')
 
 fig.cleanup
 
-fig.save('~/Dropbox/VR/+varprecision/figures/fpp_GOV')
+fig.save(['~/Dropbox/VR/+varprecision/figures/fpp_GOV_' type])

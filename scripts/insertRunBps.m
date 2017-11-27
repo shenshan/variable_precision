@@ -1,7 +1,7 @@
 subjs = fetch(varprecision.Subject & 'subj_type= "real"');
 
-models = fetch(varprecision.Model & 'model_type="sub"');
-keys = fetch(varprecision.InitialPoint & subjs & 'exp_id in (7)' & models);
+models = fetch(varprecision.Model & 'prior_type in ("Flat")');
+keys = fetch(varprecision.InitialPoint & subjs & 'exp_id in (4)' & models);
 
 for iKey = keys'
     if ~isempty(fetch(varprecision.RunBps & iKey))

@@ -17,7 +17,7 @@ else
 end
 setsizes = unique(set_size);
 exp_id = key.exp_id;
-[model_type,factor_code,rule] = fetch1(varprecision.Model & key, 'model_type','factor_code','rule');
+[model_type,factor_code,rule,prior_type] = fetch1(varprecision.Model & key, 'model_type','factor_code','rule','prior_type');
 
 if ismember(key.exp_id,[6,7,11])
     vm = 1;
@@ -248,6 +248,7 @@ pars.pre = 0;
 pars.model_type = model_type;
 pars.rule = rule;
 pars.factor_code = factor_code;
+pars.prior_type = prior_type;
 trial_num_sim = key.trial_num_sim;
 
 predMat = zeros(size(response));
