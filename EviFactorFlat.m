@@ -1,5 +1,5 @@
 %{
-varprecision.EviFactorGOV (computed) # compute factorized evidences, difference in evidence between model with a factor versus not
+varprecision.EviFactorFlat (computed) # compute factorized evidences, difference in evidence between model with a factor versus not
 -> varprecision.Data
 -----
 ori_aic    : double    # aic evidence for ori dependent variance
@@ -14,6 +14,10 @@ guess_aic  : double    # aic evidence for guessing
 guess_bic  : double    # bic evidence for guessing
 guess_aicc : double    # aicc evidence for guessing
 guess_llmax: double    # llmax evidence for guessing
+dn_aic     : double    # aic evidence for decision noise
+dn_bic     : double    # bic evidence for decision noise
+dn_aicc    : double    # aicc evidence for decision noise
+dn_llmax   : double    # llmax evidence for decision noise
 total_var_aic   : double  # aic evidence for total variance
 total_var_bic   : double  # bic evidence for total variance
 total_var_aicc  : double  # aicc evidence for total variance
@@ -26,6 +30,10 @@ o_lfpr_aic    : float   # Oblique evidence ratio computed with AIC
 o_lfpr_bic    : float   # Oblique evidence ratio computed with BIC
 o_lfpr_aicc    : float   # Oblique evidence ratio computed with AICc
 o_lfpr_llmax    : float   # Oblique evidence ratio computed with llmax
+d_lfpr_aic    : float   # Oblique evidence ratio computed with AIC
+d_lfpr_bic    : float   # Oblique evidence ratio computed with BIC
+d_lfpr_aicc    : float   # Oblique evidence ratio computed with AICc
+d_lfpr_llmax    : float   # Oblique evidence ratio computed with llmax
 v_lfpr_aic    : float   # VP evidence ratio computed with AIC
 v_lfpr_bic    : float   # VP evidence ratio computed with BIC
 v_lfpr_aicc    : float   # VP evidence ratio computed with AICc
@@ -36,23 +44,34 @@ ov_lfpr_aicc    : float   # OV evidence ratio computed with AICc
 ov_lfpr_llmax    : float   # OV evidence ratio computed with llmax
 %}
 
-classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
+classdef EviFactorFlat < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = varprecision.Data & 'exp_id<12'
+        popRel = varprecision.Data & 'exp_id=4'
     end
 	
     methods(Access=protected)
         
 		function makeTuples(self, key)
-            [ori_aicMat, ori_bicMat, ori_aiccMat, ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("OP","OPG","OPVP","OPVPG")','aic','bic','aicc','llmax');
-            [non_ori_aicMat, non_ori_bicMat, non_ori_aiccMat, non_ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPG","VP","VPG")','aic','bic','aicc','llmax');
-            [var_aicMat, var_bicMat, var_aiccMat, var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("VP","VPG","OPVP","OPVPG")','aic','bic','aicc','llmax');
-            [non_var_aicMat, non_var_bicMat, non_var_aiccMat, non_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPG","OP","OPG")','aic','bic','aicc','llmax');
-            [guess_aicMat, guess_bicMat, guess_aiccMat, guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CPG","VPG","OPG","OPVPG")','aic','bic','aicc','llmax');
-            [non_guess_aicMat, non_guess_bicMat, non_guess_aiccMat, non_guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","VP","OP","OPVP")','aic','bic','aicc','llmax');
-            [total_var_aicMat, total_var_bicMat, total_var_aiccMat, total_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("OPVP","OPVPG")','aic','bic','aicc','llmax');
-            [non_total_var_aicMat, non_total_var_bicMat, non_total_var_aiccMat, non_total_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("CP","CPG")','aic','bic','aicc','llmax');
+            models = fetch(varprecision.Model & key & 'prior_type="Flat"');
+            models_ori = fetch(varprecision.Model & key & 'factor_code like "%O%"' & models);
+            models_non_ori = fetch(varprecision.Model & key & 'factor_code not like "%O%"' & models);
+            models_var = fetch(varprecision.Model & key & 'factor_code like "%V%"' & models);
+            models_non_var = fetch(varprecision.Model & key & 'factor_code not like "%V%"' & models);
+            models_guess = fetch(varprecision.Model & key & 'factor_code like "%G%"' & models);
+            models_non_guess = fetch(varprecision.Model & key & 'factor_code not like "%G%"' & models);
+            models_dn = fetch(varprecision.Model & key & 'factor_code like "%D%"' & models);
+            models_non_dn = fetch(varprecision.Model & key & 'factor_code not like "%D%"' & models);
+            [ori_aicMat, ori_bicMat, ori_aiccMat, ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_ori,'aic','bic','aicc','llmax');
+            [non_ori_aicMat, non_ori_bicMat, non_ori_aiccMat, non_ori_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_non_ori,'aic','bic','aicc','llmax');
+            [var_aicMat, var_bicMat, var_aiccMat, var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_var,'aic','bic','aicc','llmax');
+            [non_var_aicMat, non_var_bicMat, non_var_aiccMat, non_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_non_var,'aic','bic','aicc','llmax');
+            [guess_aicMat, guess_bicMat, guess_aiccMat, guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_guess,'aic','bic','aicc','llmax');
+            [non_guess_aicMat, non_guess_bicMat, non_guess_aiccMat, non_guess_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_non_guess,'aic','bic','aicc','llmax');
+            [dn_aicMat, dn_bicMat, dn_aiccMat, dn_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_dn,'aic','bic','aicc','llmax');
+            [non_dn_aicMat, non_dn_bicMat, non_dn_aiccMat, non_dn_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & models_non_dn,'aic','bic','aicc','llmax');
+            [total_var_aicMat, total_var_bicMat, total_var_aiccMat, total_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("OVFlat","GOVFlat","DOVFlat","GDOVFlat")','aic','bic','aicc','llmax');
+            [non_total_var_aicMat, non_total_var_bicMat, non_total_var_aiccMat, non_total_var_llmaxMat] = fetchn(varprecision.FitParsEviBpsBestAvg & key & 'model_name in ("BaseFlat","GFlat","VFlat","GVFlat")','aic','bic','aicc','llmax');
             
             
             % aic 
@@ -66,6 +85,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             res_guess_aicMat = guess_aicMat - min_val;
             res_non_guess_aicMat = non_guess_aicMat - min_val;
             
+            res_dn_aicMat = dn_aicMat - min_val;
+            res_non_dn_aicMat = non_dn_aicMat - min_val;
+            
             res_total_var_aicMat = total_var_aicMat - min_val;
             res_non_total_var_aicMat = non_total_var_aicMat - min_val;
             
@@ -77,6 +99,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             
             guess_aic_ratio = mean(exp(-res_guess_aicMat))/(mean(exp(-res_non_guess_aicMat)));
             key.guess_aic = guess_aic_ratio/(guess_aic_ratio+1);
+            
+            dn_aic_ratio = mean(exp(-res_dn_aicMat))/(mean(exp(-res_non_dn_aicMat)));
+            key.dn_aic = dn_aic_ratio/(dn_aic_ratio+1);
             
             total_var_aic_ratio = mean(exp(-res_total_var_aicMat))/(mean(exp(-res_non_total_var_aicMat)));
             key.total_var_aic = total_var_aic_ratio/(total_var_aic_ratio+1);
@@ -93,6 +118,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             res_guess_bicMat = guess_bicMat - min_val;
             res_non_guess_bicMat = non_guess_bicMat - min_val;
             
+            res_dn_bicMat = dn_bicMat - min_val;
+            res_non_dn_bicMat = non_dn_bicMat - min_val;
+            
             res_total_var_bicMat = total_var_bicMat - min_val;
             res_non_total_var_bicMat = non_total_var_bicMat - min_val;
             
@@ -104,6 +132,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             
             guess_bic_ratio = mean(exp(-res_guess_bicMat))/(mean(exp(-res_non_guess_bicMat)));
             key.guess_bic = guess_bic_ratio/(guess_bic_ratio+1);
+            
+            dn_bic_ratio = mean(exp(-res_dn_bicMat))/(mean(exp(-res_non_dn_bicMat)));
+            key.dn_bic = dn_bic_ratio/(dn_bic_ratio+1);
             
             total_var_bic_ratio = mean(exp(-res_total_var_bicMat))/(mean(exp(-res_non_total_var_bicMat)));
             key.total_var_bic = total_var_bic_ratio/(total_var_bic_ratio+1);
@@ -119,6 +150,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             res_guess_aiccMat = guess_aiccMat - min_val;
             res_non_guess_aiccMat = non_guess_aiccMat - min_val;
             
+            res_dn_aiccMat = dn_aiccMat - min_val;
+            res_non_dn_aiccMat = non_dn_aiccMat - min_val;
+            
             res_total_var_aiccMat = total_var_aiccMat - min_val;
             res_non_total_var_aiccMat = non_total_var_aiccMat - min_val;
             
@@ -130,7 +164,10 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             
             guess_aicc_ratio = mean(exp(-res_guess_aiccMat))/(mean(exp(-res_non_guess_aiccMat)));
             key.guess_aicc = guess_aicc_ratio/(guess_aicc_ratio+1);
-           
+            
+            dn_aicc_ratio = mean(exp(-res_dn_aiccMat))/(mean(exp(-res_non_dn_aiccMat)));
+            key.dn_aicc = dn_aicc_ratio/(dn_aicc_ratio+1);
+            
             total_var_aicc_ratio = mean(exp(-res_total_var_aiccMat))/(mean(exp(-res_non_total_var_aiccMat)));
             key.total_var_aicc = total_var_aicc_ratio/(total_var_aicc_ratio+1);
             
@@ -145,6 +182,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             res_guess_llmaxMat = guess_llmaxMat - max_val;
             res_non_guess_llmaxMat = non_guess_llmaxMat - max_val;
             
+            res_dn_llmaxMat = dn_llmaxMat - max_val;
+            res_non_dn_llmaxMat = non_dn_llmaxMat - max_val;
+            
             res_total_var_llmaxMat = total_var_llmaxMat - max_val;
             res_non_total_var_llmaxMat = non_total_var_llmaxMat - max_val;
             
@@ -157,6 +197,9 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             guess_llmax_ratio = mean(exp(res_guess_llmaxMat))/(mean(exp(res_non_guess_llmaxMat)));
             key.guess_llmax = guess_llmax_ratio/(guess_llmax_ratio+1);
             
+            dn_llmax_ratio = mean(exp(res_dn_llmaxMat))/(mean(exp(res_non_dn_llmaxMat)));
+            key.dn_llmax = dn_llmax_ratio/(dn_llmax_ratio+1);
+            
             total_var_llmax_ratio = mean(exp(res_total_var_llmaxMat))/(mean(exp(res_non_total_var_llmaxMat)));
             key.total_var_llmax = total_var_llmax_ratio/(total_var_llmax_ratio+1);
             
@@ -168,6 +211,10 @@ classdef EviFactorGOV < dj.Relvar & dj.AutoPopulate
             key.o_lfpr_bic = log(ori_bic_ratio);
             key.o_lfpr_aicc = log(ori_aicc_ratio);
             key.o_lfpr_llmax = log(ori_llmax_ratio);
+            key.d_lfpr_aic = log(dn_aic_ratio);
+            key.d_lfpr_bic = log(dn_bic_ratio);
+            key.d_lfpr_aicc = log(dn_aicc_ratio);
+            key.d_lfpr_llmax = log(dn_llmax_ratio);
             key.v_lfpr_aic = log(var_aic_ratio);
             key.v_lfpr_bic = log(var_bic_ratio);
             key.v_lfpr_aicc = log(var_aicc_ratio);

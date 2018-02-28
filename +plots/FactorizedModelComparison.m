@@ -1,8 +1,8 @@
-function FactorizedModelComparison(exp,cmp_type,model_type,avg)
+function FactorizedModelComparison(exp_res,cmp_type,model_type,avg)
 %FACTORIZEDMODELCOMPARISON shows the model comparison results, for final
 %paper
 
-exp = fetch(varprecision.Experiment & exp);
+exp_res = fetch(varprecision.Experiment & exp_res);
 subjs = fetch(varprecision.Subject & 'subj_type="real"');
 
 if ~exist('avg','var')
@@ -27,28 +27,32 @@ sem_evi = zeros(1,length(models));
 if ismember(model_type,{'all','dn'})
     
     if strcmp(avg, 'avg')
-        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPGN"',cmp_type);
+        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp_res & subjs & 'model_name = "OPVPGN"',cmp_type);
     else
-        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPGN"',cmp_type);
+        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp_res & subjs & 'model_name = "OPVPGN"',cmp_type);
     end
     
 else
     if strcmp(avg, 'avg')
-        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & 'model_name = "OPVPG"',cmp_type);
+        eviRef = fetchn(varprecision.FitParsEviBpsBestAvg & exp_res & subjs & 'model_name = "OPVPG"',cmp_type);
     else
-        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & 'model_name = "OPVPG"',cmp_type);
+        eviRef = fetchn(varprecision.FitParsEviBpsBest & exp_res & subjs & 'model_name = "OPVPG"',cmp_type);
     end
 end
+
+subjs_rel = fetch(varprecision.Data & subjs & exp_res);
+eviMat_all = zeros(length(subjs_rel),length(models));
 
 for ii = 1:length(models)
     
     if strcmp(avg,'avg')
-        eviMat = fetchn(varprecision.FitParsEviBpsBestAvg & exp & subjs & ['model_name="' models{ii} '"'],cmp_type);
+        eviMat = fetchn(varprecision.FitParsEviBpsBestAvg & exp_res & subjs & ['model_name="' models{ii} '"'],cmp_type);
     else
-        eviMat = fetchn(varprecision.FitParsEviBpsBest & exp & subjs & ['model_name="' models{ii} '"'],cmp_type);
+        eviMat = fetchn(varprecision.FitParsEviBpsBest & exp_res & subjs & ['model_name="' models{ii} '"'],cmp_type);
     end
     eviMat = eviMat - eviRef;
     
+    eviMat_all(:,ii) = eviMat;
     mean_evi(ii) = mean(eviMat);
     sem_evi(ii) = std(eviMat)/sqrt(length(eviMat));
 end
@@ -57,7 +61,9 @@ if ismember(cmp_type, {'aic','bic','aicc'})
     mean_evi = 2*mean_evi;
     sem_evi = 2*sem_evi;
 end
-   
+
+eviMat_all = eviMat_all *2
+
 if length(models)>10
     fig = Figure(110,'size',[200,35]);
 else
@@ -93,5 +99,5 @@ xlabel('Model')
 ylabel([upper(cmp_type) ' difference\newlinerelative to GODV'])
 
 fig.cleanup
-fig.save(['~/Dropbox/VR/+varprecision/figures/exp_' num2str(exp.exp_id) '_' cmp_type '_' model_type])
+fig.save(['~/Dropbox/VR/+varprecision/figures/exp_' num2str(exp_res.exp_id) '_' cmp_type '_' model_type])
 

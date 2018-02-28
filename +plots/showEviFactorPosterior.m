@@ -4,7 +4,7 @@ function showEviFactorPosterior(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
 
 exp_ids = [1,8,2:5,9,10,6,7,11];
-eviMat = cell(length(exp_ids),3);
+eviMat = cell(length(exp_ids),5);
 
 for ii = 1:length(exp_ids)
     exp_id = exp_ids(ii);

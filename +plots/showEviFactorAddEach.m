@@ -25,13 +25,17 @@ for ii = 1:length(exp_ids)
 end
 
 fig = Figure(101,'size',[150,30]);
-eviMat = cellfun(@(x)-2*x, eviMat,'Un',0);
+eviMat = cellfun(@(x)2*x, eviMat,'Un',0);
 groupbar(eviMat)
+hold on
+ylim([-20,110])
+set(gca,'YTick',-20:20:100)
 
-ylim([-120,20])
-
-% xlabel('Experiment number')
-ylabel([upper(type) ' difference'])
+xLim = get(gca, 'xLim');  
+plot([xLim(1),xLim(2)],[6.8,6.8],'k--');
+plot([xLim(1),xLim(2)],[9.21,9.21],'k--')% xlabel('Experiment number')
+plot([xLim(1),xLim(2)],[4.6,4.6],'k--')
+ylabel('KID')
 
 % legend('+G','+D','+O','+V','+O+V','location','northeast')
 

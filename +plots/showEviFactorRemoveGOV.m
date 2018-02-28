@@ -1,4 +1,4 @@
-function showEviFactorGOV(type)
+function showEviFactorRemoveGOV(type)
 %SHOWEVIFACTOR shows the factor evidence for all experiments
 %   function showEviFactor(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
@@ -27,8 +27,14 @@ fig = Figure(101,'size',[150,27]);
 
 eviMat = cellfun(@(x) 2*x, eviMat, 'Un', 0);
 groupbar(eviMat);
-
-ylim([-20,80])
+hold on
+ylim([-20,90])
+xLim = get(gca, 'xLim');
+plot([xLim(1),xLim(2)],[6.8,6.8],'k--')
+plot([xLim(1),xLim(2)],[9.21,9.21],'k--')
+plot([xLim(1),xLim(2)],[4.6,4.6],'k--')
+ylim([-20,90])
+set(gca,'YTick',-20:20:80);
 
 % xlabel('Experiment number')
 ylabel([upper(type) ' difference\newlinerelative to GOV'])

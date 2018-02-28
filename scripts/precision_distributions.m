@@ -11,7 +11,7 @@ xlim([0,3]);
 ylim([0,1.5]);
 xlabel('Precision');
 ylabel('Probability');
-set(gca,'XTick',[],'YTick',[])
+set(gca,'YTick',[])
 fig.cleanup
 fig.save('~/Dropbox/VR/+varprecision/figures/precision_distribution')
 

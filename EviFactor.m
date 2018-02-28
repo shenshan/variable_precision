@@ -22,13 +22,32 @@ total_var_aic   : double  # aic evidence for total variance
 total_var_bic   : double  # bic evidence for total variance
 total_var_aicc  : double  # aicc evidence for total variance
 total_var_llmax : double  # llmax evidence for total variance
-
+g_lfpr_aic    : float   # guessing evidence ratio computed with AIC
+g_lfpr_bic    : float   # guessing evidence ratio computed with BIC
+g_lfpr_aicc    : float   # guessing evidence ratio computed with AICc
+g_lfpr_llmax    : float   # guessing evidence ratio computed with llmax
+o_lfpr_aic    : float   # Oblique evidence ratio computed with AIC
+o_lfpr_bic    : float   # Oblique evidence ratio computed with BIC
+o_lfpr_aicc    : float   # Oblique evidence ratio computed with AICc
+o_lfpr_llmax    : float   # Oblique evidence ratio computed with llmax
+d_lfpr_aic    : float   # Oblique evidence ratio computed with AIC
+d_lfpr_bic    : float   # Oblique evidence ratio computed with BIC
+d_lfpr_aicc    : float   # Oblique evidence ratio computed with AICc
+d_lfpr_llmax    : float   # Oblique evidence ratio computed with llmax
+v_lfpr_aic    : float   # VP evidence ratio computed with AIC
+v_lfpr_bic    : float   # VP evidence ratio computed with BIC
+v_lfpr_aicc    : float   # VP evidence ratio computed with AICc
+v_lfpr_llmax    : float   # VP evidence ratio computed with llmax
+ov_lfpr_aic    : float   # OV evidence ratio computed with AIC
+ov_lfpr_bic    : float   # OV evidence ratio computed with BIC
+ov_lfpr_aicc    : float   # OV evidence ratio computed with AICc
+ov_lfpr_llmax    : float   # OV evidence ratio computed with llmax
 %}
 
 classdef EviFactor < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = varprecision.Data
+        popRel = varprecision.Data & 'exp_id<12'
     end
 	
     methods(Access=protected)
@@ -175,6 +194,27 @@ classdef EviFactor < dj.Relvar & dj.AutoPopulate
             total_var_llmax_ratio = mean(exp(res_total_var_llmaxMat))/(mean(exp(res_non_total_var_llmaxMat)));
             key.total_var_llmax = total_var_llmax_ratio/(total_var_llmax_ratio+1);
             
+            key.g_lfpr_aic = log(guess_aic_ratio);
+            key.g_lfpr_bic = log(guess_bic_ratio);
+            key.g_lfpr_aicc = log(guess_aicc_ratio);
+            key.g_lfpr_llmax = log(guess_llmax_ratio);
+            key.o_lfpr_aic = log(ori_aic_ratio);
+            key.o_lfpr_bic = log(ori_bic_ratio);
+            key.o_lfpr_aicc = log(ori_aicc_ratio);
+            key.o_lfpr_llmax = log(ori_llmax_ratio);
+            key.d_lfpr_aic = log(dn_aic_ratio);
+            key.d_lfpr_bic = log(dn_bic_ratio);
+            key.d_lfpr_aicc = log(dn_aicc_ratio);
+            key.d_lfpr_llmax = log(dn_llmax_ratio);
+            key.v_lfpr_aic = log(var_aic_ratio);
+            key.v_lfpr_bic = log(var_bic_ratio);
+            key.v_lfpr_aicc = log(var_aicc_ratio);
+            key.v_lfpr_llmax = log(var_llmax_ratio);
+            key.ov_lfpr_aic = log(total_var_aic_ratio);
+            key.ov_lfpr_bic = log(total_var_bic_ratio);
+            key.ov_lfpr_aicc = log(total_var_aicc_ratio);
+            key.ov_lfpr_llmax = log(total_var_llmax_ratio);
+
             self.insert(key)
 		end
 	end

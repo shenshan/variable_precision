@@ -1,4 +1,4 @@
-function showEviFactor(type)
+function showEviFactorRemove(type)
 %SHOWEVIFACTOR shows the factor evidence for all experiments
 %   function showEviFactor(type)
 %   type specifies the type of evidences, should be one of the following: aic, bic, aicc, llmax
@@ -30,9 +30,14 @@ groupbar(eviMat);
 
 ylim([-20,80])
 
-% xlabel('Experiment number')
-ylabel([upper(type) ' difference\newlinerelative to GDOV'])
+xLim = get(gca, 'xLim');  hold on
+plot([xLim(1),xLim(2)],[6.8,6.8],'k--');
+plot([xLim(1),xLim(2)],[9.21,9.21],'k--')
+plot([xLim(1),xLim(2)],[4.6,4.6],'k--')
 
+% xlabel('Experiment number')
+% ylabel([upper(type) ' difference\newlinerelative to GODV'])
+ylabel('KOD')
 
 % legend('-G','-D','-O','-V','-O-V','location','southeast')
 

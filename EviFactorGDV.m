@@ -19,7 +19,7 @@ dn_llmax   : double    # llmax evidence for decision noise
 classdef EviFactorGDV < dj.Relvar & dj.AutoPopulate
     
     properties
-        popRel = varprecision.Data
+        popRel = varprecision.Data & 'exp_id<12'
     end
 	
     methods(Access=protected)
