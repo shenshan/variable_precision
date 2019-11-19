@@ -1,5 +1,12 @@
-results/
+Experiments_Helga/
+Psychtoolbox*
+mym*
+Estimated_parameters/
+VP_data_archive*
+*results/
 figures/
 stat_results/
 *.eps
 *.m~
+run_matlab.sh
+Dockerfile
